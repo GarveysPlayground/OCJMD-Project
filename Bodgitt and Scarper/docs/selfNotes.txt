@@ -4,3 +4,7 @@ Instructions specify that the classes to handle exceptions MUST "be created as
 member classes of the suncertify.db package." Does this mean that teh classes
 should be and inner class of DBmain, or a normal class?
 
+To make Accessing database file easier, we should use RandomAccessFile, 
+because it can seek to the certain byte location back and forward. I 
+think it is the best approach for accessing database file easier. So, 
+use it. Simplicity is the key for passing this tough exam.
