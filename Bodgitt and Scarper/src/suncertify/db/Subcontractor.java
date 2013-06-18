@@ -14,6 +14,9 @@ public class Subcontractor {
 	 
 	 static final int owner_Length = 8;
 	 
+	 static final int COPIES_LENGTH = 2;
+
+	 
 	 static final int entry_Length = name_Length + location_Length + 
 			 						 specialties_Length + size_Length + 
 			 						 rate_Length + owner_Length;
@@ -29,6 +32,10 @@ public class Subcontractor {
 			 			  int size, float rate, int owner){
 		 
 	 }
+	 public Subcontractor(String name, String location, String specialities,
+			 			String size, String rate, String owner){
+
+}
 	 
 	 public String getName(){
 		 return this.name;
