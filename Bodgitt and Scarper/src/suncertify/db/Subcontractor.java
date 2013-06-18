@@ -14,8 +14,7 @@ public class Subcontractor {
 	 
 	 static final int owner_Length = 8;
 	 
-	 static final int COPIES_LENGTH = 2;
-
+	 static final int number_Of_Fields = 6;
 	 
 	 static final int entry_Length = name_Length + location_Length + 
 			 						 specialties_Length + size_Length + 

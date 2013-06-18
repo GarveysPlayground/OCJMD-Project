@@ -15,8 +15,8 @@ public class Test {
 
 		
 		System.out.println("Hello world");
-		String Location = "C:\\Users\\Garvey\\Desktop\\";
-		FileAccess.FileAccess(Location);
+		
+		FileAccess.FileAccess();
 
 	
 	}
