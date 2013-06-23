@@ -2,6 +2,13 @@ package suncertify.db;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.Statement;
+
+
+
 
 
 
@@ -41,8 +48,19 @@ public class FileAccess {
  
 		 String Location = "C:\\Users\\Garvey\\Desktop\\";
 		 connectToDB(Location);
-		 getAllRecords();
-		 read(27);
+		 //getAllRecords();
+		 //read(13);
+		 String[] newRec = new String[6];
+		 newRec[0] = "Other Realms";
+		 newRec[1] = "Cork";
+		 newRec[2] = "comics";
+		 newRec[3] = "4";
+		 newRec[4] = "$80.00";
+		 newRec[5] = " ";
+		 //persist(13,newRec);
+
+		 update(13,newRec);
+		 read(13);
 	 }
 	 
 	 private static void connectToDB(String dbLocation) throws IOException{
@@ -87,7 +105,7 @@ public class FileAccess {
 	 }
 	 
 	 
-	 public static void read(int recNo) throws IOException{
+	 public static String[] read(int recNo) throws IOException{
 		 recNo--; //offsets the zero value
 		 final int offset = getInitialOffset();
 		 int recordLocation = offset + (fullRecord*recNo);
@@ -95,8 +113,9 @@ public class FileAccess {
 		 String record[] = getSingleRecord();
 		 
 		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			 System.out.println("-->"+record[i]);
-		 }  	   
+			 //System.out.println("-->"+record[i]);
+		 }
+		return record;
 	 }
 	 
 	 
@@ -130,12 +149,203 @@ public class FileAccess {
          while (database.getFilePointer() < database.length()) {
 	            String record[] = getSingleRecord();
 	            numberOfRecords++;
-	            System.out.println("\n-----Record Num:" +numberOfRecords+"-----");
+	            System.out.println("\n-----Record Num:" +numberOfRecords+"-----" + database.getFilePointer());
 	            for (int i = 0; i < Subcontractor.number_Of_Fields; i++){
 	   			 System.out.println("-->"+record[i]);
 	   		 	 }
 	        }
        } 
+	 
+	 private static void update(int recNo, String[] data) throws IOException{
+		 
+		 database.seek(4812);
+		 String[] recordDetails = new String[Subcontractor.number_Of_Fields];
+		 recordDetails = read(recNo);
+		 database.seek(4812);
+
+		
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			System.out.println(data[i].getBytes().length);
+			int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+			database.write(data[i].getBytes());
+			//database.writeUTF(data[i]);
+			while(padding != 0){
+				database.write(' ');
+				padding --;
+			}
+			 
+			 
+			 		 
+			 /**paddedValue = new byte [FIELD_LENGTHS[i]];
+			 paddedValue [i] = i < data[i].length () ? (byte)data[i].charAt (i) : (byte)' ';
+			 
+			 for(int q = 0 ; q < FIELD_LENGTHS[i]; q++){
+				 database.writeUTF(" ");
+				 
+			 }
+			 database.writeUTF(data[i]);
+			 database.write(paddedValue);
+			 System.out.println(paddedValue);
+			// System.out.println( database.getFilePointer() + " update " + recordDetails[i]+ " to " + data[i]);
+**/
+			 
+
+		 }
+
+		 
+		 System.out.println("\n\n\nNEW VALUES ");
+		 
+		 
+		 
+		 database.seek(2433);
+		 recordDetails = read(recNo);
+		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			 System.out.println("update " + recordDetails[i]);
+			 
+		 }
+		 
+	 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 private static String emptyRecordString = null;
+	 private static void persist(int recNo, String[] data) throws IOException {
+
+	        // Perform as many operations as we can outside of the synchronized
+	        // block to improve concurrent operations.
+
+	       
+
+	        
+		 	emptyRecordString = new String(new byte[fullRecord]);
+	        final StringBuilder out = new StringBuilder(emptyRecordString);
+
+	        /** assists in converting Strings to a byte[] */
+	        class RecordFieldWriter {
+	            /** current position in byte[] */
+	            private int currentPosition = 0;
+	            /**
+	             * converts a String of specified length to byte[]
+	             *
+	             * @param data the String to be converted into part of the byte[].
+	             * @param length the maximum size of the String
+	             */
+	            void write(String data, int length) {
+	                out.replace(currentPosition,
+	                            currentPosition + data.length(),
+	                            data);
+	                currentPosition += length;
+	            }
+	        }
+	        System.out.println("step 1");
+	        RecordFieldWriter writeRecord = new RecordFieldWriter();
+	        for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+	        	writeRecord.write(data[i], FIELD_LENGTHS[i]);
+	        }
+	        System.out.println("step 2");
+	        
+	        // now that we have everything ready to go, we can go into our
+	        // synchronized block & perform our operations as quickly as possible
+	        // ensuring that we block other users for as little time as possible.
+
+	        
+	           // database.seek(2433);
+	           // database.write(out.toString().getBytes());
+	           // database.writeUTF("test1");
+	            //database.writeChars("this is a test");
+	            //database.write(arg0, arg1, arg2)
+
+	        
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 public static byte [] truncateName (String name)
+	 {
+	     byte [] result = new byte [8];
+	     for (int i = 0; i < 8; i++)
+	         result [i] = i < name.length () ? (byte)name.charAt (i) : (byte)' ';
+	     return result;
+	 }
+
+	 
+	 
 	 
 
 	 private static int getValue(final byte [] byteArray) {  
@@ -148,4 +358,7 @@ public class FileAccess {
          }  
          return value;  
      } 	 
+	 
+	 
+	 	    
 }
