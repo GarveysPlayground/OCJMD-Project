@@ -46,7 +46,7 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws IOException{
  
-		 String Location = "C:\\Users\\Garvey\\Desktop\\";
+		 String Location = "C:\\Users\\epagarv\\Desktop\\";
 		 connectToDB(Location);
 		 //getAllRecords();
 		 //read(13);
@@ -56,7 +56,7 @@ public class FileAccess {
 		 newRec[2] = "comics";
 		 newRec[3] = "4";
 		 newRec[4] = "$80.00";
-		 newRec[5] = " ";
+		 newRec[5] = "485";
 		 //persist(13,newRec);
 
 		 update(13,newRec);
@@ -173,10 +173,12 @@ public class FileAccess {
 		 
 		 
 		 
-		 
+		 byte b = 00;
+		 database.write(b);
 		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			System.out.println(data[i].getBytes().length);
+			 //System.out.println(data[i].getBytes().length);
 			int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+			System.out.println("Input: " + data[i].getBytes().length + "Padding: " + padding);
 			database.write(data[i].getBytes());
 			//database.writeUTF(data[i]);
 			while(padding != 0){
@@ -184,23 +186,10 @@ public class FileAccess {
 				padding --;
 			}
 			 
-			 
-			 		 
-			 /**paddedValue = new byte [FIELD_LENGTHS[i]];
-			 paddedValue [i] = i < data[i].length () ? (byte)data[i].charAt (i) : (byte)' ';
-			 
-			 for(int q = 0 ; q < FIELD_LENGTHS[i]; q++){
-				 database.writeUTF(" ");
-				 
-			 }
-			 database.writeUTF(data[i]);
-			 database.write(paddedValue);
-			 System.out.println(paddedValue);
-			// System.out.println( database.getFilePointer() + " update " + recordDetails[i]+ " to " + data[i]);
-**/
-			 
+			
 
 		 }
+		 //database.write(' ');
 
 		 
 		 System.out.println("\n\n\nNEW VALUES ");
