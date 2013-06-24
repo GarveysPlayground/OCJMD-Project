@@ -8,3 +8,7 @@ To make Accessing database file easier, we should use RandomAccessFile,
 because it can seek to the certain byte location back and forward. I 
 think it is the best approach for accessing database file easier. So, 
 use it. Simplicity is the key for passing this tough exam.
+
+valid and invalid is of type int in FileAccess,
+Change this to byte []?
+

@@ -48,35 +48,7 @@ public interface DBMain {
   public boolean isLocked(int recNo)
     throws RecordNotFoundException;
   
-  //member class for the DuplicateKeyException exception
-  //It contains a zero argument constructor and a second 
-  //constructor that takes a String that serves as the 
-  //exception's description
-  class DuplicateKeyException extends Exception {
-		
-		public DuplicateKeyException() {
-		     super();
-		}
-
-		public DuplicateKeyException(String message) {
-		    super(message);
-		}
-	}
-
-  //member class for the RecordNotFoundException exception
-  //It contains a zero argument constructor and a second 
-  //constructor that takes a String that serves as the 
-  //exception's description
-  class RecordNotFoundException extends Exception {
-		
-		public RecordNotFoundException() {
-		     super();
-		}
-
-		public RecordNotFoundException(String message) {
-		    super(message);
-		}
-	}
+   
 }
 
 
