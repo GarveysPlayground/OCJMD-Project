@@ -32,29 +32,31 @@ public class FileAccess {
     		 Subcontractor.owner_Length}; 
 	 
 
-	final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
+	 final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
 
 	 
-	 public static void FileAccess() throws IOException, RecordNotFoundException{
+	 public static void FileAccess() throws IOException, RecordNotFoundException, DuplicateKeyException{
  
-		 String Location = "C:\\Users\\garvey\\Desktop\\";
+		 String Location = "C:\\Users\\epagarv\\Desktop\\";
 		 connectToDB(Location);
 		 //getAllRecords();
 		 //read(13);
 		 String[] newRec = new String[6];
-		 newRec[0] = "Other Realms";
-		 newRec[1] = "Cork";
-		 newRec[2] = "comics";
+		 newRec[0] = "pennys";
+		 newRec[1] = "athlone";
+		 newRec[2] = "clothes";
 		 newRec[3] = "4";
-		 newRec[4] = "$80.00";
-		 newRec[5] = "485";
+		 newRec[4] = "$20.00";
+		 newRec[5] = "";
 		 
 		 String [] criteria = new String[2];
 		 criteria[0] = "pip";
 		 criteria[1] = "";
 
 
-		 find(criteria);
+		 int newRecord = create(newRec);
+		 System.out.println("Record added to rec #" + newRecord);
+		 //find(criteria);
 		 //update(7,newRec);
 		// read(13);
 		// delete(7);
@@ -77,7 +79,7 @@ public class FileAccess {
          database.read(numberOfFieldsByteArray);  
      
                   
-		 /** The bytes that store the length of each field name    */
+		 /** The bytes that store the length of each field name */
          final String [] fieldNames = new String[Subcontractor.number_Of_Fields];
          final int [] fieldLengths = new int[Subcontractor.number_Of_Fields];  
 		    
@@ -97,22 +99,7 @@ public class FileAccess {
          } 
 		 /**Setting the initial_offset to point at the begining of the first record*/
 		 int initial_offset = (int) database.getFilePointer();
-	     //final byte[] initial_offset = new byte[(int) database.getFilePointer()];
 	     return initial_offset;
-	 }
-	 
-	 
-	 public static String[] read(int recNo) throws IOException{
-		 recNo--; //offsets the zero value
-		 final int offset = getInitialOffset();
-		 int recordLocation = offset + (fullRecordSize*recNo);
-		 database.seek(recordLocation);
-		 String record[] = getSingleRecord();
-		 
-		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			 //System.out.println("-->"+record[i]);
-		 }
-		return record;
 	 }
 	 
 	 
@@ -153,8 +140,22 @@ public class FileAccess {
 	        }
          
          return numberOfRecords;
-       } 
+     } 
+	 
 	
+	 public static String[] read(int recNo) throws IOException{
+		 recNo--; //offsets the zero value
+		 final int offset = getInitialOffset();
+		 int recordLocation = offset + (fullRecordSize*recNo);
+		 database.seek(recordLocation);
+		 String record[] = getSingleRecord();
+		 
+		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			 //System.out.println("-->"+record[i]);
+		 }
+		return record;
+	 }
+	 
 	 
 	 private static void update(int recNo, String[] data) throws IOException{
 		 //get record to update
@@ -177,6 +178,29 @@ public class FileAccess {
 		 }
 	}
 	 
+	 public static int create(String [] data) throws DuplicateKeyException, IOException{
+		 int numOfRecords = getAllRecords();
+		 System.out.println("Total number of records" +numOfRecords );
+		 //get record to update
+		 final int offset = getInitialOffset();
+		 int recordLocation = offset + (numOfRecords * fullRecordSize); 
+		 database.seek(recordLocation);
+		 
+		 byte b = VALID; //valid file byte
+		 database.write(b);
+		 
+		 //for each field output the new value + white space
+		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+			database.write(data[i].getBytes());
+			while(padding != 0){
+				database.write(' ');
+				padding --;
+			}
+		 } 
+		 return numOfRecords + 1;
+	}
+	 
 	 
 	 private static void delete(int recNo) throws RecordNotFoundException, IOException{
 		 //get record to update
@@ -197,7 +221,6 @@ public class FileAccess {
 	 
 	 
 	 public static int [] find(String [] criteria) throws RecordNotFoundException, IOException{
-		 //System.out.println("searching for " + criteria[0]);
 		 int counter = 0;
 		 int totalRecords = getAllRecords();
 		 int [] matchingRecords = new int[totalRecords];
