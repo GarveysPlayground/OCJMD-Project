@@ -37,7 +37,7 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws IOException, RecordNotFoundException, DuplicateKeyException{
  
-		 String Location = "C:\\Users\\epagarv\\Desktop\\";
+		 String Location = "C:\\Users\\garvey\\Desktop\\";
 		 connectToDB(Location);
 		
 		 //getAllRecords();

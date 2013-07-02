@@ -2,9 +2,11 @@ package suncertify.gui;
 
 import javax.swing.*;
 
+
 import suncertify.db.FileAccess;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.IOException;
 
@@ -20,11 +22,7 @@ public class View implements ActionListener{
 	
 	
 	
-	Object [ ] colNames = {"Name", "Location", "Specialties", "size, ", "rate" , "Owner"};
-	//Object [] [] rows = { 
-	//	  {"Data 3", "Data 4","Data 3", "Data 4","Data 3", "Data 4"},
-	//	  {"Data 6", "Data 6","Data 6", "Data 6","Data 6", "Data 6"}
-	//	  };
+	Object [] colNames = {"Rec ID","Name", "Location", "Specialties", "size, ", "rate" , "Owner"};
 	
 	public static void main(String[] args) throws IOException{
 		
@@ -33,52 +31,61 @@ public class View implements ActionListener{
 	}
 	
 	public void makeWindow() throws IOException{
-		String[] record = new String[data.getAllRecords()];
-		Object [] [] rows = new Object[data.getAllRecords()][6];
-
 		
-		for(int i = 1; i < data.getAllRecords() ;i++){
-		record  = data.read(i);
-			for(int k=0; k<6; k++){
-				rows[i][k] = record[k];
+		String[] record = new String[data.getAllRecords()];
+		Object [] [] rows = new Object[data.getAllRecords() + 1][7]; //6 columns + ID
+		for(int i = 1; i < data.getAllRecords() + 1 ;i++){
+			record  = data.read(i);
+			for(int k = 0; k <= 6; k++){
+				if (k == 0){
+					rows[i][k] = i;
+				}else{
+					rows[i][k] = record[k-1].trim();
+				}
+				
 			}
 		}
 		
 		
 		
-		
-		//System.out.println(data.getAllRecords());
-		
-	//	f//or(int i = 0; i < data.getAllRecords() -1 ;i++){
-		//	record = data.read(i);
-			
-		//		for(int k = 1; k < 6; k++){
-				//	System.out.println(record[k]);
-					//	rows[i][k] += record[k];
-					//System.out.println(record[k].toString());
-	//			}
-	//	}
-		
-		
-		
-		
-		
-		
-		JTable table = new JTable (rows, colNames);
-		JFrame frame = new JFrame();
+		JFrame frame = new JFrame();		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.setSize(600,600);
-		frame.setVisible(true);
+		frame.setSize(800,800);
 		
 		
-		exitButton = new JButton("Exit");
-		connectButton = new JButton("Connect");
-		exitButton.addActionListener(this);
+		
+		//DB Table
+		JTable table = new JTable (rows, colNames);
+		JScrollPane scrollPane = new JScrollPane(table);
+		frame.getContentPane().add(BorderLayout.NORTH, scrollPane);
+		
+		
+			
+		// Set up the search pane
+;
+		JPanel searchPanel = new JPanel();
+		JButton searchButton = new JButton("Search");
+		
+		JTextField nameSearch = new JTextField(20);
+		JLabel nameLabel = new JLabel("NAME :");
+		nameSearch.add(nameLabel);
+		searchPanel.add(BorderLayout.CENTER, nameLabel);
+		searchPanel.add(BorderLayout.CENTER, nameSearch);
+		
+		JTextField locationSearch = new JTextField(20);
+		JLabel locationLabel = new JLabel("LOCATION :");
+		nameSearch.add(locationLabel);
+		searchPanel.add(BorderLayout.CENTER, locationLabel);
+		searchPanel.add(BorderLayout.CENTER, locationSearch);
+		
+		searchPanel.add(BorderLayout.CENTER, searchButton);
+        
+		
+		frame.getContentPane().add(BorderLayout.CENTER, searchPanel);
 
-		frame.getContentPane().add(BorderLayout.CENTER, table);
-		//frame.getContentPane().add(BorderLayout.SOUTH, exitButton);
-		//frame.getContentPane().add(BorderLayout.SOUTH, connectButton);
+        
+      
+        frame.setVisible(true);
 	}
 	
 	
