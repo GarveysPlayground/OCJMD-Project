@@ -39,6 +39,7 @@ public class FileAccess {
  
 		 String Location = "C:\\Users\\epagarv\\Desktop\\";
 		 connectToDB(Location);
+		
 		 //getAllRecords();
 		 //read(13);
 		 String[] newRec = new String[6];
@@ -49,13 +50,17 @@ public class FileAccess {
 		 newRec[4] = "$20.00";
 		 newRec[5] = "";
 		 
+		 newRec = read(1);
+		 System.out.println("--" + newRec[0] + "\n\n");
+		 
 		 String [] criteria = new String[2];
 		 criteria[0] = "pip";
 		 criteria[1] = "";
 
-
-		 int newRecord = create(newRec);
-		 System.out.println("Record added to rec #" + newRecord);
+		
+		 
+		// int newRecord = create(newRec);
+		// System.out.println("Record added to rec #" + newRecord);
 		 //find(criteria);
 		 //update(7,newRec);
 		// read(13);
@@ -125,7 +130,7 @@ public class FileAccess {
 	 }
 	 
 	 
-	 private static int getAllRecords() throws IOException{ 
+	 public static int getAllRecords() throws IOException{ 
          final int offset = getInitialOffset();		
 		 database.seek(offset);
 		 int numberOfRecords = 0;

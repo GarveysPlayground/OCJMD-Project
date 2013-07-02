@@ -7,6 +7,7 @@ import suncertify.*;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.FileAccess;
 import suncertify.db.RecordNotFoundException;
+import suncertify.gui.View;
 
 public class Test {
 	
@@ -19,7 +20,11 @@ public class Test {
 		System.out.println("Hello world");
 		
 		FileAccess.FileAccess();
-
+		
+		View gui = new View();
+		gui.makeWindow();
+		
+		
 	
 	}
 
