@@ -4,6 +4,7 @@ import javax.swing.*;
 
 
 import suncertify.db.FileAccess;
+import suncertify.db.RecordNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -16,16 +17,17 @@ public class View {
 	
 	Object [] colNames = {"Rec ID","Name", "Location", "Specialties", "size, ", "rate" , "Owner"};
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, RecordNotFoundException{
 		View gui = new View();
 		gui.makeMainWindow();
 	}
 	
-	public void makeMainWindow() throws IOException{
+	public void makeMainWindow() throws IOException, RecordNotFoundException{
 		
 		String[] record = new String[data.getAllRecords()];
-		Object [] [] rows = new Object[data.getAllRecords() + 1][7]; //6 columns + ID
-		for(int i = 1; i < data.getAllRecords() + 1 ;i++){
+		System.out.println("\n\n\n-------------"+data.getAllRecords());
+		Object [] [] rows = new Object[data.getAllRecords() +1 ][7]; //6 columns + ID
+		for(int i = 0; i <= data.getAllRecords()   ;i++){
 			record  = data.read(i);
 			for(int k = 0; k <= 6; k++){
 				if (k == 0){

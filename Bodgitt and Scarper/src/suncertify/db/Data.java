@@ -1,11 +1,16 @@
 package suncertify.db;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 public class Data implements DBMain{
 
+	private static FileAccess database = null;
+	private Logger logger = Logger.getLogger("suncertify.db");
+	
 	@Override
-	public String[] read(int recNo) throws RecordNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public String[] read(int recNo) throws RecordNotFoundException{
+			return database.read(recNo);
 	}
 
 	@Override

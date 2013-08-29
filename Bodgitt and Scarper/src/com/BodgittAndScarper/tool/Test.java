@@ -22,8 +22,8 @@ public class Test {
 		FileAccess.FileAccess();
 		
 		View gui = new View();
-		//gui.makeMainWindow();
-		gui.makeStandaloneWindow();
+		gui.makeMainWindow();
+		//gui.makeStandaloneWindow();
 	}
 
 }

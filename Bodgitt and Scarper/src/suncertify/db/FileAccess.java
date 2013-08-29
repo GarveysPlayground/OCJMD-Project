@@ -1,11 +1,16 @@
 package suncertify.db;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 
 public class FileAccess {
 	
-	 private static final String databaseName = "db-2x3.db";
+	 private static final String databaseName = "db-2x3 - Copy - Copy - Copy.db";
 	 private static RandomAccessFile database = null;
 	 
 	 
@@ -33,9 +38,10 @@ public class FileAccess {
 	 
 
 	 final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
-
 	 
-	 public static void FileAccess() throws IOException, RecordNotFoundException, DuplicateKeyException{
+	 private static Logger logger = Logger.getLogger("suncertify.db");
+	 
+	 public static void FileAccess() throws FileNotFoundException, RecordNotFoundException {
  
 		 String Location = "C:\\Users\\epagarv\\Desktop\\";
 		 connectToDB(Location);
@@ -50,32 +56,33 @@ public class FileAccess {
 		 newRec[4] = "$20.00";
 		 newRec[5] = "";
 		 
+		 
 		 newRec = read(1);
 		 System.out.println("--" + newRec[0] + "\n\n");
+		 newRec = read(16);
+		 System.out.println("--" + newRec[0] + "\n\n");
+		 newRec = read(23);
+		 System.out.println("--" + newRec[0] + "\n\n");
+		 newRec = read(38);
+		 System.out.println("--" + newRec[0] + "\n\n");
+		 newRec = read(39);
+		 System.out.println("--" + newRec[0] + "\n\n");
+		 newRec = read(40);
+		 System.out.println("--" + newRec[0] + "\n\n");
 		 
-		 String [] criteria = new String[2];
-		 criteria[0] = "pip";
-		 criteria[1] = "";
 
-		
-		 
-		// int newRecord = create(newRec);
-		// System.out.println("Record added to rec #" + newRecord);
-		 //find(criteria);
-		 //update(7,newRec);
-		// read(13);
-		// delete(7);
 	 }
 	 
-	 private static void connectToDB(String dbLocation) throws IOException{
-		 System.out.println("Connecting.....");
-		 database = new RandomAccessFile(dbLocation + databaseName, "rw");	
-		 System.out.println("Connected!");
-		 database.seek(0);
+	 public static void connectToDB(String dbLocation) throws FileNotFoundException {
+		 	logger.entering("FileAccess", "connectToDB", dbLocation);
+		 	logger.info("Connecting to Database");
+			database = new RandomAccessFile(dbLocation + databaseName, "rw");
 	 }
 	 
 	 
 	 private static int getInitialOffset() throws IOException{
+		 //logger.entering("FileAccess", "getInitialOffset");
+		 logger.info("Calculating the files initial offset bytes");
 		 database.seek(0);
 		 //Read the start of the file as per the Data File Format
 		 final byte [] magicCookieByteArray = new byte[MAGIC_COOKIE_BYTES];    
@@ -108,17 +115,23 @@ public class FileAccess {
 	 }
 	 
 	 
-	 private static String[] getSingleRecord() throws IOException{
-		          
+	 private static String[] getSingleRecord() throws IOException {
+		 System.out.println((database.length()));
+		 System.out.println((database.getFilePointer()));
+		 if(database.getFilePointer() > database.length()){
+		      	System.out.println("Not that many records exist"); 
+		 }
+		 
+		 
          String[] recordValues = new String[Subcontractor.number_Of_Fields]; 
          final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
  	    database.read(flagByteArray);
   	    final int flag = getValue(flagByteArray);
-      	if (flag == VALID) {  
-          	//System.out.println( "valid record");  
-        } else{  
-         // System.out.println("deleted record");  
-        }  
+  	    if (flag == VALID) {  
+          	System.out.println( "valid record");  
+        } else if (flag == INVALID){  
+          System.out.println("deleted record");  
+        }
 
         for (int i = 0; i < recordValues.length; i++) {  
         	byte[] bytes = new byte[FIELD_LENGTHS[i]];  
@@ -130,7 +143,7 @@ public class FileAccess {
 	 }
 	 
 	 
-	 public static int getAllRecords() throws IOException{ 
+	 public static int getAllRecords() throws IOException { 
          final int offset = getInitialOffset();		
 		 database.seek(offset);
 		 int numberOfRecords = 0;
@@ -148,17 +161,21 @@ public class FileAccess {
      } 
 	 
 	
-	 public static String[] read(int recNo) throws IOException{
-		 recNo--; //offsets the zero value
-		 final int offset = getInitialOffset();
-		 int recordLocation = offset + (fullRecordSize*recNo);
-		 database.seek(recordLocation);
-		 String record[] = getSingleRecord();
+	 public static String[] read(int recNo) throws RecordNotFoundException{
+		 logger.entering("DataDBAccess", "read", recNo);
+		 logger.info("Attempting to read record number" + recNo);
 		 
-		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			 //System.out.println("-->"+record[i]);
+		 //recNo--; //offsets the zero value
+		
+		 try{
+			database.seek(getInitialOffset() + (fullRecordSize*recNo)); //offset + record position
+		 	String record[] = getSingleRecord();
+		 	logger.exiting("FileAccess", "read");
+		 	return record;
 		 }
-		return record;
+		 catch (Exception e) {
+             throw new RecordNotFoundException("Problem encountered reading recNo " +recNo+": "+ e.getMessage());		 
+		 }
 	 }
 	 
 	 
