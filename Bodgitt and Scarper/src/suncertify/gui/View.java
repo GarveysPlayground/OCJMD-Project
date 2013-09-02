@@ -3,17 +3,21 @@ package suncertify.gui;
 import javax.swing.*;
 
 
+import suncertify.db.Data;
 import suncertify.db.FileAccess;
 import suncertify.db.RecordNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.*;
 import java.io.IOException;
 
 
 public class View {
-	FileAccess data = new FileAccess();
+	FileAccess fileAccess = new FileAccess();
+	Data data = new Data();
+	
+	
+
 	
 	Object [] colNames = {"Rec ID","Name", "Location", "Specialties", "size, ", "rate" , "Owner"};
 	
@@ -24,10 +28,10 @@ public class View {
 	
 	public void makeMainWindow() throws IOException, RecordNotFoundException{
 		
-		String[] record = new String[data.getAllRecords()];
-		System.out.println("\n\n\n-------------"+data.getAllRecords());
-		Object [] [] rows = new Object[data.getAllRecords() +1 ][7]; //6 columns + ID
-		for(int i = 0; i <= data.getAllRecords()   ;i++){
+		String[] record = new String[FileAccess.getNoOfRecords()];
+		Object [] [] rows = new Object[FileAccess.getNoOfRecords()][7]; //6 columns + ID
+		int noOfRecords = FileAccess.getNoOfRecords();
+		for(int i = 0; i < noOfRecords   ;i++){
 			record  = data.read(i);
 			for(int k = 0; k <= 6; k++){
 				if (k == 0){

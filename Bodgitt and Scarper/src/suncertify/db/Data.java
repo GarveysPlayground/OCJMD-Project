@@ -10,24 +10,28 @@ public class Data implements DBMain{
 	
 	@Override
 	public String[] read(int recNo) throws RecordNotFoundException{
-			return database.read(recNo);
+			return FileAccess.read(recNo);
 	}
 
 	@Override
 	public void update(int recNo, String[] data) throws RecordNotFoundException {
-		// TODO Auto-generated method stub
-		
+			FileAccess.update(recNo, data);		
 	}
 
 	@Override
 	public void delete(int recNo) throws RecordNotFoundException {
-		// TODO Auto-generated method stub
-		
+			FileAccess.delete(recNo);
 	}
 
 	@Override
 	public int[] find(String[] criteria) throws RecordNotFoundException {
 		// TODO Auto-generated method stub
+		try {
+			return FileAccess.find(criteria);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
