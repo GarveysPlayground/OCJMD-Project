@@ -32,8 +32,9 @@ public class Test {
 		
 		
 		FileAccess.FileAccess();
-
-		//data.delete(35);
+		
+	
+		
 		//data.update(13, newRec);
 		//int newRecNo = data.create(newRec);
 		//System.out.println("\n\n\n"+ newRecNo); 
