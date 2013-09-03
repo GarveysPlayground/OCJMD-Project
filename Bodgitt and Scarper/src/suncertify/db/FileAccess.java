@@ -43,7 +43,7 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws RecordNotFoundException, IOException {
  
-		String Location = "C:\\Users\\epagarv\\Desktop\\";
+		String Location = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\";
 		connectToDB(Location);
 		initial_offset = getInitialOffset();
 		
@@ -168,7 +168,6 @@ public class FileAccess {
 		 }
 		 int recordLocation = initial_offset + (recNo * fullRecordSize);
 		 try{
-			
 			 database.seek(recordLocation);
 			 byte[] record = new byte[fullRecordSize];
 			 database.read(record);            
@@ -196,28 +195,35 @@ public class FileAccess {
              }
 	}
 	 
+ 
 	 public static int create(String [] data) throws DuplicateKeyException, IOException{
 		 int numOfRecords = getNoOfRecords();
-		 System.out.println("Total number of records" +numOfRecords );
-		 //get record to update
-		 //final int offset = getInitialOffset();
-		 int recordLocation = initial_offset + (numOfRecords * fullRecordSize); 
-		 database.seek(recordLocation);
-		 
+	 
+		 database.seek(initial_offset);
+		 byte[] record = new byte[fullRecordSize];
+		 database.read(record);
+		 int currentRec = 0;
+		 while(record[0] == VALID && currentRec < numOfRecords){
+			 database.read(record);
+			 currentRec++;
+		 }
+		 if(record[0] == INVALID){
+			 database.seek(initial_offset + (currentRec*fullRecordSize));
+		 }
+	 
 		 byte b = VALID; //valid file byte
 		 database.write(b);
-		 
 		 //for each field output the new value + white space
 		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
-			database.write(data[i].getBytes());
-			while(padding != 0){
-				database.write(' ');
-				padding --;
-			}
+			 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+			 	database.write(data[i].getBytes());
+			 	while(padding != 0){
+			 		database.write(' ');
+			 		padding--;
+			 	}
 		 } 
-		 return numOfRecords + 1;
-	}
+		return currentRec;
+}
 	 
 	 
 	 static void delete(int recNo) throws RecordNotFoundException{
@@ -244,27 +250,27 @@ public class FileAccess {
 	 }
 	 
 	 
-	 public static int [] find(String [] criteria) throws RecordNotFoundException, IOException{
+	 public static int [] find(String [] criteria) throws RecordNotFoundException{
 		 int counter = 0;
 		 int totalRecords = getNoOfRecords();
-		 int [] matchingRecords = new int[totalRecords];
-
-	
+		 int[] AllRecords = new int[totalRecords];	
+		 try {
 			 database.seek(initial_offset);
-			 for(int i = 1; i <= totalRecords; i++){
-				 String [] record = read(i);
-				 if(record[0].contains(criteria[0]) && record[1].contains(criteria[1])){
-					 System.out.println("Does " + record[0] + " = " + criteria[0]);
-				 
-					 matchingRecords[counter] = i;
-					 System.out.println("\n\n" + matchingRecords[counter]);
-					 counter++;
-				 }
-			 }
+		 }catch(IOException e){
+			 e.printStackTrace();
+		 }
 			
-				//for(int i = 0; i < matchingRecords.length; i++ ){
-				//	System.out.println(matchingRecords[i]);
-				//}
+		 for(int i = 0; i < totalRecords; i++){
+			 String [] record = read(i);
+			 if(record[0].contains(criteria[0]) && record[1].contains(criteria[1])){
+					 AllRecords[counter] = i;
+					 counter++;
+			 }
+		 }
+		 int[]  matchingRecords= new int[counter];
+		 for(int i = 0; i < counter; i++){
+			 matchingRecords[i] = AllRecords[i];
+		 }	
 		 return matchingRecords;
 	 }
 	 

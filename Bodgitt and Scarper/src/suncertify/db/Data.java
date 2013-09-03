@@ -1,6 +1,5 @@
 package suncertify.db;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Data implements DBMain{
@@ -25,20 +24,12 @@ public class Data implements DBMain{
 
 	@Override
 	public int[] find(String[] criteria) throws RecordNotFoundException {
-		// TODO Auto-generated method stub
-		try {
-			return FileAccess.find(criteria);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return FileAccess.find(criteria);
 	}
 
 	@Override
 	public int create(String[] data) throws DuplicateKeyException {
-		// TODO Auto-generated method stub
-		return 0;
+			return FileAccess.create(data);
 	}
 
 	@Override
