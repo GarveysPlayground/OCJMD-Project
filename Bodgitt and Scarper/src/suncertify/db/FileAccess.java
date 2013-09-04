@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+
 public class FileAccess {
 	
 	 private static final String databaseName = "db-2x3.db";
@@ -23,8 +24,8 @@ public class FileAccess {
 	 
 	 //data section
 	 private static final int RECORD_FLAG_BYTES = 1; 
-	 private static final byte validByteFlag = 00; 
-	 private static final byte deletedByteFlag = (byte) 0xFF;
+	 private static final byte VALID = 00; 
+	 private static final byte INVALID = (byte) 0xFF;
 	 private static final String ENCODING = "US-ASCII";
 	 
 	 /**Set the individual lengths of the field record*/
@@ -42,7 +43,7 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws RecordNotFoundException, IOException {
  
-		String Location = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\";
+		String Location = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\";
 		connectToDB(Location);
 		initial_offset = getInitialOffset();
 		
@@ -109,9 +110,9 @@ public class FileAccess {
         final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
  	    database.read(flagByteArray);
   	    final int flag = getValue(flagByteArray);
-  	    if (flag == validByteFlag) {  
+  	    if (flag == VALID) {  
           //	System.out.println( "valid record");  
-        } else if (flag == deletedByteFlag){  
+        } else if (flag == INVALID){  
           //System.out.println("deleted record");  
         }
 
@@ -125,14 +126,13 @@ public class FileAccess {
 	 }
 	 
 	 
-	 public static int getNoOfRecords(){ 
+	 public static int getNoOfRecords() { 
 		 int numberOfRecords = 0;
 		 try{
 			database.seek(initial_offset);
          	/** Get the value of each field in the record  */
          	while (database.getFilePointer() < database.length()) {
-	           	//String record[] = getSingleRecord();
-         		getSingleRecord();
+	           	String record[] = getSingleRecord();
 	           	numberOfRecords++;
 	   	 	}
 		 }catch(IOException e){
@@ -143,51 +143,45 @@ public class FileAccess {
      } 
 	 
 	
-	public static String[] read(int recNo) throws RecordNotFoundException{
+	 public static String[] read(int recNo) throws RecordNotFoundException{
 		 //logger.entering("DataDBAccess", "read", recNo);
 		 logger.info("Attempting to read record number: " + recNo);
-		if(recNo < 0 || recNo >= getNoOfRecords()){
-			 throw new RecordNotFoundException("The record: " + recNo 
-					 								+ " does not exist");		 
-		 }
-		try{
+		 
+		 try{
 			database.seek(initial_offset + (fullRecordSize*recNo)); //offset + record position
 		 	String record[] = getSingleRecord();
 		 	logger.exiting("FileAccess", "read");
 		 	return record;
-		}
+		 }
 		 catch (Exception e) {
              throw new RecordNotFoundException("Problem encountered reading recNo " +recNo+": "+ e.getMessage());		 
-		}
-	}
+		 }
+	 }
 	 
 	 
 	 static void update(int recNo, String[] data) throws RecordNotFoundException{
-		 byte[] record = new byte[fullRecordSize];
-		 int recordLocation = initial_offset + (recNo*fullRecordSize);
-		 
+		 //get record to update
+
 		 if(recNo < 0 || recNo >= getNoOfRecords()){
 			 throw new RecordNotFoundException("The record: " + recNo 
-					 								+ " does not exist");
-		}
-		
-		try{
-			database.seek(recordLocation);
-			database.read(record);      
-			 if (record[0] == deletedByteFlag) {				 
+					 								+ " was not found");
+		 }
+		 int recordLocation = initial_offset + (recNo * fullRecordSize);
+		 try{
+			 database.seek(recordLocation);
+			 byte[] record = new byte[fullRecordSize];
+			 database.read(record);            
+
+			 if (record[0] == INVALID) {				 
 				 logger.severe("Cannot update Record. Record was Deleted.");
 			 }
-             else if(record[0] == validByteFlag){
+             else if(record[0] == VALID){
                  database.seek(recordLocation);
-    			 database.write(validByteFlag);
+    			 byte b = VALID; //valid file byte
+    			 database.write(b);
     			 //for each field output the new value + white space
     			 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-    				 if(data[i].getBytes().length > FIELD_LENGTHS[i]){
-    					 throw new IndexOutOfBoundsException("Error" + 
-    				 "updating RecNo " + recNo + ". Value for" +
-    				 " 'FIELD_LENGTHS[i]' is to long");
-    				 }
-    				 int padding = FIELD_LENGTHS[i]-data[i].getBytes().length;
+    				 int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
     				 database.write(data[i].getBytes());
     				 while(padding != 0){
     					 database.write(' ');
@@ -201,58 +195,48 @@ public class FileAccess {
              }
 	}
 	 
-	 /***
-	  * Duplicate Key not called as no primary key defined in the DB.
-	  * @param data
-	  * @return
-	  * @throws DuplicateKeyException
-	  */
-	 static int create(String [] data) throws DuplicateKeyException{
+ 
+	 public static int create(String [] data) throws DuplicateKeyException, IOException{
 		 int numOfRecords = getNoOfRecords();
-		 int currentRec = 0;
+	 
+		 database.seek(initial_offset);
 		 byte[] record = new byte[fullRecordSize];
-		 
-		 if (data == null) {
-             throw new IllegalArgumentException("invalid data");
-         }
-		 try{
-			 database.seek(initial_offset);
+		 database.read(record);
+		 int currentRec = 0;
+		 while(record[0] == VALID && currentRec < numOfRecords){
 			 database.read(record);
-			 while(record[0] == validByteFlag && currentRec < numOfRecords){
-				 database.read(record);
-				 currentRec++;
-			 }
-			 if(record[0] == deletedByteFlag){
-				 database.seek(initial_offset + (currentRec*fullRecordSize));
-			 }
-		 
-			 database.write(validByteFlag);
-			 //for each field output the new value + white space
-			 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-				 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
-				 	database.write(data[i].getBytes());
-				 	while(padding != 0){
-				 		database.write(' ');
-				 		padding--;
-				 	}
-			 }
-		 }catch(Exception e){
-			 throw new RuntimeException();
+			 currentRec++;
 		 }
+		 if(record[0] == INVALID){
+			 database.seek(initial_offset + (currentRec*fullRecordSize));
+		 }
+	 
+		 byte b = VALID; //valid file byte
+		 database.write(b);
+		 //for each field output the new value + white space
+		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+			 	database.write(data[i].getBytes());
+			 	while(padding != 0){
+			 		database.write(' ');
+			 		padding--;
+			 	}
+		 } 
 		return currentRec;
 }
 	 
 	 
 	 static void delete(int recNo) throws RecordNotFoundException{
-		 int recordLocation = initial_offset + (recNo * fullRecordSize); 
-		 
+
 		 if(recNo < 0 || recNo >= getNoOfRecords()){
-			 throw new RecordNotFoundException("Record Number "	+ recNo	+
-					 							" does not exist");
+			 throw new RecordNotFoundException("The record you wish to delete:"
+					 							+ recNo	+ " was not found");
 		 }
+		 int recordLocation = initial_offset + (recNo * fullRecordSize); 
 		 try{
 		 	database.seek(recordLocation);		 
-		 	database.write(deletedByteFlag);
+		 	byte b = (byte) INVALID; //valid file byte
+		 	database.write(b);
 		 	int padding = Subcontractor.entry_Length;
 		 	while(padding != 0){
 				database.write(' ');
@@ -261,7 +245,7 @@ public class FileAccess {
 		 }catch (Exception e){
              throw new RecordNotFoundException("The record: " + recNo 
           			+ " was not found, " + e.getMessage());
-		 }
+}
 		 
 	 }
 	 
@@ -276,10 +260,10 @@ public class FileAccess {
 			 e.printStackTrace();
 		 }
 			
-		 for(int recNo = 0; recNo < totalRecords; recNo++){
-			 String [] record = read(recNo);
+		 for(int i = 0; i < totalRecords; i++){
+			 String [] record = read(i);
 			 if(record[0].contains(criteria[0]) && record[1].contains(criteria[1])){
-					 AllRecords[counter] =recNo ;
+					 AllRecords[counter] = i;
 					 counter++;
 			 }
 		 }
