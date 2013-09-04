@@ -43,7 +43,7 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws RecordNotFoundException, IOException {
  
-		String Location = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\";
+		String Location = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\";
 		connectToDB(Location);
 		initial_offset = getInitialOffset();
 		
