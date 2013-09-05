@@ -2,6 +2,8 @@ package suncertify.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,6 +45,8 @@ public class MainWindowView {
 	
 	private TableController controller = new TableController();
 	
+	JTable table;
+	
 	public void MainWindowView(){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +57,6 @@ public class MainWindowView {
 		tablePanel =  makeTablePanel();
 		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
 		System.out.println("Done");
-		//mainWindowFrame.add(tablePanel, BorderLayout.SOUTH);
 		bookPanel = makeBookPanel();
 		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
 		searchPanel = makeSearchPanel();
@@ -72,42 +75,53 @@ public class MainWindowView {
 	}
 	
 	private JPanel makeSearchPanel() {
-		JTextField nameSearch = new JTextField(20);
+		nameSearch = new JTextField(20);
 		JLabel nameLabel = new JLabel("NAME :");
 		nameSearch.add(nameLabel);
 		searchPanel.add(BorderLayout.CENTER, nameLabel);
 		searchPanel.add(BorderLayout.CENTER, nameSearch);
 		
-		JTextField locationSearch = new JTextField(20);
+		locationSearch = new JTextField(20);
 		JLabel locationLabel = new JLabel("LOCATION :");
 		nameSearch.add(locationLabel);
 		searchPanel.add(BorderLayout.CENTER, locationLabel);
 		searchPanel.add(BorderLayout.CENTER, locationSearch);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		searchButton = new JButton("Search");
+		searchButton.addActionListener(new searchContractors());
 		searchPanel.add(BorderLayout.CENTER, searchButton);
 		
 		return searchPanel;
 	}
 	
 	private JPanel makeTablePanel() {
-		/* JPanel tablePanel = new JPanel(new BorderLayout());
-		 tableModel = this.controller.getAllContractors();
-	     JTable table = new JTable(tableModel);
-	     tablePanel.add(new JScrollPane(table));
-	    */
-		//table.setEnabled(false);
-		
-		
-	
-		
 		JPanel tablePanel = new JPanel(new BorderLayout());
 		tableModel = this.controller.getAllContractors();
-		JTable table = new JTable(tableModel);
+		table = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(table);
 		tablePanel.add(scrollPane);
 		return tablePanel;
 	}
+	
+	private class searchContractors implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			String[] criteria = new String[2];
+			criteria[0] = nameSearch.getText();
+			criteria[1] = locationSearch.getText();
+			
+			tableModel = controller.getContractors(criteria);
+			refreshTable();
+			
+		}
+		
+	}
+	
+	private void refreshTable() {
+        this.table.setModel(this.tableModel);       
+    }
 	
 
 }
