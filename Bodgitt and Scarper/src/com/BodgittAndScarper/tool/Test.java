@@ -8,6 +8,7 @@ import suncertify.db.Data;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.FileAccess;
 import suncertify.db.RecordNotFoundException;
+import suncertify.gui.MainWindowView;
 import suncertify.gui.View;
 
 public class Test {
@@ -37,8 +38,8 @@ public class Test {
 		//data.update(13, newRec);
 		//int newRecNo = data.create(newRec);
 		//System.out.println("\n\n\n"+ newRecNo); 
-		View gui = new View();
-		gui.makeMainWindow();
+		MainWindowView gui = new MainWindowView();
+		gui.MainWindowView();
 		//gui.makeStandaloneWindow();
 	
 		/*

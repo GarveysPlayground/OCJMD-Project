@@ -34,5 +34,8 @@ public class TableModel extends AbstractTableModel {
     public void addRecord(String[] record) {              
         this.records.add(record);
     }
+    
+    public void addRecord() {
+    }
 
 }

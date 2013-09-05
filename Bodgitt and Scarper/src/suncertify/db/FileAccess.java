@@ -160,8 +160,6 @@ public class FileAccess {
 	 
 	 
 	 static void update(int recNo, String[] data) throws RecordNotFoundException{
-		 //get record to update
-
 		 if(recNo < 0 || recNo >= getNoOfRecords()){
 			 throw new RecordNotFoundException("The record: " + recNo 
 					 								+ " was not found");
@@ -188,6 +186,8 @@ public class FileAccess {
     					 padding --;
     				 }
     			 }
+             }else{
+            	 //throw some db or record exception
              } 
          }catch (Exception e){
                  throw new RecordNotFoundException("The record: " + recNo 
@@ -198,34 +198,36 @@ public class FileAccess {
  
 	 public static int create(String [] data) throws DuplicateKeyException, IOException{
 		 int numOfRecords = getNoOfRecords();
-	 
-		 database.seek(initial_offset);
-		 byte[] record = new byte[fullRecordSize];
-		 database.read(record);
-		 int currentRec = 0;
-		 while(record[0] == VALID && currentRec < numOfRecords){
+			 database.seek(initial_offset);
+			 byte[] record = new byte[fullRecordSize];
 			 database.read(record);
-			 currentRec++;
-		 }
-		 if(record[0] == INVALID){
-			 database.seek(initial_offset + (currentRec*fullRecordSize));
-		 }
-	 
-		 byte b = VALID; //valid file byte
-		 database.write(b);
-		 //for each field output the new value + white space
-		 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-			 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
-			 	database.write(data[i].getBytes());
-			 	while(padding != 0){
-			 		database.write(' ');
-			 		padding--;
-			 	}
-		 } 
-		return currentRec;
+		 
+			 //Find deleted record space
+			 int currentRec = 0;
+			 while(record[0] == VALID && currentRec < numOfRecords){
+				 database.read(record);
+				 currentRec++;
+			 }
+			 if(record[0] == INVALID){
+				 database.seek(initial_offset + (currentRec*fullRecordSize));
+			 }
+		 
+			 byte b = VALID; //valid file byte
+			 database.write(b);
+			 //for each field output the new value + white space
+			 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+				 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+				 	database.write(data[i].getBytes());
+				 	while(padding != 0){
+				 		database.write(' ');
+				 		padding--;
+				 	}
+			 }
+			 return currentRec;
+		
+
 }
-	 
-	 
+	 	 
 	 static void delete(int recNo) throws RecordNotFoundException{
 
 		 if(recNo < 0 || recNo >= getNoOfRecords()){
@@ -245,7 +247,7 @@ public class FileAccess {
 		 }catch (Exception e){
              throw new RecordNotFoundException("The record: " + recNo 
           			+ " was not found, " + e.getMessage());
-}
+		 }
 		 
 	 }
 	 

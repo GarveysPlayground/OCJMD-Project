@@ -1,5 +1,6 @@
 package suncertify.db;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Data implements DBMain{
@@ -29,7 +30,14 @@ public class Data implements DBMain{
 
 	@Override
 	public int create(String[] data) throws DuplicateKeyException {
-			return FileAccess.create(data);
+		int newRecord = 0;	
+		try {
+			newRecord = FileAccess.create(data);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return newRecord;
 	}
 
 	@Override

@@ -12,3 +12,7 @@ use it. Simplicity is the key for passing this tough exam.
 valid and invalid is of type int in FileAccess,
 Change this to byte []?
 
+Subcontractor class are all set to Stings. No distinction between int / floats / double etc. Is that ok?
+
+do some exception handling in the DAO
+
