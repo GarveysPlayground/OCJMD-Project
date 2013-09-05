@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -40,20 +41,26 @@ public class MainWindowView {
 	
 	private TableModel tableModel = new TableModel();
 	
+	private TableController controller = new TableController();
+	
 	public void MainWindowView(){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindowFrame.setSize(800,600);
 		mainWindowFrame.setResizable(false);		
-		mainWindowFrame.setVisible(true);
+		
 		
 		tablePanel =  makeTablePanel();
-		mainWindowFrame.add(tablePanel, BorderLayout.NORTH);
+		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
+		System.out.println("Done");
+		//mainWindowFrame.add(tablePanel, BorderLayout.SOUTH);
 		bookPanel = makeBookPanel();
 		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
 		searchPanel = makeSearchPanel();
 		mainWindowFrame.add(searchPanel, BorderLayout.CENTER);
-	}
+		
+		mainWindowFrame.setVisible(true);
+		}
 
 	private JPanel makeBookPanel() {
 		JButton bookButton = new JButton("Book");
@@ -84,7 +91,21 @@ public class MainWindowView {
 	}
 	
 	private JPanel makeTablePanel() {
+		/* JPanel tablePanel = new JPanel(new BorderLayout());
+		 tableModel = this.controller.getAllContractors();
+	     JTable table = new JTable(tableModel);
+	     tablePanel.add(new JScrollPane(table));
+	    */
+		//table.setEnabled(false);
 		
+		
+	
+		
+		JPanel tablePanel = new JPanel(new BorderLayout());
+		tableModel = this.controller.getAllContractors();
+		JTable table = new JTable(tableModel);
+		JScrollPane scrollPane = new JScrollPane(table);
+		tablePanel.add(scrollPane);
 		return tablePanel;
 	}
 	

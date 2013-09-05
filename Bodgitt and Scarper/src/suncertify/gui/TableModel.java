@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
 
-	private String [] headerTitles = {"Rec ID","Name", "Location",
+	private String [] headerTitles = {"Name", "Location",
 									 "Specialties", "size, ", "rate",
 									 "Owner"};
 	
@@ -31,11 +31,18 @@ public class TableModel extends AbstractTableModel {
         rowValues[column] = obj;
     }
     
-    public void addRecord(String[] record) {              
-        this.records.add(record);
+    public void addSubcontractorRecord(String[] record) {  
+    	this.records.add(record);
     }
     
-    public void addRecord() {
+    public void addSubcontractorRecord() {
+    }
+    
+    public boolean isCellEditable(int row, int column) {
+        return false;
     }
 
+    public String getColumnName(int column) {
+        return headerTitles[column];
+    }
 }

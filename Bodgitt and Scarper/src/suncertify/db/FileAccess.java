@@ -144,7 +144,6 @@ public class FileAccess {
 	 
 	
 	 public static String[] read(int recNo) throws RecordNotFoundException{
-		 //logger.entering("DataDBAccess", "read", recNo);
 		 logger.info("Attempting to read record number: " + recNo);
 		 
 		 try{

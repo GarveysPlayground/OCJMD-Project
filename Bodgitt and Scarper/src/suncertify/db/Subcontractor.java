@@ -34,7 +34,7 @@ public class Subcontractor {
 	 public Subcontractor(String name, String location, String specialities,
 			 			String size, String rate, String owner){
 
-}
+	 }
 	 
 	 public String getName(){
 		 return this.name;
