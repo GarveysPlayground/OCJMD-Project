@@ -45,6 +45,8 @@ public class MainWindowView {
 	
 	private TableController controller = new TableController();
 	
+	private DialogBoxViews dialogs = new DialogBoxViews();
+	
 	JTable table;
 	
 	public void MainWindowView(){
@@ -66,7 +68,8 @@ public class MainWindowView {
 		}
 
 	private JPanel makeBookPanel() {
-		JButton bookButton = new JButton("Book");
+		bookButton = new JButton("Book");
+		bookButton.addActionListener(new bookContractors());
 		bookPanel.add(BorderLayout.EAST, bookButton);
 		JButton unbookButton = new JButton("Unbook");
 		bookPanel.add(BorderLayout.EAST, unbookButton);
@@ -104,20 +107,25 @@ public class MainWindowView {
 	}
 	
 	private class searchContractors implements ActionListener{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			String[] criteria = new String[2];
 			criteria[0] = nameSearch.getText();
-			criteria[1] = locationSearch.getText();
-			
+			criteria[1] = locationSearch.getText();			
 			tableModel = controller.getContractors(criteria);
 			refreshTable();
-			
-		}
-		
+		}		
 	}
+
+	private class bookContractors implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int recNo = table.getSelectedRow();
+			dialogs.bookContractorWindow();
+			System.out.println("Record number you selected is: " + recNo);
+		}		
+	}
+	
 	
 	private void refreshTable() {
         this.table.setModel(this.tableModel);       
