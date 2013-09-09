@@ -8,10 +8,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import suncertify.db.Data;
+import suncertify.db.RecordNotFoundException;
 
 public class MainWindowView {
 	
@@ -121,11 +125,51 @@ public class MainWindowView {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int recNo = table.getSelectedRow();
-			dialogs.bookContractorWindow();
-			System.out.println("Record number you selected is: " + recNo);
+
+			String customerID = "initial";
+			customerID = (String) JOptionPane.showInputDialog(tablePanel,
+						 "Please enter the Customer ID", 
+						 "Booking SubContractor", 3);		
+			if(customerID != null && customerID.length() == 8 && isInteger(customerID)){
+				System.out.println("Valid");
+			
+				
+				
+				Data data = new Data();
+				try {
+					String[] cat = data.read(recNo);
+					System.out.println("Booking recNo :" + recNo);
+					for(int i = 0; i< cat.length; i++){
+						System.out.println(cat[i]);
+					}
+				} catch (RecordNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}			
+			
+		
+			
+			
+			}else{
+				JOptionPane.showMessageDialog(tablePanel,
+					    "Record not booked due to:\n Incorrect data type or \n user cancellation",
+					    "Record not booked",
+					    JOptionPane.ERROR_MESSAGE);
+				System.out.println("not valiid");
+			}
+						
 		}		
 	}
 	
+	public boolean isInteger( String input ) {
+	    try {
+	        Integer.parseInt( input );
+	        return true;
+	    }
+	    catch( Exception e ) {
+	        return false;
+	    }
+	}
 	
 	private void refreshTable() {
         this.table.setModel(this.tableModel);       

@@ -29,4 +29,12 @@ public class TableController {
 		allValues[1] =  " ";		
 		return getContractors(allValues);
 	}
+	
+	public void updateContractor(int record, String Customer){
+	String[] data = null;
+	
+	//dbConnect.update(record, data[]);
+	}
+
 }
+
