@@ -26,12 +26,6 @@ public class TableModel extends AbstractTableModel {
 		return this.records.size();
 	}
 	
-	public int getRowNo(Object[] rowValues) {
-		for(int i = 0; i<=records.size(); i++){
-			
-		}
-		return this.records.size();
-	}
 
 	public Object getValueAt(int row, int column) {
 		String[] rowValues = this.records.get(row);
@@ -48,6 +42,12 @@ public class TableModel extends AbstractTableModel {
     
     public void addSubcontractorRecord(String[] record) {  
     	this.records.add(record);
+    }
+    
+    public  String getSubcontractorRecord(int row, int column) {  
+    	String[] rowValues = this.records.get(row);
+    	System.out.println(rowValues[0]);
+        return rowValues[column];
     }
     
     public void addSubcontractorRecord() {

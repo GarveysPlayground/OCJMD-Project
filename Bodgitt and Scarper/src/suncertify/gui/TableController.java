@@ -31,6 +31,22 @@ public class TableController {
 		return getContractors(allValues);
 	}
 	
+	public String[] getSelectedContractor(int row, int column){
+		TableRecs = new TableModel();
+		String recordConstants[] = new String[6];
+		for(int i = 0; i <= 5; i++){
+		String record = TableRecs.getSubcontractorRecord(row, i);
+		System.out.println(record);
+		recordConstants[i] = record;
+		}
+		return recordConstants;
+	}
+	
+	public int[] getContractorRecNo(String[] criteria) throws RecordNotFoundException{
+		int[] recNo = dbConnect.find(criteria);
+		return recNo;
+	}
+	
 	public void updateContractor(int record, String Customer){
 	//String[] data = null;
 	System.out.println("I am being called");
