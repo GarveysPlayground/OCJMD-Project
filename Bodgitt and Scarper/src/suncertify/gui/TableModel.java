@@ -6,12 +6,17 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String [] headerTitles = {"Name", "Location",
 									 "Specialties", "size, ", "rate",
 									 "Owner"};
 	
 	private ArrayList<String[]> records = new ArrayList<String[]>();
-	
+	 
 	public int getColumnCount() {
 		return this.headerTitles.length;
 		
