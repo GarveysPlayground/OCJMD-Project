@@ -125,32 +125,17 @@ public class MainWindowView {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int recNo = table.getSelectedRow();
-			
-
 			String customerID = "initial";
 			customerID = (String) JOptionPane.showInputDialog(tablePanel,
 						 "Please enter the Customer ID", 
 						 "Booking SubContractor", 3);		
 			if(customerID != null && customerID.length() == 8 && isInteger(customerID)){
-				System.out.println("Valid");
-			
+				System.out.println("Valid");				
+				
+				controller.updateContractor(recNo, customerID);
+				refreshTable();
 				
 				
-				Data data = new Data();
-				try {
-					String[] cat = data.read(recNo);
-					System.out.println("Booking recNo :" + recNo);
-					for(int i = 0; i< cat.length; i++){
-						System.out.println(cat[i]);
-					}
-				} catch (RecordNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}			
-			
-		
-			
-			
 			}else{
 				JOptionPane.showMessageDialog(tablePanel,
 					    "Record not booked due to:\n Incorrect data type or \n user cancellation",
@@ -158,8 +143,7 @@ public class MainWindowView {
 					    JOptionPane.ERROR_MESSAGE);
 				System.out.println("not valiid");
 			}
-						
-		}		
+		}				
 	}
 	
 	public boolean isInteger( String input ) {

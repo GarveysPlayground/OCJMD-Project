@@ -25,6 +25,13 @@ public class TableModel extends AbstractTableModel {
 	public int getRowCount() {
 		return this.records.size();
 	}
+	
+	public int getRowNo(Object[] rowValues) {
+		for(int i = 0; i<=records.size(); i++){
+			
+		}
+		return this.records.size();
+	}
 
 	public Object getValueAt(int row, int column) {
 		String[] rowValues = this.records.get(row);
@@ -34,6 +41,9 @@ public class TableModel extends AbstractTableModel {
     public void setValueAt(Object obj, int row, int column) {
         Object[] rowValues = this.records.get(row);
         rowValues[column] = obj;
+        fireTableDataChanged();
+        
+        System.out.println("row values object is " + rowValues);
     }
     
     public void addSubcontractorRecord(String[] record) {  

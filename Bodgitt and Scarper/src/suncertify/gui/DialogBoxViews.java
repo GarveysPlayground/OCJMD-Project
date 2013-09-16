@@ -43,6 +43,7 @@ public class DialogBoxViews{
 		connectButton.addActionListener(new selectFile());
 
 		dbFile = new JTextField(20);
+		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
 		JLabel nameLabel = new JLabel("DATABASE:");
 		dbFile.add(nameLabel);
 		databasePanel.add(BorderLayout.CENTER, nameLabel);
