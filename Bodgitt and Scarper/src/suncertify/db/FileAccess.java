@@ -1,10 +1,13 @@
 package suncertify.db;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import suncertify.gui.MainWindowView;
 
 
 
@@ -43,9 +46,9 @@ public class FileAccess {
 	 
 	 public static void FileAccess() throws RecordNotFoundException, IOException {
  
-		String Location = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\";
-		connectToDB(Location);
-		initial_offset = getInitialOffset();
+		//String Location = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\";
+		//connectToDB(Location);
+		//initial_offset = getInitialOffset();
 		
 		
 		 //getAllRecords();
@@ -59,10 +62,17 @@ public class FileAccess {
 		 newRec[5] = "";
 	}
 	 
-	 public static void connectToDB(String dbLocation) throws FileNotFoundException {
+	 public static void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
+		 
+		 
 		 	logger.entering("FileAccess", "connectToDB", dbLocation);
-		 	logger.info("Connecting to Database");
-			database = new RandomAccessFile(dbLocation + databaseName, "rw");
+		 	logger.info("Connecting to Database dbLocation");
+			database = new RandomAccessFile(new File(dbLocation, databaseName), "rw");;
+			
+				initial_offset = getInitialOffset();
+			
+			MainWindowView gui = new MainWindowView();
+			gui.MainWindowView();
 	 }
 	 
 	 

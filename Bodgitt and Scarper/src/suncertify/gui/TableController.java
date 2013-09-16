@@ -9,13 +9,13 @@ public class TableController {
 	
 	public TableModel getContractors(String [] criteria){
 		TableModel TableRecs = new TableModel();
-		  
 	    try {
 	    	String[] record;
 			int[] recordNumbers = dbConnect.find(criteria);
 			for(int i = 0; i < recordNumbers.length;i++){
 				record = dbConnect.read(recordNumbers[i]);
 				TableRecs.addSubcontractorRecord(record);
+				//System.out.println("find returning:" + recordNumbers[i]);
 			}
 		} catch (RecordNotFoundException e) {
 			
@@ -31,9 +31,9 @@ public class TableController {
 	}
 	
 	public void updateContractor(int record, String Customer){
-	String[] data = null;
+	//String[] data = null;
 	
-	//dbConnect.update(record, data[]);
+	//dbConnect.update(record, Customer);
 	}
 
 }

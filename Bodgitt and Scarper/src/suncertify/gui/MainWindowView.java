@@ -125,6 +125,7 @@ public class MainWindowView {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int recNo = table.getSelectedRow();
+			
 
 			String customerID = "initial";
 			customerID = (String) JOptionPane.showInputDialog(tablePanel,
