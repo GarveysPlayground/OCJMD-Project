@@ -124,15 +124,19 @@ public class MainWindowView {
 	private class bookContractors implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int recNo = table.getSelectedRow();
+			int rowNo = table.getSelectedRow();
 			String customerID = "initial";
 			customerID = (String) JOptionPane.showInputDialog(tablePanel,
 						 "Please enter the Customer ID", 
 						 "Booking SubContractor", 3);		
-			if(customerID != null && customerID.length() == 8 && isInteger(customerID)){
-				System.out.println("Valid");				
-				
-				controller.updateContractor(recNo, customerID);
+			if(customerID != null && customerID.length() == 8 && isInteger(customerID)){		
+							
+				try {
+					controller.updateContractor(rowNo, customerID);
+				} catch (RecordNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}		
 				refreshTable();
 				
 				
@@ -145,6 +149,9 @@ public class MainWindowView {
 			}
 		}				
 	}
+	
+	
+	
 	
 	public boolean isInteger( String input ) {
 	    try {

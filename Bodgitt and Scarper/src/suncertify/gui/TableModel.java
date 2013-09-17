@@ -37,7 +37,6 @@ public class TableModel extends AbstractTableModel {
         rowValues[column] = obj;
         fireTableDataChanged();
         
-        System.out.println("row values object is " + rowValues);
     }
     
     public void addSubcontractorRecord(String[] record) {  

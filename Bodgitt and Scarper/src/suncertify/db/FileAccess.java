@@ -68,8 +68,7 @@ public class FileAccess {
 		 	logger.entering("FileAccess", "connectToDB", dbLocation);
 		 	logger.info("Connecting to Database dbLocation");
 			database = new RandomAccessFile(new File(dbLocation, databaseName), "rw");;
-			
-				initial_offset = getInitialOffset();
+			initial_offset = getInitialOffset();
 			
 			MainWindowView gui = new MainWindowView();
 			gui.MainWindowView();
@@ -262,6 +261,15 @@ public class FileAccess {
 	 
 	 
 	 public static int [] find(String [] criteria) throws RecordNotFoundException{
+		 
+		 String[] allColumns = new String[6];		 
+		 System.arraycopy(criteria, 0, allColumns, 0, criteria.length);
+		 criteria = allColumns;		 
+		 for(int i = 0 ; i < allColumns.length; i++){
+			 if (allColumns[i] == null){allColumns[i] = "";}
+		 }
+		  
+		 
 		 int counter = 0;
 		 int totalRecords = getNoOfRecords();
 		 int[] AllRecords = new int[totalRecords];	
@@ -273,7 +281,11 @@ public class FileAccess {
 			
 		 for(int i = 0; i < totalRecords; i++){
 			 String [] record = read(i);
-			 if(record[0].contains(criteria[0]) && record[1].contains(criteria[1])){
+			 if(record[0].contains(allColumns[0]) && 
+				record[1].contains(allColumns[1]) &&
+				record[2].contains(allColumns[2]) &&
+				record[3].contains(allColumns[3]) &&
+				record[4].contains(allColumns[4])){
 					 AllRecords[counter] = i;
 					 counter++;
 			 }

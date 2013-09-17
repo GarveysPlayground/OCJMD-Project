@@ -31,26 +31,40 @@ public class TableController {
 		return getContractors(allValues);
 	}
 	
-	public String[] getSelectedContractor(int row, int column){
-		TableRecs = new TableModel();
-		String recordConstants[] = new String[6];
-		for(int i = 0; i <= 5; i++){
-		String record = TableRecs.getSubcontractorRecord(row, i);
-		System.out.println(record);
-		recordConstants[i] = record;
-		}
-		return recordConstants;
+	public String[] getSelectedContractor(int rowIndex){
+		int columns = TableRecs.getColumnCount();  
+	        String[] s = new String[columns];  
+	        for(int col = 0; col < columns; col++)  
+	        {  
+	            Object colValue = TableRecs.getValueAt(rowIndex, col);  
+	            //System.out.println(colValue.toString());
+	            s[col] = colValue.toString();  
+	        }  
+	       return s;
+	}
+		
+	public void updateContractor(int row, String Customer) throws RecordNotFoundException{
+	TableRecs.setValueAt(Customer, row, 5);
+
+	String[] data = getSelectedContractor(row); 
+	System.out.println(data[0]);
+	System.out.println("Got record");
+	
+	
+	int[] recNo = dbConnect.find(data);
+	System.out.println("REcord to update is : " + recNo[0]);
+	if(recNo.length == 1){
+		dbConnect.update(recNo[0], data);
+	}else{
+		
 	}
 	
-	public int[] getContractorRecNo(String[] criteria) throws RecordNotFoundException{
-		int[] recNo = dbConnect.find(criteria);
-		return recNo;
-	}
+	System.out.println("Controller: Update called");
+	//TableRecs.getSubcontractorRecord(row, 5);
 	
-	public void updateContractor(int record, String Customer){
-	//String[] data = null;
-	System.out.println("I am being called");
-	TableRecs.setValueAt(Customer, record, 5);
+	
+	//TableRecs.setValueAt(Customer, record, 5);
+	
 	
 	}
 

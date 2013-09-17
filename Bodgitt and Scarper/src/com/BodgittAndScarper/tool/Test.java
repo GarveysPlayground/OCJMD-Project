@@ -21,25 +21,43 @@ public class Test {
 		
 		System.out.println("Hello world");
 		
-		 String[] newRec = new String[6];
-		 newRec[0] = "BBB";
-		 newRec[1] = "Jericho";
-		 newRec[2] = "Plumbing";
-		 newRec[3] = "4";
-		 newRec[4] = "$80.00";
-		 newRec[5] = "";
+		 String[] newRec = new String[5];
+		 newRec[0] = "Fred & Nobby";
+		 newRec[1] = "Xanadu";
+		 newRec[2] = "Air Conditioning, Drywall, Heating";
+		newRec[3] = "10";
+		 newRec[4] = "$65.00";
+		 //newRec[5] = "";
+		// newRec[2] = "Air Conditioning, Drywall, Heating";
+		// newRec[3] = "10";
+		// newRec[4] = "$65.00";
+		// newRec[5] = "";
 		 
 		 Data data = new Data();
 		
 		
 		FileAccess.FileAccess();
 
+		FileAccess.connectToDB("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
+		int[] recNo = data.find(newRec);
+		
+		if(recNo.length == 1){
+		System.out.println("--->");
+		System.out.println(recNo[0]);
+		System.out.println("<---");
+		}else{
+			System.out.println("--->");
+			System.out.println("Found multiple");
+			System.out.println("<---");
+			
+		}
+		
 		//data.delete(35);
 		//data.update(13, newRec);
 		//int newRecNo = data.create(newRec);
 		//System.out.println("\n\n\n"+ newRecNo); 
-		MainWindowView gui = new MainWindowView();
-		gui.MainWindowView();
+		//MainWindowView gui = new MainWindowView();
+		//gui.MainWindowView();
 		//gui.makeStandaloneWindow();
 	
 		/*
