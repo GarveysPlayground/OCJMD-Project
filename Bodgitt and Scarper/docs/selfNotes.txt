@@ -16,3 +16,4 @@ Subcontractor class are all set to Stings. No distinction between int / floats /
 
 do some exception handling in the DAO
 
+Why does RMI need DBMain RemoteException

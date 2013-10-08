@@ -137,6 +137,7 @@ public class MainWindowView {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}		
+				
 				refreshTable();
 				
 				
@@ -147,6 +148,7 @@ public class MainWindowView {
 					    JOptionPane.ERROR_MESSAGE);
 				System.out.println("not valiid");
 			}
+			
 		}				
 	}
 	
@@ -164,6 +166,7 @@ public class MainWindowView {
 	}
 	
 	private void refreshTable() {
+		tableModel.fireTableDataChanged();
         this.table.setModel(this.tableModel);       
     }
 	

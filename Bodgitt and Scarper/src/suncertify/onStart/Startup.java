@@ -10,7 +10,6 @@ public class Startup {
 	 
 	 public Startup(String[] args) {
 		 if (args.length == 0 || "alone".equalsIgnoreCase(args[0])) {
-	            // Create an instance of the main application window
 	            DialogBoxViews connection = new DialogBoxViews();
 	            connection.connectionType("alone");
 	        } else if ("server".equalsIgnoreCase(args[0])) {
