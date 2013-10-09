@@ -21,6 +21,7 @@ import suncertify.db.FileAccess;
 public class DialogBoxViews{
 	
 	JTextField dbFile;
+	JTextField rmiport;
 	JFrame frame;
 	
 	public void connectionType(String connectionType){
@@ -28,7 +29,7 @@ public class DialogBoxViews{
 			databaseLocationWindow();
            
         } else if (connectionType == "server") {
-          
+        	rmiConnectionWindow();
         }
 	}
 	
@@ -49,6 +50,35 @@ public class DialogBoxViews{
 		databasePanel.add(BorderLayout.CENTER, nameLabel);
 		databasePanel.add(BorderLayout.CENTER, dbFile);
 		databasePanel.add(BorderLayout.CENTER, connectButton);
+		frame.getContentPane().add(BorderLayout.CENTER, databasePanel);		
+		frame.setVisible(true);
+	}
+	
+	public void rmiConnectionWindow(){
+		frame = new JFrame();
+		frame.setTitle("Bodgitt and Scarper, LLC: Database location, Network Connection");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(600,100);
+		
+		dbFile = new JTextField(20);
+		dbFile.setText("Localhost");
+		JLabel nameLabel = new JLabel("HOST:");
+		dbFile.add(nameLabel);
+		
+		rmiport = new JTextField(20);
+		rmiport.setText("8080");
+		JLabel portLabel = new JLabel("PORT:");
+		rmiport.add(portLabel);
+		
+		JPanel databasePanel = new JPanel();
+		JButton connectButton = new JButton("Connect");
+		connectButton.addActionListener(new rmiConnect());
+		
+		databasePanel.add(BorderLayout.CENTER, nameLabel);
+		databasePanel.add(BorderLayout.CENTER, dbFile);
+		databasePanel.add(BorderLayout.CENTER, portLabel);
+		databasePanel.add(BorderLayout.CENTER, rmiport);
+		databasePanel.add( BorderLayout.CENTER,connectButton);
 		frame.getContentPane().add(BorderLayout.CENTER, databasePanel);		
 		frame.setVisible(true);
 	}
@@ -78,6 +108,17 @@ public class DialogBoxViews{
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	private class rmiConnect implements ActionListener{
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			System.out.println("POP");	
+		}
+			
+			
 	}
 	
 	
