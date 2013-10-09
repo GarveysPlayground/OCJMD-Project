@@ -1,11 +1,10 @@
-package suncertify.rmi;
+package suncertify.db;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import suncertify.db.DuplicateKeyException;
-import suncertify.db.RecordNotFoundException;
 
 
-public interface DBMainRmiConnector {
+public interface DBMainRmiConnector extends Remote{
   // Reads a record from the file. Returns an array where each
   // element is a record value.
   public String [] read(int recNo) throws RecordNotFoundException, RemoteException;
