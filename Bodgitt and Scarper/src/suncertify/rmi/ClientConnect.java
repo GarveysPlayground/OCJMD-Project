@@ -12,7 +12,7 @@ public class ClientConnect {
 	
 	 private static Logger logger = Logger.getLogger("suncertify.rmi");
 	 
-	 public static contractorRemote getConnection(String host, String port)
+	 public static ContractorDBRemote getConnection(String host, String port)
 	            throws RemoteException {
 		 
 		 logger.info("Establishing Client Connection");
@@ -21,7 +21,7 @@ public class ClientConnect {
 		 
 		 try {
 			DBFactory factory =  (DBFactory) Naming.lookup(url);
-			return (contractorRemote) factory.getClient();
+			return (ContractorDBRemote) factory.getClient();
 			
 		} catch (MalformedURLException e) {
 			System.err.println("Invalid URL:" + e.getMessage());
