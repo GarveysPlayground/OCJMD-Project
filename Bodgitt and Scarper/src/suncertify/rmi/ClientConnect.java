@@ -12,12 +12,11 @@ public class ClientConnect {
 	
 	 private static Logger logger = Logger.getLogger("suncertify.rmi");
 	 
-	 public static ContractorDBRemote getConnection(String host, String port)
+	 public static ContractorDBRemote getConnection(String host, int port)
 	            throws RemoteException {
 		 
 		 logger.info("Establishing Client Connection");
 		 String url = "rmi://" + host + ":" + port + "/Bodgitt&Scarper";
-		 
 		 
 		 try {
 			DBFactory factory =  (DBFactory) Naming.lookup(url);

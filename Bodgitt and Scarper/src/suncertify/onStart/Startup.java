@@ -11,7 +11,8 @@ public class Startup {
 	 public Startup(String[] args) {
 		 if (args.length == 0 || "alone".equalsIgnoreCase(args[0])) {
 	            DialogBoxViews connection = new DialogBoxViews();
-	           // connection.connectionType("alone");
+	            connection.connectionType("");
+	            //connection.connectionType("alone");
 	            connection.connectionType("server");
 	        } else if ("server".equalsIgnoreCase(args[0])) {
 	           // new ServerWindow();

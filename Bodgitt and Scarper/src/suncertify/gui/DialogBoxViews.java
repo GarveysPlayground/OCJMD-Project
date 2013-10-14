@@ -5,9 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.StringTokenizer;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,13 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import suncertify.db.FileAccess;
+import suncertify.rmi.ClientConnect;
+import suncertify.rmi.RMIManager;
 
 
 
 public class DialogBoxViews{
 	
 	JTextField dbFile;
-	JTextField rmiport;
+	JTextField rmiPort;
 	JFrame frame;
 	
 	public void connectionType(String connectionType){
@@ -30,6 +33,8 @@ public class DialogBoxViews{
            
         } else if (connectionType == "server") {
         	rmiConnectionWindow();
+        } else if (connectionType == "") {
+        	rmiClient();
         }
 	}
 	
@@ -54,32 +59,63 @@ public class DialogBoxViews{
 		frame.setVisible(true);
 	}
 	
-	public void rmiConnectionWindow(){
+	public void rmiClient(){
 		frame = new JFrame();
-		frame.setTitle("Bodgitt and Scarper, LLC: Database location, Network Connection");
+		frame.setTitle("Bodgitt and Scarper, LLC: Network Connection");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,100);
+		frame.setSize(900,600);
 		
 		dbFile = new JTextField(20);
-		dbFile.setText("Localhost");
-		JLabel nameLabel = new JLabel("HOST:");
+		dbFile.setText("localhost");
+		JLabel nameLabel = new JLabel("Host:");
 		dbFile.add(nameLabel);
 		
-		rmiport = new JTextField(20);
-		rmiport.setText("8080");
+		rmiPort = new JTextField(20);
+		rmiPort.setText("4566");
 		JLabel portLabel = new JLabel("PORT:");
-		rmiport.add(portLabel);
+		rmiPort.add(portLabel);
+		
+		JPanel databasePanel = new JPanel();
+		JButton connectButton = new JButton("Connect");
+		connectButton.addActionListener(new clientConnecter());
+		
+		//BorderLayout.CENTER,
+		databasePanel.add(nameLabel,BorderLayout.CENTER);
+		databasePanel.add(dbFile,BorderLayout.CENTER);
+		databasePanel.add(portLabel,BorderLayout.CENTER);
+		databasePanel.add(rmiPort,BorderLayout.CENTER);
+		databasePanel.add(connectButton);
+		frame.getContentPane().add(databasePanel);		
+		frame.setVisible(true);
+	}
+	
+	public void rmiConnectionWindow(){
+		frame = new JFrame();
+		frame.setTitle("Bodgitt and Scarper, LLC: start Server");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(900,600);
+		
+		dbFile = new JTextField(20);
+		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
+		JLabel nameLabel = new JLabel("Database Location:");
+		dbFile.add(nameLabel);
+		
+		rmiPort = new JTextField(20);
+		rmiPort.setText("4566");
+		JLabel portLabel = new JLabel("PORT:");
+		rmiPort.add(portLabel);
 		
 		JPanel databasePanel = new JPanel();
 		JButton connectButton = new JButton("Connect");
 		connectButton.addActionListener(new rmiConnect());
 		
-		databasePanel.add(BorderLayout.CENTER, nameLabel);
-		databasePanel.add(BorderLayout.CENTER, dbFile);
-		databasePanel.add(BorderLayout.CENTER, portLabel);
-		databasePanel.add(BorderLayout.CENTER, rmiport);
-		databasePanel.add( BorderLayout.CENTER,connectButton);
-		frame.getContentPane().add(BorderLayout.CENTER, databasePanel);		
+		//BorderLayout.CENTER,
+		databasePanel.add(nameLabel,BorderLayout.CENTER);
+		databasePanel.add(dbFile,BorderLayout.CENTER);
+		databasePanel.add(portLabel,BorderLayout.CENTER);
+		databasePanel.add(rmiPort,BorderLayout.CENTER);
+		databasePanel.add(connectButton);
+		frame.getContentPane().add(databasePanel);		
 		frame.setVisible(true);
 	}
 	
@@ -110,12 +146,56 @@ public class DialogBoxViews{
 		}
 	}
 	
-	private class rmiConnect implements ActionListener{
+	
+	private class clientConnecter implements ActionListener{
+		ClientConnect client = new ClientConnect();
+		@Override
+		public void actionPerformed(ActionEvent e) {	
+			FileAccess connect = new FileAccess(); 
 		
+				
+				if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
+					JOptionPane.showMessageDialog(frame,
+					    "No Location/port entered!",
+					    "Inane error",
+					    JOptionPane.ERROR_MESSAGE);
+				}else{
+					int port = Integer.parseInt(rmiPort.getText());
+					try {
+						client.getConnection(dbFile.getText(), port);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				
+			
+		}
+	}
+	
+	private class rmiConnect implements ActionListener{
+		RMIManager rmiManage = new RMIManager();
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			System.out.println("POP");	
+			System.out.println("POP");
+			if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
+				JOptionPane.showMessageDialog(frame,
+				    "No Location/port entered!",
+				    "Inane error",
+				    JOptionPane.ERROR_MESSAGE);
+			}else{
+				int port = Integer.parseInt(rmiPort.getText());
+				
+				try {
+					rmiManage.startRegister(dbFile.getText(), port);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 		}
 			
 			

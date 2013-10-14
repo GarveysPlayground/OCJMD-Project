@@ -16,7 +16,7 @@ public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory{
     /**
      * The physical location of the database.
      */
-    private static String dbLocation = null;
+    private String dbLocation = null;
     
 	
    public DBFactoryImpl(String dbLocation) throws RemoteException{
@@ -26,6 +26,6 @@ public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory{
    public ContractorDBRemote getClient() throws RemoteException{
 	   return new ContractorDBremoteImpl(dbLocation);
    }
-   	
+  	
 
 }
