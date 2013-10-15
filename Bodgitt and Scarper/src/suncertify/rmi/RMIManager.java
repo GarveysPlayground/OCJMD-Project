@@ -10,7 +10,7 @@ public class RMIManager {
 	private static DBFactory dbFactory;
 	 private static Logger logger = Logger.getLogger("suncertify.rmi.RMIManager");
 	
-	public static void startRegister(String dbLocation, int rmiPort) throws RemoteException{
+	public void startRegister(String dbLocation, int rmiPort) throws RemoteException{
 		
 		dbFactory = new  DBFactoryImpl(dbLocation);
 		String host = "localhost";

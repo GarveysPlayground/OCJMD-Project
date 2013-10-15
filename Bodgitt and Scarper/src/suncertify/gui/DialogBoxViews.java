@@ -15,8 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import suncertify.db.Data;
 import suncertify.db.FileAccess;
-import suncertify.rmi.ClientConnect;
+import suncertify.onStart.Startup;
+import suncertify.rmi.ClientRemoteConnect;
 import suncertify.rmi.RMIManager;
 
 
@@ -30,7 +32,6 @@ public class DialogBoxViews{
 	public void connectionType(String connectionType){
 		if (connectionType == "alone") {
 			databaseLocationWindow();
-           
         } else if (connectionType == "server") {
         	rmiConnectionWindow();
         } else if (connectionType == "") {
@@ -46,7 +47,7 @@ public class DialogBoxViews{
 		
 		JPanel databasePanel = new JPanel();
 		JButton connectButton = new JButton("Connect");
-		connectButton.addActionListener(new selectFile());
+		connectButton.addActionListener(new selectLocalFile());
 
 		dbFile = new JTextField(20);
 		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
@@ -96,7 +97,7 @@ public class DialogBoxViews{
 		frame.setSize(900,600);
 		
 		dbFile = new JTextField(20);
-		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
+		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		JLabel nameLabel = new JLabel("Database Location:");
 		dbFile.add(nameLabel);
 		
@@ -119,11 +120,12 @@ public class DialogBoxViews{
 		frame.setVisible(true);
 	}
 	
-	private class selectFile implements ActionListener{
+	private class selectLocalFile implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {	
 			FileAccess connect = new FileAccess(); 
+			
 			try {
 				
 				if(dbFile.getText().length() == 0){
@@ -133,6 +135,7 @@ public class DialogBoxViews{
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
 				connect.connectToDB(dbFile.getText());
+				new Data(dbFile.getText());
 				}
 				
 				
@@ -148,12 +151,8 @@ public class DialogBoxViews{
 	
 	
 	private class clientConnecter implements ActionListener{
-		ClientConnect client = new ClientConnect();
 		@Override
-		public void actionPerformed(ActionEvent e) {	
-			FileAccess connect = new FileAccess(); 
-		
-				
+		public void actionPerformed(ActionEvent e) {					
 				if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
 					JOptionPane.showMessageDialog(frame,
 					    "No Location/port entered!",
@@ -162,15 +161,12 @@ public class DialogBoxViews{
 				}else{
 					int port = Integer.parseInt(rmiPort.getText());
 					try {
-						client.getConnection(dbFile.getText(), port);
+						ClientRemoteConnect.getConnection(dbFile.getText(), port);
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
-				
-				
-			
 		}
 	}
 	
@@ -190,6 +186,10 @@ public class DialogBoxViews{
 				
 				try {
 					rmiManage.startRegister(dbFile.getText(), port);
+					Startup star = null;
+					
+					
+					
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

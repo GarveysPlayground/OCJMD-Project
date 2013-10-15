@@ -1,10 +1,18 @@
 package suncertify.gui;
 
+import suncertify.db.DBMain;
 import suncertify.db.Data;
 import suncertify.db.RecordNotFoundException;
+import suncertify.rmi.ContractorDBRemote;
 
 
 public class TableController {
+	
+	
+
+	
+	
+	
 	Data dbConnect = new Data();
 	TableModel TableRecs = new TableModel();	
 	
@@ -37,7 +45,6 @@ public class TableController {
 	        for(int col = 0; col < columns; col++)  
 	        {  
 	            Object colValue = TableRecs.getValueAt(rowIndex, col);  
-	            //System.out.println(colValue.toString());
 	            s[col] = colValue.toString();  
 	        }  
 	       return s;
@@ -60,11 +67,7 @@ public class TableController {
 	}
 	
 	System.out.println("Controller: Update called");
-	//TableRecs.getSubcontractorRecord(row, 5);
-	
-	
-	//TableRecs.setValueAt(Customer, record, 5);
-	
+
 	
 	}
 

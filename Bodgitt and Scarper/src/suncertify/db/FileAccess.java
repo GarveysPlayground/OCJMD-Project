@@ -62,9 +62,8 @@ public class FileAccess {
 		 newRec[5] = "";
 	}
 	 
-	 public static void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
-		 
-		 
+	 public void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
+		 		 
 		 	logger.entering("FileAccess", "connectToDB", dbLocation);
 		 	logger.info("Connecting to Database dbLocation");
 			database = new RandomAccessFile(new File(dbLocation, databaseName), "rw");;

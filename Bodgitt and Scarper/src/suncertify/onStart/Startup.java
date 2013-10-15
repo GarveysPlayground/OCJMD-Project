@@ -7,19 +7,42 @@ import suncertify.gui.DialogBoxViews;
 public class Startup {
 
 	 private Logger logger = Logger.getLogger("startUp");
+	 private static String connectionType = null;
 	 
 	 public Startup(String[] args) {
-		 if (args.length == 0 || "alone".equalsIgnoreCase(args[0])) {
-	            DialogBoxViews connection = new DialogBoxViews();
-	            connection.connectionType("");
-	            //connection.connectionType("alone");
-	           //connection.connectionType("server");
-	        } else if ("server".equalsIgnoreCase(args[0])) {
-	           // new ServerWindow();
-	        }
+		 DialogBoxViews connection = new DialogBoxViews();
+		 if (args.length == 0) {	           
+			// setConnectionType("remote");   
+			// connection.connectionType("");
+	            	           
+			  connection.connectionType("alone");
+	          setConnectionType("local");
+			
+			 //setConnectionType("server");  
+			 //connection.connectionType("server");
+			 		 
+	            
+	        }else if ("server".equalsIgnoreCase(args[0])) {
+	           connection.connectionType("server");
+	        }else if ("alone".equalsIgnoreCase(args[0])) {
+		       connection.connectionType("alone");
+		    }
 	}
+	 
+	 
+	 public void setConnectionType(String type)
+	 {
+	     connectionType = type;
+	     
+	 }
+	 
+	 public static String getConnectionType()
+	 {
+	     return connectionType;
+	 }
+
 
 	public static void main(String[] args){
-			 Startup start = new Startup(args);
+			Startup start = new Startup(args);
 	}
 }

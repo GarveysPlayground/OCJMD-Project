@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class ClientConnect {
+public class ClientRemoteConnect {
 	
 	 private static Logger logger = Logger.getLogger("suncertify.rmi");
 	 

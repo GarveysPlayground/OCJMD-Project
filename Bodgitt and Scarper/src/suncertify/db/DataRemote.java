@@ -1,60 +1,59 @@
 package suncertify.db;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
 import java.util.logging.Logger;
 
 public class DataRemote implements DBMainRmiConnector{
 
-	private static FileAccess database = null;
+	private DBMain database = null;
 	private Logger logger = Logger.getLogger("suncertify.db");
 	
+	public DataRemote(String dbLocation) throws FileNotFoundException, IOException{
+		database = new Data(dbLocation);
+	}
 	@Override
-	public String[] read(int recNo) throws RecordNotFoundException{
-			return FileAccess.read(recNo);
+	public String[] read(int recNo) throws RecordNotFoundException, RemoteException{
+			return database.read(recNo);
 	}
 
 	@Override
-	public void update(int recNo, String[] data) throws RecordNotFoundException {
-			FileAccess.update(recNo, data);		
+	public void update(int recNo, String[] data) throws RecordNotFoundException, RemoteException {
+		database.update(recNo, data);		
 	}
 
 	@Override
-	public void delete(int recNo) throws RecordNotFoundException {
-			FileAccess.delete(recNo);
+	public void delete(int recNo) throws RecordNotFoundException, RemoteException {
+		database.delete(recNo);
 	}
 
 	@Override
-	public int[] find(String[] criteria) throws RecordNotFoundException {
-		return FileAccess.find(criteria);
+	public int[] find(String[] criteria) throws RecordNotFoundException, RemoteException {
+		return database.find(criteria);
 	}
 
 	@Override
-	public int create(String[] data) throws DuplicateKeyException {
+	public int create(String[] data) throws DuplicateKeyException, RemoteException {
 		int newRecord = 0;	
-		try {
-			newRecord = FileAccess.create(data);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		newRecord = database.create(data);
 		return newRecord;
 	}
 
 	@Override
-	public void lock(int recNo) throws RecordNotFoundException {
+	public void lock(int recNo) throws RecordNotFoundException, RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void unlock(int recNo) throws RecordNotFoundException {
+	public void unlock(int recNo) throws RecordNotFoundException, RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean isLocked(int recNo) throws RecordNotFoundException {
+	public boolean isLocked(int recNo) throws RecordNotFoundException, RemoteException {
 		// TODO Auto-generated method stub
 		return false;
 	}
