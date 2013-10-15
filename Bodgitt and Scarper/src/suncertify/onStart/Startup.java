@@ -13,7 +13,7 @@ public class Startup {
 	            DialogBoxViews connection = new DialogBoxViews();
 	            connection.connectionType("");
 	            //connection.connectionType("alone");
-	            connection.connectionType("server");
+	           //connection.connectionType("server");
 	        } else if ("server".equalsIgnoreCase(args[0])) {
 	           // new ServerWindow();
 	        }

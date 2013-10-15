@@ -15,18 +15,21 @@ public class ClientConnect {
 	 public static ContractorDBRemote getConnection(String host, int port)
 	            throws RemoteException {
 		 
-		 logger.info("Establishing Client Connection");
-		 String url = "rmi://" + host + ":" + port + "/Bodgitt&Scarper";
+		
+		 logger.info("Establishing Client Connection to host : " + host);
+		 String url = "rmi://" + host + ":" + port + "/BodgittScarper";
+		 logger.info("Client connecting to: " + url);
 		 
 		 try {
 			DBFactory factory =  (DBFactory) Naming.lookup(url);
 			return (ContractorDBRemote) factory.getClient();
 			
-		} catch (MalformedURLException e) {
+		 }catch (MalformedURLException e) {
 			System.err.println("Invalid URL:" + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage(), e);
             throw new RemoteException("Problem with Room connection: ", e);
-		} catch (NotBoundException e) {
+            
+		 }catch (NotBoundException e) {
 			System.err.println("Not bound Exception: " + e.getMessage());
             throw new RemoteException("Not bound Exception: ", e);
 		}
