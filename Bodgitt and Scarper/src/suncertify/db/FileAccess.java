@@ -50,22 +50,9 @@ public class FileAccess {
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
 		 
-		// MainWindowView gui = new MainWindowView();
-		// gui.MainWindowView();
+
 
 	}
-	 
-/*	 public void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
-		 		 
-		 	logger.entering("FileAccess", "connectToDB", dbLocation);
-		 	logger.info("Connecting to Database dbLocation");
-			database = new RandomAccessFile(new File(dbLocation), "rw");;
-			initial_offset = getInitialOffset();
-			
-			MainWindowView gui = new MainWindowView();
-			gui.MainWindowView();
-	 }
-*/	 
 	 
 	 private static int getInitialOffset() throws IOException{
 		 //logger.entering("FileAccess", "getInitialOffset");

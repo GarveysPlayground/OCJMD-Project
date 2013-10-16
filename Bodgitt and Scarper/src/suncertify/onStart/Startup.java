@@ -11,19 +11,18 @@ public class Startup {
 	 private static String connectionType = null;
 	 
 	 public Startup(String[] args) {
-		 DialogBoxViews connection = new DialogBoxViews();
+		// DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
 			// setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
-	         setConnectionType("alone");
+	       //  setConnectionType("alone");
 			
-			// setConnectionType("remote");  
+			setConnectionType("server");  
 			// connection.connectionType("server");
-			 MainWindowView gui = new MainWindowView();
-			 gui.MainWindowView();	 
-	            
+	 
+			 new MainWindowView();
 	        }else if ("server".equalsIgnoreCase(args[0])) {
 	        //   connection.connectionType("server");
 	        }else if ("alone".equalsIgnoreCase(args[0])) {

@@ -49,47 +49,26 @@ public class MainWindowView {
 	
 	private TableModel tableModel = new TableModel();
 	
-	private TableController controller = new TableController();
+	private TableController controller;
 	
 	private DialogBoxViews dialogs = new DialogBoxViews();
 	
 	
 	JTable table;
 	
-	public void MainWindowView(){
-		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindowFrame.setSize(800,600);
-		mainWindowFrame.setResizable(false);		
-		
+	public MainWindowView(){
+		System.out.println("Innitiate");
 		if(appType == "alone"){	
-			System.out.println("making alone thinger");
 			dialogs.databaseLocationWindow();
 			
 		}else if(appType == "remote"){
-		
+			dialogs.rmiClient();
+		}else if(appType == "server"){
+			dialogs.rmiConnectionWindow();
 		}
+	
 
-		
-		
-		
-		
-	/*	mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindowFrame.setSize(800,600);
-		mainWindowFrame.setResizable(false);
-		
-		tablePanel =  makeTablePanel();
-		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
-		System.out.println("Done");
-		bookPanel = makeBookPanel();
-		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
-		searchPanel = makeSearchPanel();
-		mainWindowFrame.add(searchPanel, BorderLayout.CENTER);
-		mainWindowFrame.setVisible(true);
-		*/
-		}
-
+	}
 	public void setupMainWindow(){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -205,6 +184,7 @@ public class MainWindowView {
 		tableModel.fireTableDataChanged();
         this.table.setModel(this.tableModel);       
     }
+
 	
 
 }

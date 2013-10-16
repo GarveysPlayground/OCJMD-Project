@@ -16,17 +16,23 @@ public class TableController {
 	
 	
 	
-	Data localConnection = new Data();
+	
 	TableModel TableRecs = new TableModel();	
 	String appType = Startup.getConnectionType();
 	private ContractorDBRemote remoteConnection = null;
+	private Data localConnection = null;
 	
-	public TableController(){
+	public TableController(String host, int port){
 		if(appType == "alone"){			
-			
+			localConnection = new Data();
 		
 		}else if(appType == "remote"){
-		
+			try {
+				remoteConnection = 	ClientRemoteConnect.getConnection(host, port);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -48,7 +54,7 @@ public class TableController {
 				//	return TableRecs;
 				}
 	    	}else if(appType == "remote"){
-	    		remoteConnection = 	ClientRemoteConnect.getConnection("localhost", 4566);
+	    		//remoteConnection = 	ClientRemoteConnect.getConnection("localhost", 4566);
 	    		 recordNumbers = remoteConnection.find(criteria);
 	    		System.out.println(recordNumbers.length);
 				for(int i = 0; i < recordNumbers.length;i++){
@@ -81,22 +87,33 @@ public class TableController {
 	}
 		
 	public void updateContractor(int row, String Customer) throws RecordNotFoundException{
-	TableRecs.setValueAt(Customer, row, 5);
-
-	String[] data = getSelectedContractor(row); 
-	System.out.println(data[0]);
-	System.out.println("Got record");
-	
-	
-	int[] recNo = localConnection.find(data);
-	System.out.println("REcord to update is : " + recNo[0]);
-	if(recNo.length == 1){
-		localConnection.update(recNo[0], data);
-	}else{
+		TableRecs.setValueAt(Customer, row, 5);
+		String[] data = getSelectedContractor(row); 		
+		//int[] recNo = localConnection.find(data);
+		int[] recNo = null;
+		if(appType == "alone"){			
+			recNo = localConnection.find(data);
 		
-	}
-	
-	System.out.println("Controller: Update called");
+		}else if(appType == "remote"){
+			try {
+				recNo = remoteConnection.find(data);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(recNo.length == 1 && appType == "alone"){
+			localConnection.update(recNo[0], data);
+		}else if(recNo.length == 1 && appType == "remote"){
+			try {
+				remoteConnection.update(recNo[0], data);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 
 	
 	}

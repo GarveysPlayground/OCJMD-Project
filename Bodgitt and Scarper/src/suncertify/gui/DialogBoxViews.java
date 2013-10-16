@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.StringTokenizer;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,8 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import suncertify.db.Data;
-import suncertify.db.FileAccess;
-import suncertify.onStart.Startup;
 import suncertify.rmi.ClientRemoteConnect;
 import suncertify.rmi.RMIManager;
 
@@ -35,7 +31,7 @@ public class DialogBoxViews{
 		frame.setTitle("Bodgitt and Scarper, LLC: Database location");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(600,100);
-		
+
 		JPanel databasePanel = new JPanel();
 		
 		JButton connectButton = new JButton("Connect");
@@ -56,6 +52,7 @@ public class DialogBoxViews{
 	}
 	
 	public void rmiClient(){
+		System.out.println("In RMICLIENT");
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Network Connection");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,9 +115,7 @@ public class DialogBoxViews{
 	private class selectLocalFile implements ActionListener{
 
 		@Override
-		public void actionPerformed(ActionEvent e) {	
-			//FileAccess connect = new FileAccess(); 
-			Data connect = new Data();
+		public void actionPerformed(ActionEvent e) {	 
 			try {
 				
 				if(dbFile.getText().length() == 0){
@@ -129,8 +124,8 @@ public class DialogBoxViews{
 					    "Inane error",
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
-				new Data(dbFile.getText());
-					connect = new Data(dbFile.getText());
+					new Data(dbFile.getText());
+					//connect = new Data(dbFile.getText());
 					MainWindowView gui = new MainWindowView();
 					gui.setupMainWindow();
 					frame.setVisible(false);
@@ -157,11 +152,13 @@ public class DialogBoxViews{
 					    "Inane error",
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
+					System.out.println("RUNNAWAY");
 					int port = Integer.parseInt(rmiPort.getText());
 					try {
 						ClientRemoteConnect.getConnection(dbFile.getText(), port);
-					//	MainWindowView gui = new MainWindowView();
-					//	 gui.MainWindowView();
+						frame.setVisible(false);
+						MainWindowView gui = new MainWindowView();
+						gui.setupMainWindow();
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -184,7 +181,7 @@ public class DialogBoxViews{
 				
 				try {
 					rmiManage.startRegister(dbFile.getText(), port);
-
+					//frame.setVisible(false);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
