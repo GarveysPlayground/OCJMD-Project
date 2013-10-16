@@ -28,6 +28,7 @@ public class TableController {
 		
 		}else if(appType == "remote"){
 			try {
+				System.out.println("Still good");
 				remoteConnection = 	ClientRemoteConnect.getConnection(host, port);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block

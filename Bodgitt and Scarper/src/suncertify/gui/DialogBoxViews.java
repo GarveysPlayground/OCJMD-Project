@@ -52,7 +52,6 @@ public class DialogBoxViews{
 	}
 	
 	public void rmiClient(){
-		System.out.println("In RMICLIENT");
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Network Connection");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -127,7 +126,7 @@ public class DialogBoxViews{
 					new Data(dbFile.getText());
 					//connect = new Data(dbFile.getText());
 					MainWindowView gui = new MainWindowView();
-					gui.setupMainWindow();
+					gui.setupMainWindow(dbFile.getText(),0);
 					frame.setVisible(false);
 				}
 				
@@ -152,13 +151,12 @@ public class DialogBoxViews{
 					    "Inane error",
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
-					System.out.println("RUNNAWAY");
 					int port = Integer.parseInt(rmiPort.getText());
 					try {
 						ClientRemoteConnect.getConnection(dbFile.getText(), port);
 						frame.setVisible(false);
 						MainWindowView gui = new MainWindowView();
-						gui.setupMainWindow();
+						gui.setupMainWindow(dbFile.getText(), port);
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

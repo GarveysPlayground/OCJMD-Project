@@ -69,13 +69,13 @@ public class MainWindowView {
 	
 
 	}
-	public void setupMainWindow(){
+	public void setupMainWindow(String host, int port){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindowFrame.setSize(800,600);
 		mainWindowFrame.setResizable(false);
 		
-		tablePanel =  makeTablePanel();
+		tablePanel =  makeTablePanel(host, port);
 		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
 		System.out.println("Done");
 		bookPanel = makeBookPanel();
@@ -116,8 +116,10 @@ public class MainWindowView {
 		return searchPanel;
 	}
 	
-	private JPanel makeTablePanel() {
+	private JPanel makeTablePanel(String host, int port) {
+		controller = new TableController(host, port);
 		JPanel tablePanel = new JPanel(new BorderLayout());
+		//controller.
 		tableModel = this.controller.getAllContractors();
 		table = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(table);
