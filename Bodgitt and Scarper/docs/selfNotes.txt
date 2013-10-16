@@ -17,3 +17,6 @@ Subcontractor class are all set to Stings. No distinction between int / floats /
 do some exception handling in the DAO
 
 Why does RMI need DBMain RemoteException
+
+
+database location. work on the string for the name. Should/shouldnt it contain db-2x3.db

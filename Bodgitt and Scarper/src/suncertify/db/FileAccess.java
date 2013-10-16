@@ -44,35 +44,28 @@ public class FileAccess {
 	 
 	 private static Logger logger = Logger.getLogger("suncertify.db");
 	 
-	 public static void FileAccess() throws RecordNotFoundException, IOException {
- 
-		//String Location = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\";
-		//connectToDB(Location);
-		//initial_offset = getInitialOffset();
-		
-		
-		 //getAllRecords();
-		 //read(13);
-		 String[] newRec = new String[6];
-		 newRec[0] = "pennys";
-		 newRec[1] = "athlone";
-		 newRec[2] = "clothes";
-		 newRec[3] = "4";
-		 newRec[4] = "$20.00";
-		 newRec[5] = "";
+	 public FileAccess(String dbLocation) throws FileNotFoundException,IOException {
+		 logger.entering("FileAccess", "connectToDB", dbLocation);
+		 logger.info("Connecting to Database dbLocation");
+		 database = new RandomAccessFile(new File(dbLocation), "rw");;
+		 initial_offset = getInitialOffset();
+		 
+		 MainWindowView gui = new MainWindowView();
+		 gui.MainWindowView();
+
 	}
 	 
-	 public void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
+/*	 public void connectToDB(String dbLocation) throws IOException, FileNotFoundException {
 		 		 
 		 	logger.entering("FileAccess", "connectToDB", dbLocation);
 		 	logger.info("Connecting to Database dbLocation");
-			database = new RandomAccessFile(new File(dbLocation, databaseName), "rw");;
+			database = new RandomAccessFile(new File(dbLocation), "rw");;
 			initial_offset = getInitialOffset();
 			
 			MainWindowView gui = new MainWindowView();
 			gui.MainWindowView();
 	 }
-	 
+*/	 
 	 
 	 private static int getInitialOffset() throws IOException{
 		 //logger.entering("FileAccess", "getInitialOffset");

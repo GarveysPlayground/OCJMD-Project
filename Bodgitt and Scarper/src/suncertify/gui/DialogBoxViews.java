@@ -50,7 +50,7 @@ public class DialogBoxViews{
 		connectButton.addActionListener(new selectLocalFile());
 
 		dbFile = new JTextField(20);
-		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db");
+		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		JLabel nameLabel = new JLabel("DATABASE:");
 		dbFile.add(nameLabel);
 		databasePanel.add(BorderLayout.CENTER, nameLabel);
@@ -97,7 +97,7 @@ public class DialogBoxViews{
 		frame.setSize(900,600);
 		
 		dbFile = new JTextField(20);
-		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		JLabel nameLabel = new JLabel("Database Location:");
 		dbFile.add(nameLabel);
 		
@@ -124,8 +124,8 @@ public class DialogBoxViews{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {	
-			FileAccess connect = new FileAccess(); 
-			
+			//FileAccess connect = new FileAccess(); 
+			Data connect = new Data();
 			try {
 				
 				if(dbFile.getText().length() == 0){
@@ -134,8 +134,9 @@ public class DialogBoxViews{
 					    "Inane error",
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
-				connect.connectToDB(dbFile.getText());
 				new Data(dbFile.getText());
+				
+				//	connect = new Data(dbFile.getText());
 				}
 				
 				

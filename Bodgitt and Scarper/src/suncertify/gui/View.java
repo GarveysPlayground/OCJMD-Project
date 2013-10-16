@@ -13,7 +13,7 @@ import java.io.IOException;
 
 
 public class View {
-	FileAccess fileAccess = new FileAccess();
+	//FileAccess fileAccess = new FileAccess();
 	Data data = new Data();
 	
 	

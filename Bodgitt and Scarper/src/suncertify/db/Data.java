@@ -10,7 +10,7 @@ public class Data implements DBMain{
 	private Logger logger = Logger.getLogger("suncertify.db");
 	
 	public Data(String dbLocation) throws FileNotFoundException, IOException {
-		database.connectToDB(dbLocation);
+		database = new FileAccess(dbLocation);
 	}
 	
 	public Data(){
