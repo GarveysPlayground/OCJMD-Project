@@ -21,7 +21,14 @@ public class TableController {
 	String appType = Startup.getConnectionType();
 	private ContractorDBRemote remoteConnection = null;
 	
-	
+	public TableController(){
+		if(appType == "alone"){			
+			
+		
+		}else if(appType == "remote"){
+		
+		}
+	}
 	
 	
 	
@@ -42,18 +49,15 @@ public class TableController {
 				}
 	    	}else if(appType == "remote"){
 	    		remoteConnection = 	ClientRemoteConnect.getConnection("localhost", 4566);
-	    		System.out.println("-------------------AAAAA----"+criteria.length);
 	    		 recordNumbers = remoteConnection.find(criteria);
-	    		System.out.println("-------------------BBBBB");
 	    		System.out.println(recordNumbers.length);
 				for(int i = 0; i < recordNumbers.length;i++){
-					System.out.println("-------------------CCCCC");
 					record = remoteConnection.read(recordNumbers[i]);
 					System.out.println("Record object values" + record);
 					TableRecs.addSubcontractorRecord(record);}
 	    	}
 		} catch (RecordNotFoundException | RemoteException e) {
-			
+			System.out.println("Issue populating JTable");
 		}
 		return TableRecs;
 	}

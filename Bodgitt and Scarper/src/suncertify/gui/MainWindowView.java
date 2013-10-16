@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import suncertify.db.RecordNotFoundException;
+import suncertify.onStart.Startup;
 
 public class MainWindowView {
 	
@@ -44,11 +45,14 @@ public class MainWindowView {
 	
 	JButton unbookButton;
 	
+	String appType = Startup.getConnectionType();
+	
 	private TableModel tableModel = new TableModel();
 	
 	private TableController controller = new TableController();
 	
 	private DialogBoxViews dialogs = new DialogBoxViews();
+	
 	
 	JTable table;
 	
@@ -58,6 +62,22 @@ public class MainWindowView {
 		mainWindowFrame.setSize(800,600);
 		mainWindowFrame.setResizable(false);		
 		
+		if(appType == "alone"){	
+			System.out.println("making alone thinger");
+			dialogs.databaseLocationWindow();
+			
+		}else if(appType == "remote"){
+		
+		}
+
+		
+		
+		
+		
+	/*	mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
+		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindowFrame.setSize(800,600);
+		mainWindowFrame.setResizable(false);
 		
 		tablePanel =  makeTablePanel();
 		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
@@ -66,10 +86,27 @@ public class MainWindowView {
 		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
 		searchPanel = makeSearchPanel();
 		mainWindowFrame.add(searchPanel, BorderLayout.CENTER);
-		
 		mainWindowFrame.setVisible(true);
+		*/
 		}
 
+	public void setupMainWindow(){
+		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
+		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindowFrame.setSize(800,600);
+		mainWindowFrame.setResizable(false);
+		
+		tablePanel =  makeTablePanel();
+		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
+		System.out.println("Done");
+		bookPanel = makeBookPanel();
+		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
+		searchPanel = makeSearchPanel();
+		mainWindowFrame.add(searchPanel, BorderLayout.CENTER);
+		mainWindowFrame.setVisible(true);
+	}
+	
+	
 	private JPanel makeBookPanel() {
 		bookButton = new JButton("Book");
 		bookButton.addActionListener(new bookContractors());

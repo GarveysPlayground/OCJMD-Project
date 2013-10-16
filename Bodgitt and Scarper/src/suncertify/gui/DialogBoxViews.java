@@ -28,29 +28,23 @@ public class DialogBoxViews{
 	JTextField dbFile;
 	JTextField rmiPort;
 	JFrame frame;
-	
-	public void connectionType(String connectionType){
-		if (connectionType == "alone") {
-			databaseLocationWindow();
-        } else if (connectionType == "server") {
-        	rmiConnectionWindow();
-        } else if (connectionType == "") {
-        	rmiClient();
-        }
-	}
-	
+		
 	public void databaseLocationWindow(){
+		System.out.println("Please");
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Database location");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(600,100);
 		
 		JPanel databasePanel = new JPanel();
+		
 		JButton connectButton = new JButton("Connect");
 		connectButton.addActionListener(new selectLocalFile());
+		
+		
 
 		dbFile = new JTextField(20);
-		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		JLabel nameLabel = new JLabel("DATABASE:");
 		dbFile.add(nameLabel);
 		databasePanel.add(BorderLayout.CENTER, nameLabel);
@@ -58,6 +52,7 @@ public class DialogBoxViews{
 		databasePanel.add(BorderLayout.CENTER, connectButton);
 		frame.getContentPane().add(BorderLayout.CENTER, databasePanel);		
 		frame.setVisible(true);
+		
 	}
 	
 	public void rmiClient(){
@@ -97,7 +92,7 @@ public class DialogBoxViews{
 		frame.setSize(900,600);
 		
 		dbFile = new JTextField(20);
-		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		JLabel nameLabel = new JLabel("Database Location:");
 		dbFile.add(nameLabel);
 		
@@ -135,8 +130,10 @@ public class DialogBoxViews{
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
 				new Data(dbFile.getText());
-				
-				//	connect = new Data(dbFile.getText());
+					connect = new Data(dbFile.getText());
+					MainWindowView gui = new MainWindowView();
+					gui.setupMainWindow();
+					frame.setVisible(false);
 				}
 				
 				
@@ -163,9 +160,8 @@ public class DialogBoxViews{
 					int port = Integer.parseInt(rmiPort.getText());
 					try {
 						ClientRemoteConnect.getConnection(dbFile.getText(), port);
-						System.out.println("Connection gotten");
-						MainWindowView gui = new MainWindowView();
-						 gui.MainWindowView();
+					//	MainWindowView gui = new MainWindowView();
+					//	 gui.MainWindowView();
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -178,8 +174,6 @@ public class DialogBoxViews{
 		RMIManager rmiManage = new RMIManager();
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			System.out.println("POP");
 			if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
 				JOptionPane.showMessageDialog(frame,
 				    "No Location/port entered!",
@@ -190,10 +184,7 @@ public class DialogBoxViews{
 				
 				try {
 					rmiManage.startRegister(dbFile.getText(), port);
-					Startup star = null;
-					
-					
-					
+
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

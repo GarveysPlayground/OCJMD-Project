@@ -1,10 +1,12 @@
 package suncertify.rmi;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
 import suncertify.db.DBMainRmiConnector;
+import suncertify.db.DataRemote;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 
@@ -16,11 +18,16 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject implements Contr
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private DBMainRmiConnector database =null;
+	private DBMainRmiConnector database = null;
 
 	public ContractorDBremoteImpl(String dbLocation) throws RemoteException{
 		
-		
+		try {
+			database = new DataRemote(dbLocation);
+		} catch (IOException e) {
+			System.out.println("Issue connecting to DB");
+			e.printStackTrace();
+		}
 	}
 	
 	/**

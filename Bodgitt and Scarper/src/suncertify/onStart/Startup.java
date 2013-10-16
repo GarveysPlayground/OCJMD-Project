@@ -3,6 +3,7 @@ package suncertify.onStart;
 import java.util.logging.Logger;
 
 import suncertify.gui.DialogBoxViews;
+import suncertify.gui.MainWindowView;
 
 public class Startup {
 
@@ -12,20 +13,21 @@ public class Startup {
 	 public Startup(String[] args) {
 		 DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
-			 setConnectionType("remote");   
-			 connection.connectionType("");
+			// setConnectionType("remote");   
+			// connection.connectionType("");
 	            	           
-			 // connection.connectionType("alone");
-	         // setConnectionType("alone");
+			// connection.connectionType("alone");
+	         setConnectionType("alone");
 			
-			// setConnectionType("server");  
+			// setConnectionType("remote");  
 			// connection.connectionType("server");
-			 		 
+			 MainWindowView gui = new MainWindowView();
+			 gui.MainWindowView();	 
 	            
 	        }else if ("server".equalsIgnoreCase(args[0])) {
-	           connection.connectionType("server");
+	        //   connection.connectionType("server");
 	        }else if ("alone".equalsIgnoreCase(args[0])) {
-		       connection.connectionType("alone");
+		     //  connection.connectionType("alone");
 		    }
 	}
 	 

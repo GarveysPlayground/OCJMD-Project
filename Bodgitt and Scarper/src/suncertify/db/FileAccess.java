@@ -50,8 +50,8 @@ public class FileAccess {
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
 		 
-		 MainWindowView gui = new MainWindowView();
-		 gui.MainWindowView();
+		// MainWindowView gui = new MainWindowView();
+		// gui.MainWindowView();
 
 	}
 	 
