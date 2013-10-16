@@ -12,14 +12,14 @@ public class Startup {
 	 public Startup(String[] args) {
 		 DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
-			// setConnectionType("remote");   
-			// connection.connectionType("");
+			 setConnectionType("remote");   
+			 connection.connectionType("");
 	            	           
-			  connection.connectionType("alone");
-	          setConnectionType("local");
+			 // connection.connectionType("alone");
+	         // setConnectionType("alone");
 			
-			 //setConnectionType("server");  
-			 //connection.connectionType("server");
+			// setConnectionType("server");  
+			// connection.connectionType("server");
 			 		 
 	            
 	        }else if ("server".equalsIgnoreCase(args[0])) {

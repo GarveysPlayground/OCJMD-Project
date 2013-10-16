@@ -163,6 +163,9 @@ public class DialogBoxViews{
 					int port = Integer.parseInt(rmiPort.getText());
 					try {
 						ClientRemoteConnect.getConnection(dbFile.getText(), port);
+						System.out.println("Connection gotten");
+						MainWindowView gui = new MainWindowView();
+						 gui.MainWindowView();
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

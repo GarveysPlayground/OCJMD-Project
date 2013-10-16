@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
+import suncertify.db.DBMainRmiConnector;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 
@@ -14,6 +15,8 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject implements Contr
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private DBMainRmiConnector database =null;
 
 	public ContractorDBremoteImpl(String dbLocation) throws RemoteException{
 		
@@ -29,33 +32,34 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject implements Contr
 	public String[] read(int recNo) throws RecordNotFoundException,
 			RemoteException {
 		// TODO Auto-generated method stub
-		return null;
+		return database.read(recNo);
 	}
 
 	@Override
 	public void update(int recNo, String[] data)
 			throws RecordNotFoundException, RemoteException {
-		// TODO Auto-generated method stub
+		database.update(recNo, data);
 		
 	}
 
 	@Override
 	public void delete(int recNo) throws RecordNotFoundException,
 			RemoteException {
-		// TODO Auto-generated method stub
+		database.delete(recNo);
 		
 	}
 
 	@Override
 	public int[] find(String[] criteria) throws RecordNotFoundException,
 			RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("Trying");
+		return database.find(criteria);
 	}
 
 	@Override
 	public int create(String[] data) throws DuplicateKeyException,
 			RemoteException {
+		database.create(data);
 		// TODO Auto-generated method stub
 		return 0;
 	}
