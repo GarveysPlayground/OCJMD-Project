@@ -7,11 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import suncertify.db.Data;
 import suncertify.rmi.ClientRemoteConnect;
@@ -22,92 +24,112 @@ import suncertify.rmi.RMIManager;
 public class DialogBoxViews{
 	
 	JTextField dbFile;
+	JTextField host;
 	JTextField rmiPort;
+	JButton connectButton;
+	JButton exitButton;
+	JButton selectFile;
 	JFrame frame;
 		
 	public void databaseLocationWindow(){
-		System.out.println("Please");
 		frame = new JFrame();
-		frame.setTitle("Bodgitt and Scarper, LLC: Database location");
+		frame.setTitle("Bodgitt and Scarper, LLC: Standalone Mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,100);
-
-		JPanel databasePanel = new JPanel();
+		frame.setSize(550,125);
 		
-		JButton connectButton = new JButton("Connect");
-		connectButton.addActionListener(new selectLocalFile());
-		
-		
-
-		dbFile = new JTextField(20);
+		JPanel filePanel = new JPanel();
+		JLabel nameLabel = new JLabel("DATABASE: ");
+		filePanel.add(nameLabel);
+		dbFile = new JTextField(35);
 		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
-		JLabel nameLabel = new JLabel("DATABASE:");
-		dbFile.add(nameLabel);
-		databasePanel.add(BorderLayout.CENTER, nameLabel);
-		databasePanel.add(BorderLayout.CENTER, dbFile);
-		databasePanel.add(BorderLayout.CENTER, connectButton);
-		frame.getContentPane().add(BorderLayout.CENTER, databasePanel);		
+		filePanel.add(dbFile);
+		selectFile = new JButton("..");
+		selectFile.addActionListener(new searchHelper());
+		filePanel.add(selectFile);
+		
+		JPanel confirmationPanel = new JPanel();
+		connectButton = new JButton("Connect");
+		connectButton.addActionListener(new selectLocalFile());
+		exitButton = new JButton("  Exit  ");
+		confirmationPanel.add(connectButton);
+		confirmationPanel.add(exitButton);
+
+		frame.add(filePanel, BorderLayout.WEST);
+		frame.add(confirmationPanel, BorderLayout.SOUTH);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
 		
 	}
 	
 	public void rmiClient(){
 		frame = new JFrame();
-		frame.setTitle("Bodgitt and Scarper, LLC: Network Connection");
+		frame.setTitle("Bodgitt and Scarper, LLC: Network mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(900,600);
+		frame.setSize(400,150);
+				
+		JPanel hostPanel= new JPanel();
+		JLabel hostLabel = new JLabel("Host:");
+		host = new JTextField(20);
+		host.setText("localhost");
+		hostPanel.add(hostLabel);
+		hostPanel.add(host);
 		
-		dbFile = new JTextField(20);
-		dbFile.setText("localhost");
-		JLabel nameLabel = new JLabel("Host:");
-		dbFile.add(nameLabel);
-		
+		JPanel rmiPanel= new JPanel();
+		JLabel portLabel = new JLabel("Port:");
 		rmiPort = new JTextField(20);
 		rmiPort.setText("4566");
-		JLabel portLabel = new JLabel("PORT:");
-		rmiPort.add(portLabel);
+		rmiPanel.add(portLabel);
+		rmiPanel.add(rmiPort);
 		
-		JPanel databasePanel = new JPanel();
-		JButton connectButton = new JButton("Connect");
+		JPanel confirmationPanel= new JPanel();
+		connectButton = new JButton("Connect");
 		connectButton.addActionListener(new clientConnecter());
+		exitButton = new JButton("  Exit  ");
+		confirmationPanel.add(connectButton);
+		confirmationPanel.add(exitButton);	
 		
-		//BorderLayout.CENTER,
-		databasePanel.add(nameLabel,BorderLayout.CENTER);
-		databasePanel.add(dbFile,BorderLayout.CENTER);
-		databasePanel.add(portLabel,BorderLayout.CENTER);
-		databasePanel.add(rmiPort,BorderLayout.CENTER);
-		databasePanel.add(connectButton);
-		frame.getContentPane().add(databasePanel);		
+		frame.getContentPane().add(hostPanel,BorderLayout.NORTH);	
+		frame.getContentPane().add(rmiPanel,BorderLayout.CENTER);	
+		frame.getContentPane().add(confirmationPanel,BorderLayout.SOUTH);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
 	public void rmiConnectionWindow(){
 		frame = new JFrame();
-		frame.setTitle("Bodgitt and Scarper, LLC: start Server");
+		frame.setTitle("Bodgitt and Scarper, LLC: Server mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(900,600);
+		frame.setSize(550,175);
 		
-		dbFile = new JTextField(20);
+		JPanel filePanel = new JPanel();
+		JLabel nameLabel = new JLabel("Database: ");
+		filePanel.add(nameLabel);
+		dbFile = new JTextField(35);
 		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
-		JLabel nameLabel = new JLabel("Database Location:");
-		dbFile.add(nameLabel);
+		filePanel.add(dbFile);
+		selectFile = new JButton("..");
+		selectFile.addActionListener(new searchHelper());
+		filePanel.add(selectFile);
 		
+		JPanel rmiPanel= new JPanel();
+		JLabel portLabel = new JLabel("Run on Port: ");
 		rmiPort = new JTextField(20);
 		rmiPort.setText("4566");
-		JLabel portLabel = new JLabel("PORT:");
-		rmiPort.add(portLabel);
+		rmiPanel.add(portLabel);
+		rmiPanel.add(rmiPort);
 		
-		JPanel databasePanel = new JPanel();
-		JButton connectButton = new JButton("Connect");
+		JPanel confirmationPanel= new JPanel();
+		connectButton = new JButton("Start Server");
 		connectButton.addActionListener(new rmiConnect());
-		
-		//BorderLayout.CENTER,
-		databasePanel.add(nameLabel,BorderLayout.CENTER);
-		databasePanel.add(dbFile,BorderLayout.CENTER);
-		databasePanel.add(portLabel,BorderLayout.CENTER);
-		databasePanel.add(rmiPort,BorderLayout.CENTER);
-		databasePanel.add(connectButton);
-		frame.getContentPane().add(databasePanel);		
+		exitButton = new JButton(" Disconnect  ");
+		confirmationPanel.add(connectButton);
+		confirmationPanel.add(exitButton);	
+
+		frame.add(filePanel, BorderLayout.NORTH);
+		frame.getContentPane().add(rmiPanel,BorderLayout.WEST);
+		frame.getContentPane().add(confirmationPanel,BorderLayout.SOUTH);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
@@ -124,10 +146,10 @@ public class DialogBoxViews{
 					    JOptionPane.ERROR_MESSAGE);
 				}else{
 					new Data(dbFile.getText());
-					//connect = new Data(dbFile.getText());
-					MainWindowView gui = new MainWindowView();
-					gui.setupMainWindow(dbFile.getText(),0);
+				
 					frame.setVisible(false);
+					MainWindowView gui = new MainWindowView();
+					gui.setupMainWindow(dbFile.getText(), 0);
 				}
 				
 				
@@ -141,6 +163,22 @@ public class DialogBoxViews{
 		}
 	}
 	
+	private class searchHelper implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			 JFileChooser fileChooser = new JFileChooser();
+		        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		                "Database file", "db");
+		        fileChooser.setFileFilter(filter);
+		        int returnVal = fileChooser.showOpenDialog(null);
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            dbFile.setText(fileChooser.getSelectedFile().toString());
+		        }
+			
+		}
+		
+	}
 	
 	private class clientConnecter implements ActionListener{
 		@Override

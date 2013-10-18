@@ -60,7 +60,6 @@ public class MainWindowView {
 		System.out.println("Innitiate");
 		if(appType == "alone"){	
 			dialogs.databaseLocationWindow();
-			
 		}else if(appType == "remote"){
 			dialogs.rmiClient();
 		}else if(appType == "server"){
@@ -72,7 +71,7 @@ public class MainWindowView {
 	public void setupMainWindow(String host, int port){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindowFrame.setSize(800,600);
+		mainWindowFrame.setSize(800,550);
 		mainWindowFrame.setResizable(false);
 		
 		tablePanel =  makeTablePanel(host, port);
@@ -82,6 +81,7 @@ public class MainWindowView {
 		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
 		searchPanel = makeSearchPanel();
 		mainWindowFrame.add(searchPanel, BorderLayout.CENTER);
+		mainWindowFrame.setLocationRelativeTo(null);
 		mainWindowFrame.setVisible(true);
 	}
 	
@@ -90,8 +90,6 @@ public class MainWindowView {
 		bookButton = new JButton("Book");
 		bookButton.addActionListener(new bookContractors());
 		bookPanel.add(BorderLayout.EAST, bookButton);
-		JButton unbookButton = new JButton("Unbook");
-		bookPanel.add(BorderLayout.EAST, unbookButton);
 		bookPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		return bookPanel;
 	}

@@ -13,13 +13,13 @@ public class Startup {
 	 public Startup(String[] args) {
 		// DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
-			// setConnectionType("remote");   
+			//setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
-	       //  setConnectionType("alone");
+	         setConnectionType("alone");
 			
-			setConnectionType("server");  
+			//setConnectionType("server");  
 			// connection.connectionType("server");
 	 
 			 new MainWindowView();
