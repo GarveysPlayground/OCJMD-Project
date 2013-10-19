@@ -13,16 +13,17 @@ public class Startup {
 	 public Startup(String[] args) {
 		// DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
-			//setConnectionType("remote");   
+			setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
-	         setConnectionType("alone");
+	         //setConnectionType("alone");
 			
 			//setConnectionType("server");  
 			// connection.connectionType("server");
 	 
-			 new MainWindowView();
+	         MainWindowView startUp = new MainWindowView();
+			 startUp.DialogSelecter();
 	        }else if ("server".equalsIgnoreCase(args[0])) {
 	        //   connection.connectionType("server");
 	        }else if ("alone".equalsIgnoreCase(args[0])) {
@@ -34,7 +35,6 @@ public class Startup {
 	 public void setConnectionType(String type)
 	 {
 	     connectionType = type;
-	     
 	 }
 	 
 	 public static String getConnectionType()

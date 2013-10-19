@@ -56,7 +56,7 @@ public class MainWindowView {
 	
 	JTable table;
 	
-	public MainWindowView(){
+	public void DialogSelecter(){
 		System.out.println("Innitiate");
 		if(appType == "alone"){	
 			dialogs.databaseLocationWindow();
@@ -68,6 +68,7 @@ public class MainWindowView {
 	
 
 	}
+	
 	public void setupMainWindow(String host, int port){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

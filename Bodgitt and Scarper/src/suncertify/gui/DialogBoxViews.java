@@ -3,7 +3,7 @@ package suncertify.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.swing.JButton;
@@ -14,23 +14,26 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import java.net.InetAddress;
 import suncertify.db.Data;
 import suncertify.rmi.ClientRemoteConnect;
 import suncertify.rmi.RMIManager;
 
 
 
-public class DialogBoxViews{
+public class DialogBoxViews implements ActionListener{
 	
-	JTextField dbFile;
-	JTextField host;
-	JTextField rmiPort;
+	JTextField dbFile = new JTextField();
+	JTextField host = new JTextField();
+	JTextField rmiPort = new JTextField();
 	JButton connectButton;
+	JButton networkButton;
+	JButton serverStartButton;
+	JButton localConect;
 	JButton exitButton;
 	JButton selectFile;
 	JFrame frame;
-		
+	
 	public void databaseLocationWindow(){
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Standalone Mode");
@@ -41,27 +44,26 @@ public class DialogBoxViews{
 		JLabel nameLabel = new JLabel("DATABASE: ");
 		filePanel.add(nameLabel);
 		dbFile = new JTextField(35);
-		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		filePanel.add(dbFile);
 		selectFile = new JButton("..");
-		selectFile.addActionListener(new searchHelper());
+		selectFile.addActionListener(this);
 		filePanel.add(selectFile);
 		
 		JPanel confirmationPanel = new JPanel();
-		connectButton = new JButton("Connect");
-		connectButton.addActionListener(new selectLocalFile());
+		localConect = new JButton("Connect");
+		localConect.addActionListener(this);
 		exitButton = new JButton("  Exit  ");
-		confirmationPanel.add(connectButton);
+		exitButton.addActionListener(this);
+		confirmationPanel.add(localConect);
 		confirmationPanel.add(exitButton);
 
 		frame.add(filePanel, BorderLayout.WEST);
 		frame.add(confirmationPanel, BorderLayout.SOUTH);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		
-		
+		frame.setVisible(true);		
 	}
-	
+		
 	public void rmiClient(){
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Network mode");
@@ -83,10 +85,11 @@ public class DialogBoxViews{
 		rmiPanel.add(rmiPort);
 		
 		JPanel confirmationPanel= new JPanel();
-		connectButton = new JButton("Connect");
-		connectButton.addActionListener(new clientConnecter());
+		networkButton = new JButton("Connect");
+		networkButton.addActionListener(this);
 		exitButton = new JButton("  Exit  ");
-		confirmationPanel.add(connectButton);
+		confirmationPanel.add(networkButton);
+		exitButton.addActionListener(this);
 		confirmationPanel.add(exitButton);	
 		
 		frame.getContentPane().add(hostPanel,BorderLayout.NORTH);	
@@ -106,10 +109,10 @@ public class DialogBoxViews{
 		JLabel nameLabel = new JLabel("Database: ");
 		filePanel.add(nameLabel);
 		dbFile = new JTextField(35);
-		dbFile.setText("C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
 		filePanel.add(dbFile);
 		selectFile = new JButton("..");
-		selectFile.addActionListener(new searchHelper());
+		selectFile.addActionListener(this);
 		filePanel.add(selectFile);
 		
 		JPanel rmiPanel= new JPanel();
@@ -120,10 +123,11 @@ public class DialogBoxViews{
 		rmiPanel.add(rmiPort);
 		
 		JPanel confirmationPanel= new JPanel();
-		connectButton = new JButton("Start Server");
-		connectButton.addActionListener(new rmiConnect());
+		serverStartButton = new JButton("Start Server");
+		serverStartButton.addActionListener(this);
 		exitButton = new JButton(" Disconnect  ");
-		confirmationPanel.add(connectButton);
+		exitButton.addActionListener(this);
+		confirmationPanel.add(serverStartButton);
 		confirmationPanel.add(exitButton);	
 
 		frame.add(filePanel, BorderLayout.NORTH);
@@ -133,102 +137,133 @@ public class DialogBoxViews{
 		frame.setVisible(true);
 	}
 	
-	private class selectLocalFile implements ActionListener{
+	public boolean confirmation(){
+		MainWindowView gui = new MainWindowView();
 
-		@Override
-		public void actionPerformed(ActionEvent e) {	 
-			try {
-				
-				if(dbFile.getText().length() == 0){
-					JOptionPane.showMessageDialog(frame,
-					    "No Location entered!",
-					    "Inane error",
-					    JOptionPane.ERROR_MESSAGE);
-				}else{
-					new Data(dbFile.getText());
-				
-					frame.setVisible(false);
-					MainWindowView gui = new MainWindowView();
-					gui.setupMainWindow(dbFile.getText(), 0);
-				}
-				
-				
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		if (dbFile.isShowing()){
+			if(dbFile.getText().length() == 0){	
+				JOptionPane.showMessageDialog(
+						frame, "No Location entered!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(!new File(dbFile.getText()).exists()){	
+				JOptionPane.showMessageDialog(
+						frame, "Chosen File does not exist!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(!dbFile.getText().endsWith("db")){	
+				JOptionPane.showMessageDialog(
+						frame, "Not a valid db file!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
 		}
-	}
-	
-	private class searchHelper implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			 JFileChooser fileChooser = new JFileChooser();
-		        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		                "Database file", "db");
-		        fileChooser.setFileFilter(filter);
-		        int returnVal = fileChooser.showOpenDialog(null);
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            dbFile.setText(fileChooser.getSelectedFile().toString());
-		        }
 			
+		
+		if (rmiPort.isShowing()){
+			if(rmiPort.getText().length() == 0){	
+				JOptionPane.showMessageDialog(
+						frame, "No Port entered!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(!gui.isInteger(rmiPort.getText())){
+				JOptionPane.showMessageDialog(
+						frame, "Port Value not an int!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			int range = Integer.parseInt(rmiPort.getText());
+			if(range <  1 || range > 65535){
+				JOptionPane.showMessageDialog(
+						frame, "Value not in valid port range of 1 - 65535"
+						, "Inane error",JOptionPane.ERROR_MESSAGE);
+				return false;
+			}			
 		}
 		
-	}
+		if (host.isShowing()){
+			if(host.getText().length() == 0){	
+				JOptionPane.showMessageDialog(
+						frame, "No Host entered!", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 	
-	private class clientConnecter implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent e) {					
-				if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
-					JOptionPane.showMessageDialog(frame,
-					    "No Location/port entered!",
-					    "Inane error",
-					    JOptionPane.ERROR_MESSAGE);
-				}else{
-					int port = Integer.parseInt(rmiPort.getText());
-					try {
-						ClientRemoteConnect.getConnection(dbFile.getText(), port);
-						frame.setVisible(false);
-						MainWindowView gui = new MainWindowView();
-						gui.setupMainWindow(dbFile.getText(), port);
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+			try {
+				InetAddress addresses = InetAddress.getByName(host.getText());
+				boolean connectable = addresses.isReachable(5);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(
+						frame, "Host is unreachable \n Check hostname : \"" + host.getText()
+								+ "\"\n and try again", "Inane error", 
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+				//e.printStackTrace();
+			}
+				
 		}
+		return true;
 	}
 	
-	private class rmiConnect implements ActionListener{
-		RMIManager rmiManage = new RMIManager();
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if(dbFile.getText().length() == 0 || rmiPort.getText().length() == 0 ){
-				JOptionPane.showMessageDialog(frame,
-				    "No Location/port entered!",
-				    "Inane error",
-				    JOptionPane.ERROR_MESSAGE);
-			}else{
+	
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == selectFile){
+			JFileChooser fileChooser = new JFileChooser();
+	        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+	        									"Database file", "db");
+	        fileChooser.setFileFilter(filter);
+	        int returnVal = fileChooser.showOpenDialog(null);
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            dbFile.setText(fileChooser.getSelectedFile().toString());
+	        }
+		}
+		
+		else if(e.getSource() == localConect){
+			if(confirmation()){			
+				try {
+					new Data(dbFile.getText());
+				}catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				frame.setVisible(false);
+				MainWindowView gui = new MainWindowView();
+				gui.setupMainWindow(dbFile.getText(), 0);
+			}
+			
+		}else if(e.getSource() == networkButton){
+			if(confirmation()){	
+				int port = Integer.parseInt(rmiPort.getText());
+				try {
+					ClientRemoteConnect.getConnection(host.getText(), port);
+					frame.setVisible(false);
+					MainWindowView gui = new MainWindowView();
+					gui.setupMainWindow(host.getText(), port);
+				} catch (RemoteException e1) {
+					JOptionPane.showMessageDialog(
+							frame,"Connection Refused!\nIs the server started?"
+							, "Inane error", JOptionPane.ERROR_MESSAGE);
+					//e1.printStackTrace();
+				}
+			}
+			
+		}else if(e.getSource() == serverStartButton){
+			RMIManager rmiManage = new RMIManager();
+			if(confirmation()){	
 				int port = Integer.parseInt(rmiPort.getText());
 				
 				try {
 					rmiManage.startRegister(dbFile.getText(), port);
 					//frame.setVisible(false);
-				} catch (RemoteException e) {
+				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e1.printStackTrace();
 				}
 			}
-			
+		
+		}else if(e.getSource() == exitButton){
+			System.exit(0);
 		}
-			
-			
-	}
-	
+	}	
 	
 }
 
