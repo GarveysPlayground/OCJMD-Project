@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import suncertify.gui.DialogBoxViews;
 import suncertify.gui.MainWindowView;
+import suncertify.gui.PersistProperties;
 
 public class Startup {
 
@@ -13,7 +14,7 @@ public class Startup {
 	 public Startup(String[] args) {
 		// DialogBoxViews connection = new DialogBoxViews();
 		 if (args.length == 0) {	           
-			setConnectionType("remote");   
+			//setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
@@ -22,9 +23,14 @@ public class Startup {
 			//setConnectionType("server");  
 			// connection.connectionType("server");
 	 
-	         MainWindowView startUp = new MainWindowView();
-			 startUp.DialogSelecter();
-	        }else if ("server".equalsIgnoreCase(args[0])) {
+	         //MainWindowView startUp = new MainWindowView();
+			 //startUp.DialogSelecter();
+	        
+			 PersistProperties properties = new PersistProperties();
+			// properties.
+		 
+		 
+		 }else if ("server".equalsIgnoreCase(args[0])) {
 	        //   connection.connectionType("server");
 	        }else if ("alone".equalsIgnoreCase(args[0])) {
 		     //  connection.connectionType("alone");
