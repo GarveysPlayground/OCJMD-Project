@@ -26,7 +26,7 @@ public class PersistProperties {
 	
 	private static File propertiesFile = new File(FILE_DIR,FILE_NAME);
 
-	
+	public enum property{PORT, HOST, FILELOCATION}
 	
 	public PersistProperties(){
 		
@@ -42,32 +42,78 @@ public class PersistProperties {
 		}else{
 			System.out.println("Exists");
 		}
+		
+		
+		
+		try {
+			writeToFile("host", "MrsSmith");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	void writeToFile(String property , String value) throws IOException{
-		FileWriter file = new FileWriter(propertiesFile);  
-		PrintWriter OutputFile = new PrintWriter(file);
+		System.out.println("writing");		
+		
+			FileWriter file = new FileWriter(propertiesFile);  
+			PrintWriter OutputFile = new PrintWriter(file);
+			//OutputFile.println(SETUP);
+		
+		String input;
+		BufferedReader br = new BufferedReader(new FileReader(propertiesFile));
+		
+		while ((input = br.readLine()) != null) {
+			System.out.println("--" + input);
+			if(property == "dbLocation" && input.contains(DATABASE_LOC)){
+				OutputFile.println(DATABASE_LOC + value);	
+			}else if(property == "host" && input.contains(RMI_HOST)){
+				OutputFile.println(RMI_HOST + value);
+			}else if(property == "port" && input.contains(RMI_PORT)){
+				OutputFile.println(RMI_PORT+ value);
+			}
+		}
+		br.close();
+		
 		OutputFile.println("");
 		OutputFile.close();
 	}
 	
-	void ReadFromFile(String property , String value) throws IOException{
+	String ReadFromFile(String property) throws IOException{
 
 		String input;
 		BufferedReader br = new BufferedReader(new FileReader(propertiesFile));
+		
 		while ((input = br.readLine()) != null) {
-			System.out.println(input);
+			if(property == "dbLocation" && input.contains(DATABASE_LOC)){
+				input = input.replace(DATABASE_LOC, "");
+				break;
+			}else if(property == "host" && input.contains(RMI_HOST)){
+				input = input.replace(RMI_HOST, "");
+				break;
+			}else if(property == "port" && input.contains(RMI_PORT)){
+				input = input.replace(RMI_PORT, "");
+				break;
+			}
 		}
 		br.close();
+		return input;
 	}
 	
 	void createFile() throws IOException{
 		System.out.println("Creating");
 		propertiesFile.createNewFile();
-		FileWriter file = new FileWriter(propertiesFile);  
-		PrintWriter OutputFile = new PrintWriter(file);
-		OutputFile.println(SETUP);
-		OutputFile.close();
+		System.out.println("---" + SETUP);
+		
+		PrintWriter writer = new PrintWriter(propertiesFile);
+		writer.println(SETUP);
+		writer.close();
+		//FileWriter file = new FileWriter(propertiesFile);  
+		//PrintWriter OutputFile = new PrintWriter(file);
+		//OutputFile.println("cat");
+		//OutputFile.close();
+		
+	
 	}
 	
 	
