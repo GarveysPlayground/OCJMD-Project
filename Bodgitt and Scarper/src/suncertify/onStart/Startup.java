@@ -13,20 +13,24 @@ public class Startup {
 	 
 	 public Startup(String[] args) {
 		// DialogBoxViews connection = new DialogBoxViews();
-		 if (args.length == 0) {	           
+		// PersistProperties properties = new PersistProperties();
+		 if (args.length == 0) {	
+			 System.out.println("start");
 			//setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
-	         //setConnectionType("alone");
+	        setConnectionType("alone");
 			
 			//setConnectionType("server");  
 			// connection.connectionType("server");
 	 
-	         //MainWindowView startUp = new MainWindowView();
-			 //startUp.DialogSelecter();
+	         MainWindowView startUp = new MainWindowView();
+			 startUp.DialogSelecter();
 	        
-			 PersistProperties properties = new PersistProperties();
+			// PersistProperties properties = new PersistProperties();
+			//proper.setProperty("port", "1234");
+			// proper.setProperty("host", "localhost");
 			// properties.
 		 
 		 

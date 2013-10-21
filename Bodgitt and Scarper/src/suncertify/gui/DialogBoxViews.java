@@ -23,6 +23,7 @@ import suncertify.rmi.RMIManager;
 
 public class DialogBoxViews implements ActionListener{
 	
+	PersistProperties properties = new PersistProperties();
 	JTextField dbFile = new JTextField();
 	JTextField host = new JTextField();
 	JTextField rmiPort = new JTextField();
@@ -44,7 +45,7 @@ public class DialogBoxViews implements ActionListener{
 		JLabel nameLabel = new JLabel("DATABASE: ");
 		filePanel.add(nameLabel);
 		dbFile = new JTextField(35);
-		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText(properties.getProperty("database"));
 		filePanel.add(dbFile);
 		selectFile = new JButton("..");
 		selectFile.addActionListener(this);
@@ -73,14 +74,14 @@ public class DialogBoxViews implements ActionListener{
 		JPanel hostPanel= new JPanel();
 		JLabel hostLabel = new JLabel("Host:");
 		host = new JTextField(20);
-		host.setText("localhost");
+		host.setText(properties.getProperty("host"));
 		hostPanel.add(hostLabel);
 		hostPanel.add(host);
 		
 		JPanel rmiPanel= new JPanel();
 		JLabel portLabel = new JLabel("Port:");
 		rmiPort = new JTextField(20);
-		rmiPort.setText("4566");
+		rmiPort.setText(properties.getProperty("port"));
 		rmiPanel.add(portLabel);
 		rmiPanel.add(rmiPort);
 		
@@ -157,6 +158,7 @@ public class DialogBoxViews implements ActionListener{
 						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
+			properties.setProperty("database", dbFile.getText());
 		}
 			
 		
@@ -178,7 +180,8 @@ public class DialogBoxViews implements ActionListener{
 						frame, "Value not in valid port range of 1 - 65535"
 						, "Inane error",JOptionPane.ERROR_MESSAGE);
 				return false;
-			}			
+			}
+			properties.setProperty("port", rmiPort.getText());
 		}
 		
 		if (host.isShowing()){
@@ -200,7 +203,7 @@ public class DialogBoxViews implements ActionListener{
 				return false;
 				//e.printStackTrace();
 			}
-				
+			properties.setProperty("host", host.getText());	
 		}
 		return true;
 	}
