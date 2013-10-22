@@ -54,12 +54,9 @@ public class TableController {
 				//	return TableRecs;
 				}
 	    	}else if(appType == "remote"){
-	    		//remoteConnection = 	ClientRemoteConnect.getConnection("localhost", 4566);
 	    		 recordNumbers = remoteConnection.find(criteria);
-	    		System.out.println(recordNumbers.length);
 				for(int i = 0; i < recordNumbers.length;i++){
 					record = remoteConnection.read(recordNumbers[i]);
-					System.out.println("Record object values" + record);
 					TableRecs.addSubcontractorRecord(record);}
 	    	}
 		} catch (RecordNotFoundException | RemoteException e) {
@@ -89,7 +86,6 @@ public class TableController {
 	public void updateContractor(int row, String Customer) throws RecordNotFoundException{
 		TableRecs.setValueAt(Customer, row, 5);
 		String[] data = getSelectedContractor(row); 		
-		//int[] recNo = localConnection.find(data);
 		int[] recNo = null;
 		if(appType == "alone"){			
 			recNo = localConnection.find(data);
