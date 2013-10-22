@@ -14,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import suncertify.db.Data;
+import suncertify.db.LockManager;
 import suncertify.db.RecordNotFoundException;
 import suncertify.onStart.Startup;
 
@@ -52,6 +54,8 @@ public class MainWindowView {
 	private TableController controller;
 	
 	private DialogBoxViews dialogs = new DialogBoxViews();
+	
+	private Data data = new Data();
 	
 	
 	JTable table;
@@ -138,9 +142,23 @@ public class MainWindowView {
 	}
 
 	private class bookContractors implements ActionListener{
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
 			int rowNo = table.getSelectedRow();
+			int recNo = 0;
+			try {
+				recNo = controller.getRecNo(rowNo);
+				//data.lock(recNo);
+			} catch (RecordNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} // do stuff here
+			
+			
+			
+			
 			String customerID = "initial";
 			customerID = (String) JOptionPane.showInputDialog(tablePanel,
 						 "Please enter the Customer ID", 
@@ -164,8 +182,8 @@ public class MainWindowView {
 					    JOptionPane.ERROR_MESSAGE);
 				System.out.println("not valiid");
 			}
-			
-		}				
+		}	
+		
 	}
 	
 	

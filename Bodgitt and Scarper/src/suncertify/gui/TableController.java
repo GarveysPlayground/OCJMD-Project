@@ -108,11 +108,34 @@ public class TableController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}	
+	}
+	
+	
+	public int getRecNo(int row) throws RecordNotFoundException{
+		String[] data = getSelectedContractor(row); 		
+		int[] recNo = null;
+		if(appType == "alone"){			
+			recNo = localConnection.find(data);
+		
+		}else if(appType == "remote"){
+			try {
+				recNo = remoteConnection.find(data);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-
-	
+		
+		try {
+			System.out.println("COntroller sending");
+			remoteConnection.lock(recNo[0]);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return recNo[0];
 	}
-
 }
 

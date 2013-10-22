@@ -16,11 +16,11 @@ public class Startup {
 		// PersistProperties properties = new PersistProperties();
 		 if (args.length == 0) {	
 			 System.out.println("start");
-			//setConnectionType("remote");   
+			setConnectionType("remote");   
 			// connection.connectionType("");
 	            	           
 			// connection.connectionType("alone");
-	        setConnectionType("alone");
+	        //setConnectionType("alone");
 			
 			//setConnectionType("server");  
 			// connection.connectionType("server");

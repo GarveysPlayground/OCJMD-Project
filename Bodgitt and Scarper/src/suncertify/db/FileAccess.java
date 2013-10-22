@@ -4,16 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import suncertify.gui.MainWindowView;
 
 
 
 public class FileAccess {
 	
-	 private static final String databaseName = "db-2x3.db";
 	 private static RandomAccessFile database = null;
 	 private static int initial_offset = 0;
 	 

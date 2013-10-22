@@ -30,7 +30,6 @@ public class DataRemote implements DBMainRmiConnector{
 
 	@Override
 	public int[] find(String[] criteria) throws RecordNotFoundException, RemoteException {
-		System.out.println("------POWPOW");
 		return database.find(criteria);
 	}
 
@@ -43,7 +42,8 @@ public class DataRemote implements DBMainRmiConnector{
 
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException, RemoteException {
-		// TODO Auto-generated method stub
+		System.out.println("DatRemote locking");
+		database.lock(recNo);
 		
 	}
 

@@ -110,7 +110,7 @@ public class DialogBoxViews implements ActionListener{
 		JLabel nameLabel = new JLabel("Database: ");
 		filePanel.add(nameLabel);
 		dbFile = new JTextField(35);
-		dbFile.setText("C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db\\db-2x3.db");
+		dbFile.setText(properties.getProperty("database"));
 		filePanel.add(dbFile);
 		selectFile = new JButton("..");
 		selectFile.addActionListener(this);
