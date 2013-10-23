@@ -104,6 +104,8 @@ public class TableController {
 		}else if(recNo.length == 1 && appType == "remote"){
 			try {
 				remoteConnection.update(recNo[0], data);
+				System.out.println("Controller issueing unlock");
+				remoteConnection.unlock(recNo[0]);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

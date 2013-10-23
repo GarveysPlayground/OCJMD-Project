@@ -15,14 +15,16 @@ public class LockManager {
 	 /** Length of time we will wait for a lock. */
     private static final int TIMEOUT = 5 * 1000;
 	
-	  private static Map<Integer, DBMain> reservations
-      = new HashMap<Integer, DBMain>();
+	  private static Map<Integer, DataRemote> reservations
+      = new HashMap<Integer, DataRemote>();
 	  
 	  private static Condition lockReleased  = lock.newCondition();
 
-	public void lock(int recNo, DBMain dbMain){
+	public static void lock(int recNo, DataRemote dataRemote){
 		System.out.println("Locking");
+		System.out.println("Current Locks before call : " + reservations);
 		lock.lock();
+		System.out.println("Record"+recNo+" locked by " + dataRemote);
         try {   
         	 long endTimeMSec = System.currentTimeMillis() + TIMEOUT;
              while (reservations.containsKey(recNo)) {
@@ -31,35 +33,30 @@ public class LockManager {
                  if (!lockReleased.await(timeLeftMSec, TimeUnit.MILLISECONDS)) {
                  }
              }
-            System.out.println("Record"+recNo+" locked by " + dbMain);
-            reservations.put(recNo, dbMain);
+            reservations.put(recNo, dataRemote);
             System.out.println(reservations);
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-            // ensure lock is always released, even if an Exception is thrown
-        //	System.out.println("UnLocking");
-        //	lock.unlock();
-        }
+		} 
     }
 
-	public void unlock(int recNo, DBMain dbMain) {
-		System.out.println(reservations);
-     lock.lock();
-     if (reservations.get(recNo) == dbMain) {
+	public static void unlock(int recNo,  DataRemote dataRemote) {
+	 System.out.println("Current locks pre unlock:" + reservations);
+     if (reservations.get(recNo) == dataRemote) {
          reservations.remove(recNo);
-
-         lockReleased.signal();
+         lock.unlock();
+       //  lockReleased.signal();
      } else {
 
      }
-     lock.unlock();
+     System.out.println("Current post unlock:" + reservations);
+     //lock.unlock();
 
 		
 	}
 
-	public boolean isLocked(int recNo) {
+	public static boolean isLocked(int recNo) {
 		if (reservations.containsKey(recNo)) {
 			System.out.println("isLocked says true");
             return true;

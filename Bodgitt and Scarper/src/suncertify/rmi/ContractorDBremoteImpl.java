@@ -73,14 +73,16 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject implements Contr
 
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException, RemoteException {
-		// TODO Auto-generated method stub
+		System.out.println("ContractorDBmain lock");
+		database.lock(recNo);
 		
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException,
 			RemoteException {
-		// TODO Auto-generated method stub
+		System.out.println("ContractorDBmain lock");
+		database.unlock(recNo);
 		
 	}
 
@@ -88,6 +90,6 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject implements Contr
 	public boolean isLocked(int recNo) throws RecordNotFoundException,
 			RemoteException {
 		// TODO Auto-generated method stub
-		return false;
+		return database.isLocked(recNo);
 	}
 }

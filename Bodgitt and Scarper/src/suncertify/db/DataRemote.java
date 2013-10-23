@@ -12,6 +12,7 @@ public class DataRemote implements DBMainRmiConnector{
 	
 	public DataRemote(String dbLocation) throws FileNotFoundException, IOException{
 		database = new Data(dbLocation);
+		new LockManager();
 	}
 	@Override
 	public String[] read(int recNo) throws RecordNotFoundException, RemoteException{
@@ -42,21 +43,21 @@ public class DataRemote implements DBMainRmiConnector{
 
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException, RemoteException {
-		System.out.println("DatRemote locking");
-		database.lock(recNo);
+		System.out.println("DataRemote locking");
+		LockManager.lock(recNo, this);
 		
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException, RemoteException {
-		// TODO Auto-generated method stub
-		
+		System.out.println("DataRemote unlocking");
+		LockManager.unlock(recNo, this);
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException, RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		System.out.println("DataRemote locking");
+		return LockManager.isLocked(recNo);
 	}
 
 }
