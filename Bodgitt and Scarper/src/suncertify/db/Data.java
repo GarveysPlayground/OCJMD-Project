@@ -14,6 +14,7 @@ public class Data implements DBMain{
 	public Data(String dbLocation) throws FileNotFoundException, IOException {
 		database = new FileAccess(dbLocation);
 		//lockManager = new LockManager();
+		
 	}
 	
 	public Data(){
@@ -55,18 +56,31 @@ public class Data implements DBMain{
 	}
 
 	@Override
-	public void lock(int recNo) throws RecordNotFoundException {	
-		lockManager.lock(recNo);
+	public void lock(int recNo) throws RecordNotFoundException {
+		if(recNo < 0 || recNo >= database.getNoOfRecords()){
+			System.err.println("No Such rec No " + recNo);
+		}else{
+			lockManager.lock(recNo);
+		}
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException {
+		if(recNo < 0 || recNo >= database.getNoOfRecords()){
+			System.err.println("No Such rec No " + recNo);
+		}else{
 		lockManager.unlock(recNo);
+		}
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException {
+		if(recNo < 0 || recNo >= database.getNoOfRecords()){
+			System.err.println("No Such rec No " + recNo);
+			return lockManager.isLocked(recNo);
+		}else{
 		return lockManager.isLocked(recNo);
+	
+		}
 	}
-
 }

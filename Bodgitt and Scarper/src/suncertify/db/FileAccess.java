@@ -47,23 +47,7 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
-		 
-		 
-		 
-		 final String[] dataEntry = new String[6];
-			dataEntry[0] = "Garvey";
-			dataEntry[1] = "Athlone";
-			dataEntry[2] = "Playing, Trouble Making";
-			dataEntry[3] = "44";
-			dataEntry[4] = "$1.00";
-			dataEntry[5] = "12345678";
-		/*	try {
-				create(dataEntry);
-			} catch (DuplicateKeyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-*/	}
+	}
 	 
 	 private static int getInitialOffset() throws IOException{
 		 logger.info("Calculating the files initial offset bytes");
@@ -228,12 +212,12 @@ public class FileAccess {
 	 }
 	 	 
 	 static void delete(int recNo) throws RecordNotFoundException{
-
+		 try{
 		 if(recNo < 0 || recNo >= getNoOfRecords()){
 			 throw new RecordNotFoundException("The record you wish to delete:"
 					 							+ recNo	+ " was not found");
 		 }
-		 try{
+
 			lockManager.lock(recNo);
 			int recordLocation = initial_offset + (recNo * fullRecordSize); 
 		 	database.seek(recordLocation);		 
