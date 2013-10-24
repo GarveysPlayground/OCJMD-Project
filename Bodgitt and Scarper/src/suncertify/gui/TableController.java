@@ -37,9 +37,7 @@ public class TableController {
 		String[] record;
 		int[] recordNumbers;
 		try {
-			System.out.println("--------------"+appType);
-	    	if(appType == "alone"){
-	    		
+	    	if(appType == "alone"){	
 				 recordNumbers = localConnection.find(criteria);
 				for(int i = 0; i < recordNumbers.length;i++){
 					record = localConnection.read(recordNumbers[i]);
@@ -96,7 +94,7 @@ public class TableController {
 		TableRecs.setValueAt(Customer, row, 5);
 		String[] data = getSelectedContractor(row); 		
 		int recNo = getRecordNoFromRow(row);
-		
+		System.out.println("Updating record number : " + row );
 		
 		if(appType == "alone"){
 			localConnection.update(recNo, data);

@@ -22,3 +22,9 @@ Why does RMI need DBMain RemoteException
 database location. work on the string for the name. Should/shouldnt it contain db-2x3.db
 
 add unbook
+
+get all contractors reads in twice. Find("","") reads throught them all first to return an int {} of all record numbers.
+Then read(int [x]) reads through them again to get the data
+
+Should FileAccess.getSingleRecord() be replaced with read?
+

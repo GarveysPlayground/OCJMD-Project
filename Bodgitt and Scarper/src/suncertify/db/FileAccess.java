@@ -38,6 +38,8 @@ public class FileAccess {
 
 	 final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
 	 
+	 private static LockManager lockManager = LockManager.getInstance();
+	 
 	 private static Logger logger = Logger.getLogger("suncertify.db");
 	 
 	 public FileAccess(String dbLocation) throws FileNotFoundException,IOException {
@@ -45,6 +47,22 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
+		 
+		 
+		 
+		 final String[] dataEntry = new String[6];
+			dataEntry[0] = "Garvey";
+			dataEntry[1] = "Athlone";
+			dataEntry[2] = "Playing, Trouble Making";
+			dataEntry[3] = "44";
+			dataEntry[4] = "$1.00";
+			dataEntry[5] = "12345678";
+			try {
+				create(dataEntry);
+			} catch (DuplicateKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	 
 	 private static int getInitialOffset() throws IOException{
@@ -104,8 +122,7 @@ public class FileAccess {
         return recordValues;
 		 
 	 }
-	 
-	 
+	 	 
 	 public static int getNoOfRecords() { 
 		 int numberOfRecords = 0;
 		 try{
@@ -123,16 +140,15 @@ public class FileAccess {
      } 
 	 
 	
-	 public static String[] read(int recNo) throws RecordNotFoundException{
-		 logger.info("Attempting to read record number: " + recNo);
-		 
+	 public static String[] read(int recNo) throws RecordNotFoundException{	 
 		 try{
-			database.seek(initial_offset + (fullRecordSize*recNo)); //offset + record position
+			database.seek(initial_offset + (fullRecordSize*recNo)); 
 		 	String record[] = getSingleRecord();
 		 	logger.exiting("FileAccess", "read");
 		 	return record;
 		 }
 		 catch (Exception e) {
+			 logger.warning("Error reading record Number : " + recNo);
              throw new RecordNotFoundException("Problem encountered reading recNo " +recNo+": "+ e.getMessage());		 
 		 }
 	 }
@@ -145,6 +161,7 @@ public class FileAccess {
 		 }
 		 int recordLocation = initial_offset + (recNo * fullRecordSize);
 		 try{
+			 lockManager.lock(recNo);
 			 database.seek(recordLocation);
 			 byte[] record = new byte[fullRecordSize];
 			 database.read(record);            
@@ -171,41 +188,44 @@ public class FileAccess {
          }catch (Exception e){
                  throw new RecordNotFoundException("The record: " + recNo 
                          			+ " was not found, " + e.getMessage());
-             }
+         }finally{
+        	 lockManager.unlock(recNo);
+         }
 	}
 	 
  
 	 public static int create(String [] data) throws DuplicateKeyException, IOException{
 		 int numOfRecords = getNoOfRecords();
-			 database.seek(initial_offset);
-			 byte[] record = new byte[fullRecordSize];
+		 database.seek(initial_offset);
+		 byte[] record = new byte[fullRecordSize];
+		 database.read(record);
+		 //Find deleted record space
+		 int currentRec = 0;
+		 while(record[0] == VALID && currentRec < numOfRecords){
 			 database.read(record);
-		 
-			 //Find deleted record space
-			 int currentRec = 0;
-			 while(record[0] == VALID && currentRec < numOfRecords){
-				 database.read(record);
-				 currentRec++;
-			 }
-			 if(record[0] == INVALID){
-				 database.seek(initial_offset + (currentRec*fullRecordSize));
-			 }
-		 
-			 byte b = VALID; //valid file byte
-			 database.write(b);
-			 //for each field output the new value + white space
-			 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-				 	int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
-				 	database.write(data[i].getBytes());
-				 	while(padding != 0){
-				 		database.write(' ');
-				 		padding--;
-				 	}
-			 }
-			 return currentRec;
-		
-
-}
+			 currentRec++;
+		 }
+		 if(record[0] == INVALID){
+			 database.seek(initial_offset + (currentRec*fullRecordSize));
+		 }
+		try{
+			lockManager.lock(currentRec);
+			byte b = VALID; //valid file byte
+			database.write(b);
+			//for each field output the new value + white space
+			for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+				int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+				database.write(data[i].getBytes());
+				while(padding != 0){
+					database.write(' ');
+					padding--;
+				}
+			}
+		}finally{
+			lockManager.unlock(currentRec);
+		}
+		return currentRec;
+	 }
 	 	 
 	 static void delete(int recNo) throws RecordNotFoundException{
 
@@ -213,8 +233,9 @@ public class FileAccess {
 			 throw new RecordNotFoundException("The record you wish to delete:"
 					 							+ recNo	+ " was not found");
 		 }
-		 int recordLocation = initial_offset + (recNo * fullRecordSize); 
 		 try{
+			lockManager.lock(recNo);
+			int recordLocation = initial_offset + (recNo * fullRecordSize); 
 		 	database.seek(recordLocation);		 
 		 	byte b = (byte) INVALID; //valid file byte
 		 	database.write(b);
@@ -226,13 +247,14 @@ public class FileAccess {
 		 }catch (Exception e){
              throw new RecordNotFoundException("The record: " + recNo 
           			+ " was not found, " + e.getMessage());
+		 }finally{
+			 lockManager.unlock(recNo);
 		 }
 		 
 	 }
 	 
 	 
 	 public static int [] find(String [] criteria) throws RecordNotFoundException{
-		 
 		 String[] allColumns = new String[6];		 
 		 System.arraycopy(criteria, 0, allColumns, 0, criteria.length);
 		 criteria = allColumns;		 
