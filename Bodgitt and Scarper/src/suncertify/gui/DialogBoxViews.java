@@ -1,6 +1,7 @@
 package suncertify.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -256,11 +257,13 @@ public class DialogBoxViews implements ActionListener{
 				
 				try {
 					rmiManage.startRegister(dbFile.getText(), port);
-					//frame.setVisible(false);
+					serverStartButton.setText("Server Started");
+					serverStartButton.setBackground(Color.GREEN);
+					serverStartButton.setEnabled(false);
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
 		
 		}else if(e.getSource() == exitButton){

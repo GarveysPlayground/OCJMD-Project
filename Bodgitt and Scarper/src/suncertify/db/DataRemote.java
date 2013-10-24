@@ -9,10 +9,11 @@ public class DataRemote implements DBMainRmiConnector{
 
 	private DBMain database = null;
 	private Logger logger = Logger.getLogger("suncertify.db");
+	public static LockManager lockInstance = LockManager.getInstance();
 	
 	public DataRemote(String dbLocation) throws FileNotFoundException, IOException{
 		database = new Data(dbLocation);
-		new LockManager();
+		
 	}
 	@Override
 	public String[] read(int recNo) throws RecordNotFoundException, RemoteException{
@@ -44,20 +45,20 @@ public class DataRemote implements DBMainRmiConnector{
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException, RemoteException {
 		System.out.println("DataRemote locking");
-		LockManager.lock(recNo, this);
+		lockInstance.lock(recNo);
 		
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException, RemoteException {
 		System.out.println("DataRemote unlocking");
-		LockManager.unlock(recNo, this);
+		lockInstance.unlock(recNo);
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException, RemoteException {
 		System.out.println("DataRemote locking");
-		return LockManager.isLocked(recNo);
+		return lockInstance.isLocked(recNo);
 	}
 
 }

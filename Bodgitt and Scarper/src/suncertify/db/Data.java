@@ -8,11 +8,11 @@ public class Data implements DBMain{
 
 	private static FileAccess database = null;
 	private Logger logger = Logger.getLogger("suncertify.db");
-	 private LockManager lockManager = null;
+	// private LockManager lockManager = null;
 	
 	public Data(String dbLocation) throws FileNotFoundException, IOException {
 		database = new FileAccess(dbLocation);
-		lockManager = new LockManager();
+		//lockManager = new LockManager();
 	}
 	
 	public Data(){
@@ -43,30 +43,26 @@ public class Data implements DBMain{
 		int newRecord = 0;	
 		try {
 			newRecord = FileAccess.create(data);
+			return newRecord;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		return newRecord;
+
+
 	}
 
 	@Override
-	public void lock(int recNo) throws RecordNotFoundException {
-		//System.out.println("Got the lock call");
-		//LockManager.lock(recNo, this);
-		
+	public void lock(int recNo) throws RecordNotFoundException {	
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException {
-		//lockManager.unlock(recNo, this);
-		
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException {
-		// TODO Auto-generated method stub
-		//return lockManager.isLocked(recNo);
 		return true;
 	}
 

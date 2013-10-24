@@ -19,7 +19,7 @@ import suncertify.db.LockManager;
 import suncertify.db.RecordNotFoundException;
 import suncertify.onStart.Startup;
 
-public class MainWindowView {
+public class MainWindowView implements ActionListener {
 	
 	//full window frame
 	JFrame mainWindowFrame = new JFrame();
@@ -43,6 +43,8 @@ public class MainWindowView {
 	
 	JButton searchButton;
 	
+	JButton searchAllButton;
+	
 	JButton bookButton;
 	
 	JButton unbookButton;
@@ -54,9 +56,6 @@ public class MainWindowView {
 	private TableController controller;
 	
 	private DialogBoxViews dialogs = new DialogBoxViews();
-	
-	private Data data = new Data();
-	
 	
 	JTable table;
 	
@@ -93,8 +92,11 @@ public class MainWindowView {
 	
 	private JPanel makeBookPanel() {
 		bookButton = new JButton("Book");
-		bookButton.addActionListener(new bookContractors());
+		unbookButton = new JButton("Unbook");
+		bookButton.addActionListener(this);
+		unbookButton.addActionListener(this);
 		bookPanel.add(BorderLayout.EAST, bookButton);
+		bookPanel.add(BorderLayout.EAST, unbookButton);
 		bookPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		return bookPanel;
 	}
@@ -113,8 +115,11 @@ public class MainWindowView {
 		searchPanel.add(BorderLayout.CENTER, locationSearch);
 		searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		searchButton = new JButton("Search");
-		searchButton.addActionListener(new searchContractors());
+		searchAllButton = new JButton("Search All");
+		searchButton.addActionListener(this);
+		searchAllButton.addActionListener(this);
 		searchPanel.add(BorderLayout.CENTER, searchButton);
+		searchPanel.add(BorderLayout.CENTER, searchAllButton);
 		
 		return searchPanel;
 	}
@@ -122,71 +127,59 @@ public class MainWindowView {
 	private JPanel makeTablePanel(String host, int port) {
 		controller = new TableController(host, port);
 		JPanel tablePanel = new JPanel(new BorderLayout());
-		//controller.
 		tableModel = this.controller.getAllContractors();
+		System.out.println("A");
 		table = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(table);
 		tablePanel.add(scrollPane);
+		table.getTableHeader().setReorderingAllowed(false);
+		System.out.println("eturning tables");
 		return tablePanel;
 	}
 	
-	private class searchContractors implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent e) {
+	
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == bookButton || e.getSource() == unbookButton){	
+			int rowNo = table.getSelectedRow();
+			String customerID = "";
+			if(e.getSource() == bookButton){
+				customerID = (String) JOptionPane.showInputDialog(tablePanel,
+							 "Please enter the Customer ID", 
+							 "Booking SubContractor", 3);
+				System.out.println(customerID);
+			}
+			if((customerID != null && customerID.length() == 8 && isInteger(customerID)) || e.getSource() == unbookButton){						
+				try {
+					controller.updateContractor(rowNo, customerID);
+				} catch (RecordNotFoundException recEx) {
+					System.err.println("Issue finding Record on row "
+							  +rowNo + " : " + recEx);
+				}		
+				refreshTable();	
+			}else if(customerID == null){
+				//logger message about canceling
+				System.out.println("cancelled");
+			}else{
+				JOptionPane.showMessageDialog(tablePanel,
+				    "Invalid Customer ID :\n8 digit int expected",
+				    "Record not booked",
+				    JOptionPane.ERROR_MESSAGE);
+			}	
+		}else if(e.getSource() == searchButton){
 			String[] criteria = new String[2];
 			criteria[0] = nameSearch.getText();
 			criteria[1] = locationSearch.getText();			
 			tableModel = controller.getContractors(criteria);
 			refreshTable();
-		}		
-	}
-
-	private class bookContractors implements ActionListener{
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			int rowNo = table.getSelectedRow();
-			int recNo = 0;
-			try {
-				recNo = controller.getRecNo(rowNo);
-				//data.lock(recNo);
-			} catch (RecordNotFoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} // do stuff here
-			
-			
-			
-			
-			String customerID = "initial";
-			customerID = (String) JOptionPane.showInputDialog(tablePanel,
-						 "Please enter the Customer ID", 
-						 "Booking SubContractor", 3);		
-			if(customerID != null && customerID.length() == 8 && isInteger(customerID)){		
-							
-				try {
-					controller.updateContractor(rowNo, customerID);
-				} catch (RecordNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}		
-				
-				refreshTable();
-				
-				
-			}else{
-				JOptionPane.showMessageDialog(tablePanel,
-					    "Record not booked due to:\n Incorrect data type or \n user cancellation",
-					    "Record not booked",
-					    JOptionPane.ERROR_MESSAGE);
-				System.out.println("not valiid");
-			}
-		}	
+		}else if(e.getSource() == searchAllButton){
+			String[] criteria = new String[2];
+			criteria[0] = "";
+			criteria[1] = "";			
+			tableModel = controller.getContractors(criteria);
+			refreshTable();
+		}
 		
 	}
-	
-	
 	
 	
 	public boolean isInteger( String input ) {

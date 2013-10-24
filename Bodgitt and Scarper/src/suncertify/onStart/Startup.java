@@ -15,15 +15,13 @@ public class Startup {
 		// DialogBoxViews connection = new DialogBoxViews();
 		// PersistProperties properties = new PersistProperties();
 		 if (args.length == 0) {	
-			 System.out.println("start");
-			setConnectionType("remote");   
-			// connection.connectionType("");
-	            	           
-			// connection.connectionType("alone");
-	        //setConnectionType("alone");
+
+			//setConnectionType("remote");   
+
+	        setConnectionType("alone");
 			
 			//setConnectionType("server");  
-			// connection.connectionType("server");
+
 	 
 	         MainWindowView startUp = new MainWindowView();
 			 startUp.DialogSelecter();

@@ -10,13 +10,7 @@ import suncertify.rmi.ContractorDBRemote;
 
 
 public class TableController {
-	
-	
-
-	
-	
-	
-	
+		
 	TableModel TableRecs = new TableModel();	
 	String appType = Startup.getConnectionType();
 	private ContractorDBRemote remoteConnection = null;
@@ -82,33 +76,35 @@ public class TableController {
 	        }  
 	       return s;
 	}
+	
+	public int getRecordNoFromRow(int row) throws RecordNotFoundException{
+		int recNo[] = null;
+		String[] recordDetails = getSelectedContractor(row);
+		if(appType == "alone"){			
+			recNo = localConnection.find(recordDetails);
+		}else if(appType == "remote"){
+			try {
+				recNo = remoteConnection.find(recordDetails);
+			} catch (RemoteException e) {
+				System.err.println("Connection Error : " + e);
+			}
+		}
+		return recNo[0];
+	}
 		
 	public void updateContractor(int row, String Customer) throws RecordNotFoundException{
 		TableRecs.setValueAt(Customer, row, 5);
 		String[] data = getSelectedContractor(row); 		
-		int[] recNo = null;
-		if(appType == "alone"){			
-			recNo = localConnection.find(data);
+		int recNo = getRecordNoFromRow(row);
 		
+		
+		if(appType == "alone"){
+			localConnection.update(recNo, data);
 		}else if(appType == "remote"){
 			try {
-				recNo = remoteConnection.find(data);
+				remoteConnection.update(recNo, data);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		if(recNo.length == 1 && appType == "alone"){
-			localConnection.update(recNo[0], data);
-		}else if(recNo.length == 1 && appType == "remote"){
-			try {
-				remoteConnection.update(recNo[0], data);
-				System.out.println("Controller issueing unlock");
-				remoteConnection.unlock(recNo[0]);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Connection Error : " + e);
 			}
 		}	
 	}
@@ -119,24 +115,14 @@ public class TableController {
 		int[] recNo = null;
 		if(appType == "alone"){			
 			recNo = localConnection.find(data);
-		
 		}else if(appType == "remote"){
 			try {
 				recNo = remoteConnection.find(data);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		
-		try {
-			System.out.println("COntroller sending");
-			remoteConnection.lock(recNo[0]);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("About to return rec No " + recNo[0]);
 		return recNo[0];
 	}
 }

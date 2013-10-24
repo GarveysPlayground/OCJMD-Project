@@ -45,13 +45,9 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
-		 
-
-
 	}
 	 
 	 private static int getInitialOffset() throws IOException{
-		 //logger.entering("FileAccess", "getInitialOffset");
 		 logger.info("Calculating the files initial offset bytes");
 		 database.seek(0);
 		 //Read the start of the file as per the Data File Format

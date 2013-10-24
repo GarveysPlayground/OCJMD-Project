@@ -6,34 +6,38 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 
 public class LockManager {
 	
 	
-	private static Lock lock = new ReentrantLock();
+	private static LockManager instance;
 	
-	 /** Length of time we will wait for a lock. */
-    private static final int TIMEOUT = 5 * 1000;
 	
-	  private static Map<Integer, DataRemote> reservations
-      = new HashMap<Integer, DataRemote>();
+	  private static Map<Integer, Long> reservations
+      = new HashMap<Integer, Long>();
 	  
-	  private static Condition lockReleased  = lock.newCondition();
+	  private LockManager() {
+	  }
+	  
+	  public static LockManager getInstance() {
+	        if (instance == null) {
+	        //    logger.log(Level.INFO, "RecordLockManager, getInstance\n");
+	            instance = new LockManager();
+	        }
+	        return instance;
+	    }
 
-	public static void lock(int recNo, DataRemote dataRemote){
-		System.out.println("Locking");
+	  public synchronized  void lock(int recNo){
+		  final long lockCookie = Thread.currentThread().getId();
 		System.out.println("Current Locks before call : " + reservations);
-		lock.lock();
-		System.out.println("Record"+recNo+" locked by " + dataRemote);
+		System.out.println("Record "+recNo+" locked by " + lockCookie);
         try {   
-        	 long endTimeMSec = System.currentTimeMillis() + TIMEOUT;
-             while (reservations.containsKey(recNo)) {
+             while (isLocked(recNo)) {
             	 System.out.println("Already Locked");
-                 long timeLeftMSec = endTimeMSec - System.currentTimeMillis();
-                 if (!lockReleased.await(timeLeftMSec, TimeUnit.MILLISECONDS)) {
-                 }
+            	 wait();
              }
-            reservations.put(recNo, dataRemote);
+            reservations.put(recNo, lockCookie);
             System.out.println(reservations);
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -41,22 +45,24 @@ public class LockManager {
 		} 
     }
 
-	public static void unlock(int recNo,  DataRemote dataRemote) {
+	  public synchronized  void unlock(int recNo) {
+		  final long lockCookie = Thread.currentThread().getId();
 	 System.out.println("Current locks pre unlock:" + reservations);
-     if (reservations.get(recNo) == dataRemote) {
-         reservations.remove(recNo);
-         lock.unlock();
-       //  lockReleased.signal();
-     } else {
-
-     }
-     System.out.println("Current post unlock:" + reservations);
-     //lock.unlock();
-
+    try{
+		 if (reservations.get(recNo) == lockCookie) {
+	         reservations.remove(recNo);
+	       //  lockReleased.signal();
+	     } else {
+	
+	     }
+	     System.out.println("Current post unlock:" + reservations);
+    }finally{
+    	notifyAll();
+    }
 		
 	}
 
-	public static boolean isLocked(int recNo) {
+	public boolean isLocked(int recNo) {
 		if (reservations.containsKey(recNo)) {
 			System.out.println("isLocked says true");
             return true;
