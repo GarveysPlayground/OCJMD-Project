@@ -30,19 +30,14 @@ public class LockManager {
 
 	  public synchronized  void lock(int recNo){
 		  final long lockCookie = Thread.currentThread().getId();
-	//	System.out.println("Current Locks before call : " + reservations);
-	//	System.out.println("Record "+recNo+" locked by " + lockCookie);
-        try {   
+		  try {   
              while (isLocked(recNo)) {
-    //        	 System.out.println("Already Locked");
             	 wait();
              }
             reservations.put(recNo, lockCookie);
-    //        System.out.println(reservations);
-        } catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+		  } catch (InterruptedException e) {
 			e.printStackTrace();
-		} 
+		  } 
     }
 
 	  public synchronized  void unlock(int recNo) {
