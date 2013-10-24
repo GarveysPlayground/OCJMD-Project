@@ -23,9 +23,14 @@ public class Subcontractor {
 	 private String name = "";
 	 private String location = "";
 	 private String specialties = "";
-	 private int size;
-	 private float rate;
-	 private int owner;
+	 private String size;
+	 private String rate;
+	 private String owner;
+	 //private int size;
+	// private float rate;
+	// private int owner;
+	 
+	 public Subcontractor(){}
 	 
 	 public Subcontractor(String name, String location, String specialities,
 			 			  int size, float rate, int owner){
@@ -40,27 +45,46 @@ public class Subcontractor {
 		 return this.name;
 	 }
 	 
+	 public void setName(String name){
+		 this.name = name;
+	 }
+	 
 	 public String getLocation(){
 		 return this.location;
+	 }
+	 
+	 public void setLocation(String location){
+		 this.location = location;
 	 }
 	 
 	 public String getSpecialties(){
 		 return this.specialties;
 	 }
 	 
-	 public int getSize(){
-		 return this.size;
+	 public void setSpecialties(String specialties){
+		 this.specialties = specialties;
 	 }
 	 
-	 public float getRate(){
+	 public String getSize(){
+		 return this.size;
+	 }
+	 public void setSize( String size ){
+		 this.size = size;
+	 }
+	 
+	 public String getRate(){
 		 return this.rate;
 	 }
 	 
-	 public float getOwner(){
+	 public void setRate(String rate){
+		 this.rate = rate;
+	 }
+	 
+	 public String getOwner(){
 		 return this.owner;
 	 }
 	 
-	 public void setOwner(){
+	 public void setOwner(String owner){
 		 this.owner = owner;
 	 }
 }

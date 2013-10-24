@@ -30,15 +30,15 @@ public class LockManager {
 
 	  public synchronized  void lock(int recNo){
 		  final long lockCookie = Thread.currentThread().getId();
-		System.out.println("Current Locks before call : " + reservations);
-		System.out.println("Record "+recNo+" locked by " + lockCookie);
+	//	System.out.println("Current Locks before call : " + reservations);
+	//	System.out.println("Record "+recNo+" locked by " + lockCookie);
         try {   
              while (isLocked(recNo)) {
-            	 System.out.println("Already Locked");
+    //        	 System.out.println("Already Locked");
             	 wait();
              }
             reservations.put(recNo, lockCookie);
-            System.out.println(reservations);
+    //        System.out.println(reservations);
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,7 +47,7 @@ public class LockManager {
 
 	  public synchronized  void unlock(int recNo) {
 		  final long lockCookie = Thread.currentThread().getId();
-	 System.out.println("Current locks pre unlock:" + reservations);
+//	 System.out.println("Current locks pre unlock:" + reservations);
     try{
 		 if (reservations.get(recNo) == lockCookie) {
 	         reservations.remove(recNo);
@@ -55,7 +55,7 @@ public class LockManager {
 	     } else {
 	
 	     }
-	     System.out.println("Current post unlock:" + reservations);
+	//     System.out.println("Current post unlock:" + reservations);
     }finally{
     	notifyAll();
     }
@@ -64,10 +64,10 @@ public class LockManager {
 
 	public boolean isLocked(int recNo) {
 		if (reservations.containsKey(recNo)) {
-			System.out.println("isLocked says true");
+	//		System.out.println("isLocked says true");
             return true;
         }else{
-        	System.out.println("isLocked says false");
+    //    	System.out.println("isLocked says false");
         	return false;
         	
         }

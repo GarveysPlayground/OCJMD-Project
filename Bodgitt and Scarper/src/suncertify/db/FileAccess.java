@@ -57,13 +57,13 @@ public class FileAccess {
 			dataEntry[3] = "44";
 			dataEntry[4] = "$1.00";
 			dataEntry[5] = "12345678";
-			try {
+		/*	try {
 				create(dataEntry);
 			} catch (DuplicateKeyException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	}
+*/	}
 	 
 	 private static int getInitialOffset() throws IOException{
 		 logger.info("Calculating the files initial offset bytes");

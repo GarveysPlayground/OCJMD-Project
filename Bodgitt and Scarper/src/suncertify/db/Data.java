@@ -8,6 +8,7 @@ public class Data implements DBMain{
 
 	private static FileAccess database = null;
 	private Logger logger = Logger.getLogger("suncertify.db");
+	private static LockManager lockManager = LockManager.getInstance();
 	// private LockManager lockManager = null;
 	
 	public Data(String dbLocation) throws FileNotFoundException, IOException {
@@ -55,15 +56,17 @@ public class Data implements DBMain{
 
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException {	
+		lockManager.lock(recNo);
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException {
+		lockManager.unlock(recNo);
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException {
-		return true;
+		return lockManager.isLocked(recNo);
 	}
 
 }
