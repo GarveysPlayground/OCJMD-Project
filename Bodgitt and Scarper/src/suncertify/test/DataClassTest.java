@@ -1,4 +1,4 @@
-package suncertify.test.db;
+package suncertify.test;
 
 import suncertify.db.Data;
 import suncertify.db.Subcontractor;
@@ -6,7 +6,7 @@ import suncertify.db.Subcontractor;
 
 public class DataClassTest {
 
-	 private static final String DB_PATH = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
+	 private static final String DB_PATH = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
  
     private static Data data = null;  
     /* 
@@ -19,19 +19,15 @@ public class DataClassTest {
      * to test the functionalities without altering the database, so this method 
      * is never called anywhere 
      */  
-    static {  
-        try {  
-        	
-        	data = new Data(DB_PATH);
-        	
-            
-        	//data.loadDbRecords();  
-        } catch (Exception e) {  
-            System.out.println(e);  
-        }  
-    }  
-  
+     
     public static void main(String [] args) {  
+    	 try {  
+         	
+         	data = new Data(DB_PATH);
+         	//data.loadDbRecords();  
+         } catch (Exception e) {  
+             System.out.println(e);  
+         }  
         new DataClassTest().startTests();  
     }  
   
@@ -43,13 +39,13 @@ public class DataClassTest {
              * time, but if you want, you can increase the controller variable, 
              * so it is executed as many times as you want 
              */  
-            for (int i = 0; i < 50; i++) {  
+            for (int i = 0; i <= 10; i++) {  
              //   Thread updatingRandom = new UpdatingRandomRecordThread();  
              //   updatingRandom.start();  
             //    Thread updatingRecord1 = new UpdatingRecord1Thread();  
             //    updatingRecord1.start();  
-           //     Thread creatingRecord = new CreatingRecordThread();  
-           //     creatingRecord.start();  
+              //  Thread creatingRecord = new CreatingRecordThread();  
+              //  creatingRecord.start();  
                 Thread deletingRecord = new DeletingRecord1Thread();  
                 deletingRecord.start();  
                // Thread findingRecords = new FindingRecordsThread();  
@@ -187,7 +183,7 @@ public class DataClassTest {
 			dataEntry[1] = "TheeAthlone";
 			dataEntry[2] = "Trouble Making";
 			dataEntry[3] = "11";
-			dataEntry[4] = "$1.00";
+			dataEntry[4] = "$25.00";
 			dataEntry[5] = "12345678";
   
             try {  
@@ -204,17 +200,17 @@ public class DataClassTest {
   
         public void run() {  
             try {  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to lock record #1 on "  
-                        + "DeletingRecord1Thread");  
+//                System.out.println(Thread.currentThread().getId()  
+//                        + " trying to lock record #1 on "  
+//                        + "DeletingRecord1Thread");  
               //  data.lock(1);  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to delete record #1 on "  
-                        + "DeletingRecord1Thread");  
+//                System.out.println(Thread.currentThread().getId()  
+//                        + " trying to delete record #1 on "  
+//                        + "DeletingRecord1Thread");  
                 data.delete(1);  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to unlock record #1 on "  
-                        + "DeletingRecord1Thread");  
+//                System.out.println(Thread.currentThread().getId()  
+//                        + " trying to unlock record #1 on "  
+//                        + "DeletingRecord1Thread");  
                // data.unlock(1);  
             } catch (Exception e) {  
                 System.out.println(e);  

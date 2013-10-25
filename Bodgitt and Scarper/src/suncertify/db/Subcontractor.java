@@ -23,20 +23,20 @@ public class Subcontractor {
 	 private String name = "";
 	 private String location = "";
 	 private String specialties = "";
-	 private String size;
-	 private String rate;
-	 private String owner;
+	 private String size = "";
+	 private String rate = "";
+	 private String owner = "";
 	 //private int size;
 	// private float rate;
 	// private int owner;
 	 
 	 public Subcontractor(String[] data){
 		 this.name =data[0];
-		 this.location =data[0];
-		 this.specialties = data[0];
-		 this.size= data[0];
-		 this.rate = data[0];
-		 this.owner = data[0];
+		 this.location =data[1];
+		 this.specialties = data[2];
+		 this.size= data[3];
+		 this.rate = data[4];
+		 this.owner = data[5];
 	 }
 	 
 	 public Subcontractor(){

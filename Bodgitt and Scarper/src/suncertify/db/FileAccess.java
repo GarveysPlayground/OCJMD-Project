@@ -47,6 +47,7 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
+		 getNoOfRecords();
 	}
 	 
 	 private static int getInitialOffset() throws IOException{
