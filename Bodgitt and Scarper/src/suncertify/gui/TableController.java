@@ -43,7 +43,6 @@ public class TableController {
 					record = localConnection.read(recordNumbers[i]);
 					System.out.println("Record object values" + record);
 					TableRecs.addSubcontractorRecord(record);
-				//	return TableRecs;
 				}
 	    	}else if(appType == "remote"){
 	    		 recordNumbers = remoteConnection.find(criteria);

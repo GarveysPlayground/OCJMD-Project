@@ -1,6 +1,7 @@
 package suncertify.test;
 
 import suncertify.db.Data;
+import suncertify.db.FileAccess;
 import suncertify.db.Subcontractor;
 
 
@@ -8,7 +9,9 @@ public class DataClassTest {
 
 	 private static final String DB_PATH = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
  
-    private static Data data = null;  
+	 private static Data data = null;
+	 
+	 private static FileAccess database = null;
     /* 
      * If any preparation has to be done before using the Data class, it can be 
      * done in a static block; in this case, before using the Data class, the 
@@ -39,15 +42,15 @@ public class DataClassTest {
              * time, but if you want, you can increase the controller variable, 
              * so it is executed as many times as you want 
              */  
-            for (int i = 0; i <= 10; i++) {  
-             //   Thread updatingRandom = new UpdatingRandomRecordThread();  
-             //   updatingRandom.start();  
-            //    Thread updatingRecord1 = new UpdatingRecord1Thread();  
-            //    updatingRecord1.start();  
-              //  Thread creatingRecord = new CreatingRecordThread();  
-              //  creatingRecord.start();  
-                Thread deletingRecord = new DeletingRecord1Thread();  
-                deletingRecord.start();  
+            for (int i = 0; i <= 5; i++) {  
+                Thread updatingRandom = new UpdatingRandomRecordThread();  
+                updatingRandom.start();  
+             //   Thread updatingRecord1 = new UpdatingRecord1Thread();  
+             //   updatingRecord1.start();  
+            //    Thread creatingRecord = new CreatingRecordThread();  
+            //    creatingRecord.start();  
+               // Thread deletingRecord = new DeletingRecord1Thread();  
+               // deletingRecord.start();  
                // Thread findingRecords = new FindingRecordsThread();  
                // findingRecords.start();  
             }  
@@ -71,9 +74,9 @@ public class DataClassTest {
   
             final int recNo = (int) (Math.random() * 50);  
             try {  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to lock record #" + recNo  
-                        + " on UpdatingRandomRecordThread");  
+  //              System.out.println(Thread.currentThread().getId()  
+  //                      + " trying to lock record #" + recNo  
+  //                      + " on UpdatingRandomRecordThread");  
   
                 /* 
                  * The generated record number may not exist in the database, so 
@@ -87,9 +90,9 @@ public class DataClassTest {
                  * your reality 
                  */  
 //                data.lock(recNo);  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to update record #" + recNo  
-                        + " on UpdatingRandomRecordThread");  
+//                System.out.println(Thread.currentThread().getId()  
+//                        + " trying to update record #" + recNo  
+//                        + " on UpdatingRandomRecordThread");  
   
                 /* 
                  * An exception cannot occur here, otherwise, the unlock 
@@ -102,17 +105,18 @@ public class DataClassTest {
                  * "Y", "$150.00", "2005/07/27", null}); 
                  */  
                 final String[] dataEntry = new String[6];
-    			dataEntry[0] = "Garvey";
-    			dataEntry[1] = "Athlone";
+    			dataEntry[0] = "Random";
+    			dataEntry[1] = "Updater";
     			dataEntry[2] = "Playing, Trouble Making";
     			dataEntry[3] = "44";
     			dataEntry[4] = "$1.00";
     			dataEntry[5] = "12345678";
-    			
-                data.update(recNo, dataEntry);  
-                System.out.println(Thread.currentThread().getId()  
-                        + " trying to unlock record #" + recNo  
-                        + " on UpdatingRandomRecordThread");  
+    			System.out.println("Thread "+Thread.currentThread().getId() +" Updateing Rec No " + recNo);
+    			data.update(recNo,new String[] {"Palace", "Smallville", "2", 
+    	                  "20", "$150.00", "55555555"}); 
+               // System.out.println(Thread.currentThread().getId()  
+               //         + " trying to unlock record #" + recNo  
+               //         + " on UpdatingRandomRecordThread");  
 //                data.unlock(recNo);  
             } catch (Exception e) {  
                 System.out.println(e);  

@@ -57,30 +57,46 @@ public class Data implements DBMain{
 
 	@Override
 	public void lock(int recNo) throws RecordNotFoundException {
-		if(recNo < 0 || recNo >= database.getNoOfRecords()){
-			System.err.println("No Such rec No " + recNo);
-		}else{
-			lockManager.lock(recNo);
+		try {
+			if(recNo < 0 || recNo >= database.getValidRecords().length){
+				System.err.println("No Such rec No " + recNo);
+			}else{
+				lockManager.lock(recNo);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void unlock(int recNo) throws RecordNotFoundException {
-		if(recNo < 0 || recNo >= database.getNoOfRecords()){
-			System.err.println("No Such rec No " + recNo);
-		}else{
-		lockManager.unlock(recNo);
+		try {
+			if(recNo < 0 || recNo >= database.getValidRecords().length){
+				System.err.println("No Such rec No " + recNo);
+			}else{
+			lockManager.unlock(recNo);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public boolean isLocked(int recNo) throws RecordNotFoundException {
-		if(recNo < 0 || recNo >= database.getNoOfRecords()){
-			System.err.println("No Such rec No " + recNo);
+		try {
+			if(recNo < 0 || recNo >= database.getValidRecords().length){
+				System.err.println("No Such rec No " + recNo);
+				return lockManager.isLocked(recNo);
+			}else{
 			return lockManager.isLocked(recNo);
-		}else{
-		return lockManager.isLocked(recNo);
-	
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return lockManager.isLocked(recNo);
 	}
 }
