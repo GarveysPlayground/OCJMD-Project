@@ -38,25 +38,28 @@ public class LockManager {
 		  } catch (InterruptedException e) {
 			e.printStackTrace();
 		  } 
+		  reservations.put(recNo, lockCookie);
     }
 
 	  public synchronized  void unlock(int recNo) {
-		  final long lockCookie = Thread.currentThread().getId();
+		  final long lockCookie = Thread.currentThread().getId();	  
 //	 System.out.println("Current locks pre unlock:" + reservations);
-    try{
-		 if (reservations.get(recNo) == lockCookie) {
-	         reservations.remove(recNo);
-	       //  lockReleased.signal();
-	     } else {
-	
-	     }
-	//     System.out.println("Current post unlock:" + reservations);
+    try{	
+    	if(isLocked(recNo)){
+    		if (isOwnerOfLock(recNo, lockCookie)) {
+    			reservations.remove(recNo);
+    		}
+    	}
     }finally{
     	notifyAll();
     }
 		
 	}
 
+	  public boolean isOwnerOfLock(int recNo, long lockCookie) {
+		  return reservations.get(recNo).equals(lockCookie);
+	  }
+	  
 	public boolean isLocked(int recNo) {
 		if (reservations.containsKey(recNo)) {
 	//		System.out.println("isLocked says true");
