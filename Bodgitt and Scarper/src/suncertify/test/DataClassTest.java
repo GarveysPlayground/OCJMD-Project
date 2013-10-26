@@ -46,17 +46,17 @@ public class DataClassTest {
              * time, but if you want, you can increase the controller variable, 
              * so it is executed as many times as you want 
              */  
-            for (int i = 0; i <= 5000; i++) {  
-                Thread updatingRandom = new UpdatingRandomRecordThread();  
-                updatingRandom.start();  
-                Thread updatingRecord1 = new UpdatingRecord1Thread();  
-                updatingRecord1.start();  
-                Thread creatingRecord = new CreatingRecordThread();  
-                creatingRecord.start();  
-                Thread deletingRecord = new DeletingRecord1Thread();  
-                deletingRecord.start();  
-                Thread findingRecords = new FindingRecordsThread();  
-                findingRecords.start();  
+            for (int i = 0; i <= 40; i++) {  
+             //   Thread updatingRandom = new UpdatingRandomRecordThread();  
+             //   updatingRandom.start();  
+              //  Thread updatingRecord1 = new UpdatingRecord1Thread();  
+              //  updatingRecord1.start();  
+               Thread creatingRecord = new CreatingRecordThread();  
+              creatingRecord.start();  
+              //  Thread deletingRecord = new DeletingRecord1Thread();  
+              //  deletingRecord.start();  
+               // Thread findingRecords = new FindingRecordsThread();  
+               // findingRecords.start();  
             }  
             
 			 try {
@@ -148,8 +148,8 @@ public class DataClassTest {
             
             
             final String[] dataEntry = new String[6];
-			dataEntry[0] = "Garvey";
-			dataEntry[1] = "TheeAthlone";
+			dataEntry[0] = "Updating";
+			dataEntry[1] = "TeeAthlone";
 			dataEntry[2] = "Trouble Making";
 			dataEntry[3] = "11";
 			dataEntry[4] = "$1.00";
@@ -184,13 +184,7 @@ public class DataClassTest {
   
         @SuppressWarnings("deprecation")  
         public void run() {  
-        	final Subcontractor subcon = new Subcontractor();  
-            subcon.setName("Sir Creating");  
-            subcon.setLocation("AthloCreate");  
-            subcon.setSpecialties("CreateRecT");  
-            subcon.setSize("21");  
-            subcon.setRate("$120.00");    
-            subcon.setOwner("22222222");  
+ 
   
             try {  
                 System.out.println(Thread.currentThread().getId()  

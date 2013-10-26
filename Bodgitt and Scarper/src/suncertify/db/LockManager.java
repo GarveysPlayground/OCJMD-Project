@@ -62,7 +62,10 @@ public class LockManager {
 	}
 
 	  public boolean isOwnerOfLock(int recNo, long lockCookie) {
-		  return reservations.get(recNo).equals(lockCookie);
+		  if(isLocked(recNo)){
+			  return reservations.get(recNo).equals(lockCookie);
+		  }
+		return false;
 	  }
 	  
 	public boolean isLocked(int recNo) {

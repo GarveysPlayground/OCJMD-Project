@@ -36,6 +36,8 @@ public class FileAccess {
     		 Subcontractor.rate_Length,
     		 Subcontractor.owner_Length}; 
 	 
+	 static int NO_OF_FIELDS = FIELD_LENGTHS.length;
+	 
 
 	 final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
 	 
@@ -48,33 +50,15 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
-		 
-		 
-		 try {
-			 delete(1);
-			 delete(0);
-			 delete(2);
-			delete(12);
-			
-			
-		} catch (RecordNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-
-	}
+		 }
 	 
 	 private static int getInitialOffset() throws IOException{
-//		 logger.info("Calculating the files initial offset bytes");
 		 database.seek(0);
 		 //Read the start of the file as per the Data File Format
 		 final byte [] magicCookieByteArray = new byte[MAGIC_COOKIE_BYTES];    
          final byte [] numberOfFieldsByteArray = new byte[NUMBER_OF_FIELDS_BYTES];  
          database.read(magicCookieByteArray);    
          database.read(numberOfFieldsByteArray);  
-     
                   
 		 /** The bytes that store the length of each field name */
          final String [] fieldNames = new String[Subcontractor.number_Of_Fields];
@@ -82,8 +66,8 @@ public class FileAccess {
 		    
          /** Get the value of the field name titles   */   
 		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++) {  
-             final byte nameLengthByteArray[] = new byte[FIELD_NAME_BYTES];  
-             database.read(nameLengthByteArray);  
+             final byte nameLengthByteArray[] = new byte[FIELD_NAME_BYTES];
+             database.read(nameLengthByteArray);
              final int nameLength = getValue(nameLengthByteArray);  
 
              final byte [] fieldNameByteArray = new byte[nameLength];  
@@ -100,166 +84,140 @@ public class FileAccess {
 	 }
 	 
 	 
-	 private static String[] getSingleRecord() throws IOException{
-		 if(database.getFilePointer() > database.length()){
-		      	logger.warning("Not that many records exist"); 
-		 }
-        String[] recordValues = new String[Subcontractor.number_Of_Fields]; 
-        final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
- 	    database.read(flagByteArray);
-  	    final int flag = getValue(flagByteArray);
- 	   if(flag == VALID){ 	    
- 		  
- 		}
- 	   for (int i = 0; i < recordValues.length; i++) {  
-      	byte[] bytes = new byte[FIELD_LENGTHS[i]];  
-      	database.read(bytes);
-      	recordValues[i] = new String(bytes, ENCODING); 
-		   }  	    
-  	    return recordValues;
-	 }
-	 	 
-	 public static int getNoOfRecords() { 
-		 System.out.println("Getting no of records");
-		 int numberOfRecords = 0;
-		// int[] validRecs[] = null;
-		 try{
+	private static String[] getSingleRecord() throws IOException {
+		String[] columnValues = new String[Subcontractor.number_Of_Fields];
+		if(database.getFilePointer() > database.length()){
+			logger.warning("Not that many records exist");
+			throw new IOException("No records to read in at " +
+								"this point in the database"); 
+		} else {
+			final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
+			database.read(flagByteArray);
+			byte[] bytes;
+			for (int i = 0; i < columnValues.length; i++) {  
+				bytes = new byte[FIELD_LENGTHS[i]];  
+				database.read(bytes);
+				columnValues[i] = new String(bytes, ENCODING);
+			}
+		}
+		return columnValues;
+	}
+	 
+	
+	 //Get no of both valid and invalid records
+	public static int getNoOfRecords() { 
+		int numberOfRecords = 0;
+		try{
 			database.seek(initial_offset);
-
-			 System.out.println("About to get single record");
          	while (database.getFilePointer() < database.length()) {
-         		String record[] = getSingleRecord();
+         		getSingleRecord();
 	           	numberOfRecords++;
 	   	 	}
 		 }catch(IOException e){
-			 logger.severe("Error getting number of records: " + e.getMessage());
+			logger.severe("Error getting record count: " + e.getMessage());
 		 }
-   //      logger.info("Total Number of records in file: " + numberOfRecords);
          return numberOfRecords;
-     } 
+    } 
 	 
-	 
-	 public static int[] getValidRecords() throws IOException, RecordNotFoundException { 
+	
+	 //Go through all record spaces adding valid records to ArrayList. Then return the
+	// valid records in an int []
+	public static int[] getValidRecords() throws IOException, RecordNotFoundException { 
+		ArrayList<Integer> recNumArray = new ArrayList<Integer>();
         int recNo = 0;
-        ArrayList<Integer> recNumArray = new ArrayList<Integer>();
-        int flag;
         final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
         database.seek(initial_offset);
         while (database.getFilePointer() < database.length()) {
  	    	database.read(flagByteArray);
-  	    	flag = getValue(flagByteArray);
-  	    	if (flag == VALID) { 
-  	   // 		System.out.println("VALID");
+  	    	if (getValue(flagByteArray) == VALID) { 
 				recNumArray.add(recNo);
 				read(recNo);
 				recNo++;
         	}else{  
-        //		System.out.println("-----INVALID");
-        		read(recNo);
+           		read(recNo);
         		recNo++;
         	}
         }
-      //  System.out.println("Number of valid records" + recNumArray.size());
- 	  //  int[] validRecs = new int[recNumArray.size()];
- 	   // int i = 0;
- 	   // for (Integer integer: recNumArray) {
- 		//   	validRecs[i] = integer;
- 		//   	i++;
-     //  }
- 	   int[] arr = new int[recNumArray.size()];
-
- 	  for(int i = 0; i < recNumArray.size(); i++) {
- 	      if (recNumArray.get(i) != null) {
- 	          arr[i] = recNumArray.get(i);
- 	      }
- 	  }
-
- 	    return arr;
+ 	    int[] validRecords = new int[recNumArray.size()];
+ 	    for(int i = 0; i < recNumArray.size(); i++) {
+ 	    	if(recNumArray.get(i) != null) {
+ 	    		validRecords[i] = recNumArray.get(i);
+ 	    	}
+ 	    }
+ 	    return validRecords;
 	 }
 	 
 	
-	 public static String[] read(int recNo) throws RecordNotFoundException{	 
-		 try{
+	public static String[] read(int recNo) throws RecordNotFoundException{	 
+		try{
 			database.seek(initial_offset + (fullRecordSize*recNo)); 
 		 	String record[] = getSingleRecord();
 		 	return record;
+		 } catch (Exception e) {
+			logger.warning("Error reading record Number : " + recNo);
+            throw new RecordNotFoundException("Problem encountered reading " +
+             							"recNo " +recNo+": "+ e.getMessage());	 
 		 }
-		 catch (Exception e) {
-			 logger.warning("Error reading record Number : " + recNo);
-             throw new RecordNotFoundException("Problem encountered reading recNo " +recNo+": "+ e.getMessage());		 
-		 }
-	 }
+	}
 	 
 	 
-	 public static synchronized void update(int recNo, String[] data) throws RecordNotFoundException{
+	public static synchronized void update(int recNo, String[] data) 
+			throws RecordNotFoundException{
+		try {
+			if (recNo < 0 || recNo > getNoOfRecords()) {
+				throw new RecordNotFoundException("The record: " + recNo 
+						+ " was not found");
+			}		
+			int recordLocation = initial_offset + (recNo * fullRecordSize);
+			lockManager.lock(recNo);
+			database.seek(recordLocation);
+			byte[] record = new byte[fullRecordSize];
+			database.read(record);            
 
-		
-	
-		 try {
-			if(recNo < 0 || recNo > getNoOfRecords()){throw new RecordNotFoundException("The record: " + recNo 
-						 								+ " was not found");
-			 }		
-		 int recordLocation = initial_offset + (recNo * fullRecordSize);
-			 lockManager.lock(recNo);
-		//	 System.out.println("Thread " +  Thread.currentThread().getId() + " Updateing recNo : " + recNo);
-			 database.seek(recordLocation);
-			 byte[] record = new byte[fullRecordSize];
-			 database.read(record);            
-
-			 if (record[0] == INVALID) {				 
-				 logger.severe("Cannot update Record. Record was Deleted.");
-			 }
-             else if(record[0] == VALID){
-     //       	 logger.info("Record Valid and Thus Updateable.");
-                 database.seek(recordLocation);
-    			 byte b = VALID; //valid file byte
-    			 database.write(b);
-    			 //for each field output the new value + white space
-    			 for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
-    				 int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
-    				 database.write(data[i].getBytes());
-    				 while(padding != 0){
-    					 database.write(' ');
-    					 padding --;
-    				 }
-    			 }
-             }else{
-            	 System.out.println("-------NEITHER VALID NOR INVALID-------");
-             } 
-         }catch (Exception e){
-                 throw new RecordNotFoundException("The record: " + recNo 
-                         			+ " was not found, " + e.getMessage());
-         } finally{
-        	 lockManager.unlock(recNo);
-         }
-		 
-		 try {
-			System.out.println("Number of valid records after update: " + getValidRecords().length);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			if (record[0] == INVALID) {				 
+				logger.severe("Cannot update Record. Record was Deleted.");
+				throw new RecordNotFoundException("The record : " + recNo 
+						+"has been deleted");
+			}
+			else if (record[0] == VALID) {
+				database.seek(recordLocation);
+				byte b = VALID; //valid file byte
+				database.write(b);
+				for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+					int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
+					database.write(data[i].getBytes());
+					while (padding != 0) {
+						database.write(' ');
+						padding --;
+					}
+				}
+			} else {System.out.println("-----------------------------------ohoh");}
+		} catch (IOException e){
+			System.err.println("Problem encountered while updating recNo + "
+					+ recNo +"\n" + e.getMessage());
+		} finally {
+			lockManager.unlock(recNo);
 		}
-	
 	}
 	 
  
-	 public synchronized static int create(String [] data) throws DuplicateKeyException, IOException{
-		 int numOfRecords =  getNoOfRecords();
-		 database.seek(initial_offset);
-		 byte[] record = new byte[fullRecordSize];
-		 database.read(record);
-		 //Find deleted record space
-		 int currentRec = 0;
-		 while(record[0] == VALID && currentRec < numOfRecords){
-			 database.read(record);
-			 currentRec++;
-		 }
-		 if(record[0] == INVALID){
-			 database.seek(initial_offset + (currentRec*fullRecordSize));
-		 }
+	public synchronized static int create(String [] data) 
+			throws DuplicateKeyException, IOException{
+		int currentRec = 0;
+		final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
 		try{
-			lockManager.lock(currentRec);
-			int recordLocation = initial_offset + (currentRec * fullRecordSize);
+			database.seek(initial_offset);
+			while (database.getFilePointer() < database.length()) {
+				database.read(flagByteArray);
+	  	    		if (getValue(flagByteArray) == VALID) { 
+	  	    			read(currentRec);
+	  	    			currentRec++;
+	  	    		}else{  
+	  	    			lockManager.lock(currentRec);
+	  	    			break;
+	  	    		}	  	    
+			}			
+			int recordLocation =initial_offset + (currentRec * fullRecordSize);
 			database.seek(recordLocation);
 			byte b = VALID; //valid file byte
 			database.write(b);
@@ -272,17 +230,12 @@ public class FileAccess {
 					padding--;
 				}
 			}
+		}catch (RecordNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally{
 			lockManager.unlock(currentRec);
-		}
-		
-		 try {
-				System.out.println("Number of valid records after create: " + getValidRecords().length);
-			} catch (RecordNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 
+		} 
 		return currentRec;
 	 }
 	 	 
@@ -299,30 +252,21 @@ public class FileAccess {
 		 	byte b = (byte) INVALID; //valid file byte
 		 	database.write(b);
 		 	int padding = Subcontractor.entry_Length;
-		 	while(padding != 0){
-				database.write(' ');
-				padding --;
-		 	}
+		 	//while(padding != 0){
+			//	database.write(' ');
+			//	padding --;
+		 	//}
 		 }catch (Exception e){
              throw new RecordNotFoundException("The record: " + recNo 
           			+ " was not found, " + e.getMessage());
 		 }finally{
 			 lockManager.unlock(recNo);
 		 }
-		 
-		 
-		 try {
-				System.out.println("Number of valid records after delete: " + getValidRecords().length);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		 
 	 }
 	 
 	 
 	 public static int [] find(String [] criteria) throws RecordNotFoundException{
-		 String[] allColumns = new String[6];		 
+		 String[] allColumns = new String[Subcontractor.number_Of_Fields];		 
 		 System.arraycopy(criteria, 0, allColumns, 0, criteria.length);
 		 criteria = allColumns;		 
 		 for(int i = 0 ; i < allColumns.length; i++){

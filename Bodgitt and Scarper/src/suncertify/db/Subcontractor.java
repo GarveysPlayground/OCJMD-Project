@@ -26,9 +26,6 @@ public class Subcontractor {
 	 private String size = "";
 	 private String rate = "";
 	 private String owner = "";
-	 //private int size;
-	// private float rate;
-	// private int owner;
 	 
 	 public Subcontractor(String[] data){
 		 this.name =data[0];
