@@ -1,5 +1,8 @@
 package suncertify.test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import suncertify.db.Data;
 import suncertify.db.FileAccess;
 import suncertify.db.Subcontractor;
@@ -7,11 +10,12 @@ import suncertify.db.Subcontractor;
 
 public class DataClassTest {
 
-	 private static final String DB_PATH = "C:\\Users\\epagarv\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
+	 private static final String DB_PATH = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
  
 	 private static Data data = null;
+	 private static FileAccess access = null;
 	 
-	 private static FileAccess database = null;
+	// private static FileAccess database = null;
     /* 
      * If any preparation has to be done before using the Data class, it can be 
      * done in a static block; in this case, before using the Data class, the 
@@ -23,16 +27,16 @@ public class DataClassTest {
      * is never called anywhere 
      */  
      
-    public static void main(String [] args) {  
-    	 try {  
-         	
-         	data = new Data(DB_PATH);
-         	//data.loadDbRecords();  
-         } catch (Exception e) {  
-             System.out.println(e);  
-         }  
-        new DataClassTest().startTests();  
-    }  
+	    public static void main(String [] args) {
+	        try {
+	            data = new Data(DB_PATH);
+	        } catch (FileNotFoundException ex) {
+	            System.out.println("File not found Ex : " + ex);
+	        } catch (IOException ex) {
+	            System.out.println("IO Exception : " + ex);
+	        }
+	        new DataClassTest().startTests();  
+	    }
   
     public void startTests() {  
         try {  
@@ -42,18 +46,25 @@ public class DataClassTest {
              * time, but if you want, you can increase the controller variable, 
              * so it is executed as many times as you want 
              */  
-            for (int i = 0; i <= 5; i++) {  
+            for (int i = 0; i <= 5000; i++) {  
                 Thread updatingRandom = new UpdatingRandomRecordThread();  
                 updatingRandom.start();  
-             //   Thread updatingRecord1 = new UpdatingRecord1Thread();  
-             //   updatingRecord1.start();  
-            //    Thread creatingRecord = new CreatingRecordThread();  
-            //    creatingRecord.start();  
-               // Thread deletingRecord = new DeletingRecord1Thread();  
-               // deletingRecord.start();  
-               // Thread findingRecords = new FindingRecordsThread();  
-               // findingRecords.start();  
+                Thread updatingRecord1 = new UpdatingRecord1Thread();  
+                updatingRecord1.start();  
+                Thread creatingRecord = new CreatingRecordThread();  
+                creatingRecord.start();  
+                Thread deletingRecord = new DeletingRecord1Thread();  
+                deletingRecord.start();  
+                Thread findingRecords = new FindingRecordsThread();  
+                findingRecords.start();  
             }  
+            
+			 try {
+					System.out.println("Number of valid records : " + access.getValidRecords().length);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
         } catch (Exception e) {  
             System.out.println(e.getMessage());  
         }  
@@ -64,13 +75,13 @@ public class DataClassTest {
   
         @SuppressWarnings("deprecation")  
         public void run() {  
-   //     	 final Subcontractor subcon = new Subcontractor();  
-	//            subcon.setName("Sir Update");  
-	//            subcon.setLocation("Athlone");  
-	//            subcon.setSpecialties("Programming");  
-	//            subcon.setSize("5");  
-	//            subcon.setRate("$150.00");    
-	//            subcon.setOwner("12451245");   
+        	 final Subcontractor subcon = new Subcontractor();  
+	            subcon.setName("Sir Update");  
+	            subcon.setLocation("Athlone");  
+	            subcon.setSpecialties("Programming");  
+	            subcon.setSize("5");  
+	            subcon.setRate("$150.00");    
+	            subcon.setOwner("12451245");   
   
             final int recNo = (int) (Math.random() * 50);  
             try {  
@@ -89,7 +100,7 @@ public class DataClassTest {
                  * finally block, but you can customize this code according to 
                  * your reality 
                  */  
-//                data.lock(recNo);  
+                //data.lock(recNo);  
 //                System.out.println(Thread.currentThread().getId()  
 //                        + " trying to update record #" + recNo  
 //                        + " on UpdatingRandomRecordThread");  
@@ -104,20 +115,19 @@ public class DataClassTest {
                  * data.update(recNo, new String[] {"Palace", "Smallville", "2", 
                  * "Y", "$150.00", "2005/07/27", null}); 
                  */  
-                final String[] dataEntry = new String[6];
-    			dataEntry[0] = "Random";
-    			dataEntry[1] = "Updater";
-    			dataEntry[2] = "Playing, Trouble Making";
-    			dataEntry[3] = "44";
-    			dataEntry[4] = "$1.00";
-    			dataEntry[5] = "12345678";
+
     			System.out.println("Thread "+Thread.currentThread().getId() +" Updateing Rec No " + recNo);
-    			data.update(recNo,new String[] {"Palace", "Smallville", "2", 
-    	                  "20", "$150.00", "55555555"}); 
+    			
+    			data.update(recNo,new String[] {"Sir Update", "Athlone", "Programming", 
+    	                  "5", "$150.00", "55555555"}); 
+    			
                // System.out.println(Thread.currentThread().getId()  
                //         + " trying to unlock record #" + recNo  
                //         + " on UpdatingRandomRecordThread");  
-//                data.unlock(recNo);  
+              //  data.unlock(recNo); 
+    			
+    			
+    			
             } catch (Exception e) {  
                 System.out.println(e);  
             }  
@@ -174,26 +184,19 @@ public class DataClassTest {
   
         @SuppressWarnings("deprecation")  
         public void run() {  
-        //	final Subcontractor subcon = new Subcontractor();  
-          //  subcon.setName("Sir Creating");  
-          //  subcon.setLocation("AthloCreate");  
-          //  subcon.setSpecialties("CreateRecT");  
-          //  subcon.setSize("21");  
-          //  subcon.setRate("$120.00");    
-          //  subcon.setOwner("23342334");  
-            
-            final String[] dataEntry = new String[6];
-			dataEntry[0] = "Crevey";
-			dataEntry[1] = "TheeAthlone";
-			dataEntry[2] = "Trouble Making";
-			dataEntry[3] = "11";
-			dataEntry[4] = "$25.00";
-			dataEntry[5] = "12345678";
+        	final Subcontractor subcon = new Subcontractor();  
+            subcon.setName("Sir Creating");  
+            subcon.setLocation("AthloCreate");  
+            subcon.setSpecialties("CreateRecT");  
+            subcon.setSize("21");  
+            subcon.setRate("$120.00");    
+            subcon.setOwner("22222222");  
   
             try {  
                 System.out.println(Thread.currentThread().getId()  
                         + " trying to create a record");  
-                data.create(dataEntry);  
+                data.create(new String[] {"Sir Creating", "AthloCreate", "CreateRecT", 
+                        "21", "$120.00", "22222222"});
             } catch (Exception e) {  
                 System.out.println(e);  
             }  

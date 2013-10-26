@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class Data implements DBMain{
 
-	private static FileAccess database = null;
+	private FileAccess database = null;
 	private Logger logger = Logger.getLogger("suncertify.db");
 	private static LockManager lockManager = LockManager.getInstance();
 	// private LockManager lockManager = null;

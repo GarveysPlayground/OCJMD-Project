@@ -48,123 +48,26 @@ public class FileAccess {
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
 		 initial_offset = getInitialOffset();
-
-		 final String[] dataEntry = new String[6];
-		 dataEntry[0] = "Sir Paddy";
-		 dataEntry[1] = "TheeAthlone";
-		 dataEntry[2] = "Trouble Making";
-		 dataEntry[3] = "11";
-		 dataEntry[4] = "$150.00";
-		 dataEntry[5] = "87654321";	 
-	/*	 
+		 
+		 
 		 try {
-			 System.out.println("Deleteing "  );
-			create(dataEntry);
-			 System.out.println("Deleteing no : 3"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 9"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no :7 "  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no :  30" );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 20"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 26" );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 6");
-			 catch (DuplicateKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		}*/
-		 /*
-		 try {
-			 System.out.println("Deleteing "  );
-			update(3,dataEntry);
-			 System.out.println("Deleteing no : 3"  );
-			 update(4,dataEntry);
-			 System.out.println("Deleteing no : 9"  );
-			 update(5,dataEntry);
-			 System.out.println("Deleteing no :7 "  );
-			 update(6,dataEntry);
-			 System.out.println("Deleteing no :  30" );
-			 update(7,dataEntry);
-			 System.out.println("Deleteing no : 20"  );
-			 update(8,dataEntry);
-			 System.out.println("Deleteing no : 26" );
-			 update(9,dataEntry);
-			 System.out.println("Deleteing no : 6");
+			 delete(1);
+			 delete(0);
+			 delete(2);
+			delete(12);
+			
+			
 		} catch (RecordNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-*/
-		 
-		 
-		 
-	/*
-	 try {
-			 System.out.println("Deleteing "  );
-			delete(34);
-			 System.out.println("Deleteing no : 3"  );
-			delete(35);
-			 System.out.println("Deleteing no : 9"  );
-			delete(36);
-			 System.out.println("Deleteing no :7 "  );
-			delete(37);
-			 System.out.println("Deleteing no :  30" );
-			delete(38);
-			 System.out.println("Deleteing no : 20"  );
-			delete(39);
-			 System.out.println("Deleteing no : 26" );
-			delete(40);
-			 System.out.println("Deleteing no : 6");
-		} catch (RecordNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-*/
-/*		 
 
-
-		 try {
-			 System.out.println("Deleteing "  );
-			create(dataEntry);
-			 System.out.println("Deleteing no : 3"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 9"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no :7 "  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no :  30" );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 20"  );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 26" );
-			 create(dataEntry);
-			 System.out.println("Deleteing no : 6");
-		} catch (DuplicateKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 
-*/ 
-		 
-		 System.out.println("Number of record spaces" + getNoOfRecords());
-		 try{
-		 System.out.println("Number of real records" + getValidRecords().length);
-		 }catch(Exception e){}
-//		 int[] stuff = getValidRecords();
-//		 for(int i =0; i < getValidRecords().length; i++){
-//			System.out.println("valid record : " + stuff[i]); 
-//		 }
 
 	}
 	 
 	 private static int getInitialOffset() throws IOException{
-		 logger.info("Calculating the files initial offset bytes");
+//		 logger.info("Calculating the files initial offset bytes");
 		 database.seek(0);
 		 //Read the start of the file as per the Data File Format
 		 final byte [] magicCookieByteArray = new byte[MAGIC_COOKIE_BYTES];    
@@ -231,7 +134,7 @@ public class FileAccess {
 		 }catch(IOException e){
 			 logger.severe("Error getting number of records: " + e.getMessage());
 		 }
-         logger.info("Total Number of records in file: " + numberOfRecords);
+   //      logger.info("Total Number of records in file: " + numberOfRecords);
          return numberOfRecords;
      } 
 	 
@@ -246,21 +149,32 @@ public class FileAccess {
  	    	database.read(flagByteArray);
   	    	flag = getValue(flagByteArray);
   	    	if (flag == VALID) { 
+  	   // 		System.out.println("VALID");
 				recNumArray.add(recNo);
 				read(recNo);
 				recNo++;
         	}else{  
-        		recNo++;
+        //		System.out.println("-----INVALID");
         		read(recNo);
+        		recNo++;
         	}
         }
- 	    int[] validRecs = new int[recNumArray.size()];
- 	    int i = 0;
- 	    for (Integer integer: recNumArray) {
- 		   	validRecs[i] = integer;
- 		   	i++;
-       }  
- 	    return validRecs;
+      //  System.out.println("Number of valid records" + recNumArray.size());
+ 	  //  int[] validRecs = new int[recNumArray.size()];
+ 	   // int i = 0;
+ 	   // for (Integer integer: recNumArray) {
+ 		//   	validRecs[i] = integer;
+ 		//   	i++;
+     //  }
+ 	   int[] arr = new int[recNumArray.size()];
+
+ 	  for(int i = 0; i < recNumArray.size(); i++) {
+ 	      if (recNumArray.get(i) != null) {
+ 	          arr[i] = recNumArray.get(i);
+ 	      }
+ 	  }
+
+ 	    return arr;
 	 }
 	 
 	
@@ -268,7 +182,6 @@ public class FileAccess {
 		 try{
 			database.seek(initial_offset + (fullRecordSize*recNo)); 
 		 	String record[] = getSingleRecord();
-		 	logger.exiting("FileAccess", "read");
 		 	return record;
 		 }
 		 catch (Exception e) {
@@ -278,15 +191,17 @@ public class FileAccess {
 	 }
 	 
 	 
-	 public static void update(int recNo, String[] data) throws RecordNotFoundException{
+	 public static synchronized void update(int recNo, String[] data) throws RecordNotFoundException{
+
+		
+	
 		 try {
-			if(recNo < 0 || recNo > getValidRecords().length){
-				 throw new RecordNotFoundException("The record: " + recNo 
+			if(recNo < 0 || recNo > getNoOfRecords()){throw new RecordNotFoundException("The record: " + recNo 
 						 								+ " was not found");
 			 }		
 		 int recordLocation = initial_offset + (recNo * fullRecordSize);
 			 lockManager.lock(recNo);
-			 System.out.println("Thread " +  Thread.currentThread().getId() + "Updateing recNo : " + recNo);
+		//	 System.out.println("Thread " +  Thread.currentThread().getId() + " Updateing recNo : " + recNo);
 			 database.seek(recordLocation);
 			 byte[] record = new byte[fullRecordSize];
 			 database.read(record);            
@@ -295,6 +210,7 @@ public class FileAccess {
 				 logger.severe("Cannot update Record. Record was Deleted.");
 			 }
              else if(record[0] == VALID){
+     //       	 logger.info("Record Valid and Thus Updateable.");
                  database.seek(recordLocation);
     			 byte b = VALID; //valid file byte
     			 database.write(b);
@@ -316,10 +232,18 @@ public class FileAccess {
          } finally{
         	 lockManager.unlock(recNo);
          }
+		 
+		 try {
+			System.out.println("Number of valid records after update: " + getValidRecords().length);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
 	}
 	 
  
-	 public static int create(String [] data) throws DuplicateKeyException, IOException{
+	 public synchronized static int create(String [] data) throws DuplicateKeyException, IOException{
 		 int numOfRecords =  getNoOfRecords();
 		 database.seek(initial_offset);
 		 byte[] record = new byte[fullRecordSize];
@@ -335,6 +259,8 @@ public class FileAccess {
 		 }
 		try{
 			lockManager.lock(currentRec);
+			int recordLocation = initial_offset + (currentRec * fullRecordSize);
+			database.seek(recordLocation);
 			byte b = VALID; //valid file byte
 			database.write(b);
 			//for each field output the new value + white space
@@ -349,12 +275,20 @@ public class FileAccess {
 		}finally{
 			lockManager.unlock(currentRec);
 		}
+		
+		 try {
+				System.out.println("Number of valid records after create: " + getValidRecords().length);
+			} catch (RecordNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 
 		return currentRec;
 	 }
 	 	 
-	 static void delete(int recNo) throws RecordNotFoundException{
+	 static synchronized void delete(int recNo) throws RecordNotFoundException{
 		 try{
-		 if(recNo < 0 || recNo >=  getValidRecords().length){
+		 if(recNo < 0 || recNo >=  getNoOfRecords()){
 			 throw new RecordNotFoundException("The record you wish to delete:"
 					 							+ recNo	+ " was not found");
 		 }
@@ -376,6 +310,14 @@ public class FileAccess {
 			 lockManager.unlock(recNo);
 		 }
 		 
+		 
+		 try {
+				System.out.println("Number of valid records after delete: " + getValidRecords().length);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		 
 	 }
 	 
 	 
@@ -387,36 +329,36 @@ public class FileAccess {
 			 if (allColumns[i] == null){allColumns[i] = "";}
 		 }
 		  
-		 try{
-		 int counter = 0;
-		 int totalRecords =  getValidRecords().length;
-		// int[] AllRecords = new int[totalRecords];	
-		int[] AllRecords =  getValidRecords();
+		 int[] searchResults = null;
 		 try {
-			 database.seek(initial_offset);
-		 }catch(IOException e){
-			 e.printStackTrace();
-		 }
-			
-		 for(int i = 0; i < totalRecords; i++){
-			 String [] record = read(i);
-			 if(record[0].contains(allColumns[0]) && 
-				record[1].contains(allColumns[1]) &&
-				record[2].contains(allColumns[2]) &&
-				record[3].contains(allColumns[3]) &&
-				record[4].contains(allColumns[4])){
-					 AllRecords[counter] = i;
-					 counter++;
-			 }
-		 }
-		 int[]  matchingRecords= new int[counter];
-		 for(int i = 0; i < counter; i++){
-			 matchingRecords[i] = AllRecords[i];
-		 }	
-		 return matchingRecords;
-		 }catch (Exception e){
-             throw new RecordNotFoundException(e.getMessage());
-		 }
+			int[] records = new int[getValidRecords().length];
+			records = getValidRecords();
+			String[] record = null;
+			ArrayList<Integer> matchingRecords = new ArrayList<Integer>();
+			for(int i = 0; i < getValidRecords().length; i++){
+				System.out.println("Records i : " + records[i]);
+				 record = read(records[i]);
+				 if(record[0].contains(allColumns[0]) && 
+					record[1].contains(allColumns[1]) &&
+					record[2].contains(allColumns[2]) &&
+					record[3].contains(allColumns[3]) &&
+					record[4].contains(allColumns[4])){
+					 matchingRecords.add(records[i]);
+				 }
+			}
+		 	searchResults = new int[matchingRecords.size()];
+		  	for(int i = 0; i < matchingRecords.size(); i++){
+		  	      if (matchingRecords.get(i) != null) {
+		  	    	  System.out.println("Matching record" + matchingRecords.get(i));
+		  	    	searchResults[i] = matchingRecords.get(i);
+		  	      }
+		  	}
+		  	
+		 } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return searchResults;
 	 }
 	 
 	 
