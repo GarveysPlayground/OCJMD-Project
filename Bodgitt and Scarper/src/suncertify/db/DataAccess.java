@@ -39,16 +39,17 @@ public class DataAccess {
 	 static int NO_OF_FIELDS = FIELD_LENGTHS.length;
 	 
 
-	 final static int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
+	 static final int fullRecordSize = Subcontractor.entry_Length + RECORD_FLAG_BYTES;
 	 
 	 private static LockManager lockManager = LockManager.getInstance();
 	 
 	 private static Logger logger = Logger.getLogger("suncertify.db");
 	 
-	 public DataAccess(String dbLocation) throws FileNotFoundException,IOException {
+	 public DataAccess(final String dbLocation) 
+			 throws IOException {
 		 logger.entering("FileAccess", "connectToDB", dbLocation);
 		 logger.info("Connecting to Database dbLocation");
-		 database = new RandomAccessFile(new File(dbLocation), "rw");;
+		 database = new RandomAccessFile(new File(dbLocation), "rw");
 		 initial_offset = getInitialOffset();
 		 }
 	 
@@ -66,7 +67,7 @@ public class DataAccess {
 		    
          /** Get the value of the field name titles   */   
 		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++) {  
-             final byte nameLengthByteArray[] = new byte[FIELD_NAME_BYTES];
+             final byte[] nameLengthByteArray = new byte[FIELD_NAME_BYTES];
              database.read(nameLengthByteArray);
              final int nameLength = getValue(nameLengthByteArray);  
 
@@ -148,10 +149,10 @@ public class DataAccess {
 	 }
 	 
 	
-	public static String[] read(int recNo) throws RecordNotFoundException{	 
+	public static String[] read(final int recNo) throws RecordNotFoundException{	 
 		try{
 			database.seek(initial_offset + (fullRecordSize*recNo)); 
-		 	String record[] = read();
+		 	String[] record = read();
 		 	return record;
 		 } catch (Exception e) {
 			logger.warning("Error reading record Number : " + recNo);
@@ -161,7 +162,7 @@ public class DataAccess {
 	}
 	 
 	 
-	public static synchronized void update(int recNo, String[] data) 
+	public static synchronized void update(final int recNo, final String[] data) 
 			throws RecordNotFoundException{
 		try {
 			if (recNo < 0 || recNo > getNoOfRecords()) {
@@ -201,7 +202,7 @@ public class DataAccess {
 	}
 	 
  
-	public synchronized static int create(String [] data) 
+	public static synchronized int create(final String [] data) 
 			throws DuplicateKeyException, IOException{
 		int currentRec = 0;
 		final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
@@ -221,32 +222,33 @@ public class DataAccess {
 	  	    			break;
 	  	    		}	  	    
 			}			
-			int recordLocation =initial_offset + (currentRec * fullRecordSize);
+			int recordLocation = initial_offset + (currentRec * fullRecordSize);
 			database.seek(recordLocation);
 			byte b = VALID; //valid file byte
 			database.write(b);
 			//for each field output the new value + white space
-			for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
+			for (int i = 0; i < Subcontractor.number_Of_Fields; i++) {
 				int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
 				database.write(data[i].getBytes());
-				while(padding != 0){
+				while (padding != 0) {
 					database.write(' ');
 					padding--;
 				}
 			}
-		}catch (RecordNotFoundException e) {
-			System.err.println("Error while finding space to create record." +
-					" Record"+ currentRec + " not found" + e.getMessage());
-		}finally{
+		} catch (RecordNotFoundException e) {
+			System.err.println("Error while finding space to create record." 
+					+ " Record" + currentRec + " not found" + e.getMessage());
+		} finally {
 			lockManager.unlock(currentRec);
 		} 
 		return currentRec;
 	 }
 	 	 
 	
-	 static synchronized void delete(int recNo) throws RecordNotFoundException{
-		 try{
-		 if(recNo < 0 || recNo >=  getNoOfRecords()){
+	 static synchronized void delete(final int recNo) 
+			 throws RecordNotFoundException {
+		 try {
+		 if (recNo < 0 || recNo >=  getNoOfRecords()) {
 			 throw new RecordNotFoundException("The record you wish to delete:"
 					 							+ recNo	+ " was not found");
 		 }
@@ -256,26 +258,25 @@ public class DataAccess {
 		 	database.seek(recordLocation);		 
 		 	byte b = (byte) INVALID; //valid file byte
 		 	database.write(b);
-		 	//int padding = Subcontractor.entry_Length;
-		 	//while(padding != 0){
-			//	database.write(' ');
-			//	padding --;
-		 	//}
-		 }catch (Exception e){
+		 } catch (Exception e) {
              throw new RecordNotFoundException("The record: " + recNo 
           			+ " was not found, " + e.getMessage());
-		 }finally{
+		 } finally {
 			 lockManager.unlock(recNo);
 		 }
 	 }
 	 
 	 
-	 public static int [] find(String [] criteria) throws RecordNotFoundException{
-		 String[] allColumns = new String[Subcontractor.number_Of_Fields];		 
+	 public static int [] find(String [] criteria) 
+			 throws RecordNotFoundException {
+		 String[] allColumns = 
+				 new String[Subcontractor.number_Of_Fields];		 
 		 System.arraycopy(criteria, 0, allColumns, 0, criteria.length);
 		 criteria = allColumns;		 
-		 for(int i = 0 ; i < allColumns.length; i++){
-			 if (allColumns[i] == null){allColumns[i] = "";}
+		 for (int i = 0; i < allColumns.length; i++) {
+			 if (allColumns[i] == null){
+				 allColumns[i] = "";
+			}
 		 }
 		  
 		 int[] searchResults = null;
@@ -284,18 +285,18 @@ public class DataAccess {
 			records = getValidRecords();
 			String[] record = null;
 			ArrayList<Integer> matchingRecords = new ArrayList<Integer>();
-			for(int i = 0; i < getValidRecords().length; i++){
+			for (int i = 0; i < getValidRecords().length; i++) {
 				 record = read(records[i]);
-				 if(record[0].contains(allColumns[0]) && 
-					record[1].contains(allColumns[1]) &&
-					record[2].contains(allColumns[2]) &&
-					record[3].contains(allColumns[3]) &&
-					record[4].contains(allColumns[4])){
+				 if (record[0].contains(allColumns[0]) 
+						 &&	record[1].contains(allColumns[1]) 
+						 &&	record[2].contains(allColumns[2]) 
+						 && record[3].contains(allColumns[3]) 
+						 &&	record[4].contains(allColumns[4])) {
 					 matchingRecords.add(records[i]);
 				 }
 			}
 		 	searchResults = new int[matchingRecords.size()];
-		  	for(int i = 0; i < matchingRecords.size(); i++){
+		  	for (int i = 0; i < matchingRecords.size(); i++) {
 		  	      if (matchingRecords.get(i) != null) {
 		  	    	searchResults[i] = matchingRecords.get(i);
 		  	      }
@@ -308,15 +309,15 @@ public class DataAccess {
 		 return searchResults;
 	 }
 	 
-	 public static boolean isDuplicate(String [] criteria){
+	 public static boolean isDuplicate(final String [] criteria){
 		 try {
 			int [] duplicateRecs = find(criteria);
-			if (duplicateRecs.length > 0 ){
+			if (duplicateRecs.length > 0) {
 				return true;
 			}			
 		} catch (Exception e) {
-			System.err.println("Error encountered while checking for record" +
-					" dublication : " + e.getMessage());
+			System.err.println("Error encountered while checking for record" 
+								+ " dublication : " + e.getMessage());
 		}
 		 return false;
 	 }

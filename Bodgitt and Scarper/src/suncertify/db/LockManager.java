@@ -22,6 +22,7 @@ public final class LockManager {
 	public synchronized  void lock(final int recNo){
 		final long lockCookie = Thread.currentThread().getId();
 		System.out.println(lockCookie + "  wants  " + recNo);
+		
 		try {   
 			while (isLocked(recNo)) {
 				System.out.println(lockCookie + "  in wait for  " + recNo);
