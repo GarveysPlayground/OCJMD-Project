@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 
 
-public class FileAccess {
+public class DataAccess {
 	
 	 private static RandomAccessFile database = null;
 	 private static int initial_offset = 0;
@@ -45,7 +45,7 @@ public class FileAccess {
 	 
 	 private static Logger logger = Logger.getLogger("suncertify.db");
 	 
-	 public FileAccess(String dbLocation) throws FileNotFoundException,IOException {
+	 public DataAccess(String dbLocation) throws FileNotFoundException,IOException {
 		 logger.entering("FileAccess", "connectToDB", dbLocation);
 		 logger.info("Connecting to Database dbLocation");
 		 database = new RandomAccessFile(new File(dbLocation), "rw");;
@@ -84,7 +84,7 @@ public class FileAccess {
 	 }
 	 
 	 
-	private static String[] getSingleRecord() throws IOException {
+	private static String[] read() throws IOException {
 		String[] columnValues = new String[Subcontractor.number_Of_Fields];
 		if(database.getFilePointer() > database.length()){
 			logger.warning("Not that many records exist");
@@ -110,7 +110,7 @@ public class FileAccess {
 		try{
 			database.seek(initial_offset);
          	while (database.getFilePointer() < database.length()) {
-         		getSingleRecord();
+         		read();
 	           	numberOfRecords++;
 	   	 	}
 		 }catch(IOException e){
@@ -151,7 +151,7 @@ public class FileAccess {
 	public static String[] read(int recNo) throws RecordNotFoundException{	 
 		try{
 			database.seek(initial_offset + (fullRecordSize*recNo)); 
-		 	String record[] = getSingleRecord();
+		 	String record[] = read();
 		 	return record;
 		 } catch (Exception e) {
 			logger.warning("Error reading record Number : " + recNo);
@@ -181,7 +181,7 @@ public class FileAccess {
 			}
 			else if (record[0] == VALID) {
 				database.seek(recordLocation);
-				byte b = VALID; //valid file byte
+				byte b = VALID; 
 				database.write(b);
 				for(int i = 0; i < Subcontractor.number_Of_Fields; i++){
 					int padding = FIELD_LENGTHS[i] - data[i].getBytes().length;
@@ -191,7 +191,7 @@ public class FileAccess {
 						padding --;
 					}
 				}
-			} else {System.out.println("-----------------------------------ohoh");}
+			}
 		} catch (IOException e){
 			System.err.println("Problem encountered while updating recNo + "
 					+ recNo +"\n" + e.getMessage());
@@ -206,6 +206,10 @@ public class FileAccess {
 		int currentRec = 0;
 		final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
 		try{
+			if(isDuplicate(data)){
+				throw new DuplicateKeyException("Create failed, " +
+						"Records already exists!");
+			}
 			database.seek(initial_offset);
 			while (database.getFilePointer() < database.length()) {
 				database.read(flagByteArray);
@@ -231,14 +235,15 @@ public class FileAccess {
 				}
 			}
 		}catch (RecordNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Error while finding space to create record." +
+					" Record"+ currentRec + " not found" + e.getMessage());
 		}finally{
 			lockManager.unlock(currentRec);
 		} 
 		return currentRec;
 	 }
 	 	 
+	
 	 static synchronized void delete(int recNo) throws RecordNotFoundException{
 		 try{
 		 if(recNo < 0 || recNo >=  getNoOfRecords()){
@@ -251,7 +256,7 @@ public class FileAccess {
 		 	database.seek(recordLocation);		 
 		 	byte b = (byte) INVALID; //valid file byte
 		 	database.write(b);
-		 	int padding = Subcontractor.entry_Length;
+		 	//int padding = Subcontractor.entry_Length;
 		 	//while(padding != 0){
 			//	database.write(' ');
 			//	padding --;
@@ -299,10 +304,23 @@ public class FileAccess {
 		  	}
 		  	
 		 } catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Error searching for records : ");
 			e.printStackTrace();
 		}
 		 return searchResults;
+	 }
+	 
+	 public static boolean isDuplicate(String [] criteria){
+		 try {
+			int [] duplicateRecs = find(criteria);
+			if (duplicateRecs.length > 0 ){
+				return true;
+			}			
+		} catch (Exception e) {
+			System.err.println("Error encountered while checking for record" +
+					" dublication : " + e.getMessage());
+		}
+		 return false;
 	 }
 	 
 	 

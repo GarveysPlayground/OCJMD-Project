@@ -28,3 +28,4 @@ Then read(int [x]) reads through them again to get the data
 
 Should FileAccess.getSingleRecord() be replaced with read?
 
+No duplicate key, checks for duplicate record

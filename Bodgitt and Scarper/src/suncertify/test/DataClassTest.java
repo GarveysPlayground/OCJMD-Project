@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import suncertify.db.Data;
-import suncertify.db.FileAccess;
+import suncertify.db.DataAccess;
 import suncertify.db.Subcontractor;
 
 
@@ -13,7 +13,7 @@ public class DataClassTest {
 	 private static final String DB_PATH = "C:\\Users\\Garvey\\Google Drive\\Java\\SCJD\\mine\\db-2x3.db";
  
 	 private static Data data = null;
-	 private static FileAccess access = null;
+	 private static DataAccess access = null;
 	 
 	// private static FileAccess database = null;
     /* 
