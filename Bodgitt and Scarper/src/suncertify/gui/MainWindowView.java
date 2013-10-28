@@ -14,10 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import suncertify.db.Data;
-import suncertify.db.LockManager;
 import suncertify.db.RecordNotFoundException;
-import suncertify.onStart.Startup;
 
 public class MainWindowView implements ActionListener {
 	
@@ -49,28 +46,14 @@ public class MainWindowView implements ActionListener {
 	
 	JButton unbookButton;
 	
-	String appType = Startup.getConnectionType();
 	
 	private TableModel tableModel = new TableModel();
 	
 	private TableController controller;
-	
-	private DialogBoxViews dialogs = new DialogBoxViews();
-	
+		
 	JTable table;
 	
-	public void DialogSelecter(){
-		System.out.println("Innitiate");
-		if(appType == "alone"){	
-			dialogs.databaseLocationWindow();
-		}else if(appType == "remote"){
-			dialogs.rmiClient();
-		}else if(appType == "server"){
-			dialogs.rmiConnectionWindow();
-		}
-	
 
-	}
 	
 	public void setupMainWindow(String host, int port){
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
@@ -80,7 +63,6 @@ public class MainWindowView implements ActionListener {
 		
 		tablePanel =  makeTablePanel(host, port);
 		mainWindowFrame.getContentPane().add(BorderLayout.NORTH, tablePanel);
-		System.out.println("Done");
 		bookPanel = makeBookPanel();
 		mainWindowFrame.add(bookPanel, BorderLayout.SOUTH);
 		searchPanel = makeSearchPanel();
@@ -128,12 +110,10 @@ public class MainWindowView implements ActionListener {
 		controller = new TableController(host, port);
 		JPanel tablePanel = new JPanel(new BorderLayout());
 		tableModel = this.controller.getAllContractors();
-		System.out.println("A");
 		table = new JTable(tableModel);
 		JScrollPane scrollPane = new JScrollPane(table);
 		tablePanel.add(scrollPane);
 		table.getTableHeader().setReorderingAllowed(false);
-		System.out.println("eturning tables");
 		return tablePanel;
 	}
 	
@@ -146,7 +126,6 @@ public class MainWindowView implements ActionListener {
 				customerID = (String) JOptionPane.showInputDialog(tablePanel,
 							 "Please enter the Customer ID", 
 							 "Booking SubContractor", 3);
-				System.out.println(customerID);
 			}
 			if((customerID != null && customerID.length() == 8 && isInteger(customerID)) || e.getSource() == unbookButton){						
 				try {
@@ -158,7 +137,6 @@ public class MainWindowView implements ActionListener {
 				refreshTable();	
 			}else if(customerID == null){
 				//logger message about canceling
-				System.out.println("cancelled");
 			}else{
 				JOptionPane.showMessageDialog(tablePanel,
 				    "Invalid Customer ID :\n8 digit int expected",
@@ -196,7 +174,4 @@ public class MainWindowView implements ActionListener {
 		tableModel.fireTableDataChanged();
         this.table.setModel(this.tableModel);       
     }
-
-	
-
 }

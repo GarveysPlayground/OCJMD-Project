@@ -1,57 +1,62 @@
 package suncertify.onStart;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import suncertify.gui.DialogBoxViews;
-import suncertify.gui.MainWindowView;
-import suncertify.gui.PersistProperties;
+
+//import suncertify.gui.MainWindowView;
+
+
 
 public class Startup {
-
-	 private Logger logger = Logger.getLogger("startUp");
-	 private static String connectionType = null;
-	 
-	 public Startup(String[] args) {
-		// DialogBoxViews connection = new DialogBoxViews();
-		// PersistProperties properties = new PersistProperties();
-		 if (args.length == 0) {	
-
-			//setConnectionType("remote");   
-
-	        setConnectionType("alone");
-			
-			//setConnectionType("server");  
-
-	 
-	         MainWindowView startUp = new MainWindowView();
-			 startUp.DialogSelecter();
-	        
-			// PersistProperties properties = new PersistProperties();
-			//proper.setProperty("port", "1234");
-			// proper.setProperty("host", "localhost");
-			// properties.
-		 
-		 
-		 }else if ("server".equalsIgnoreCase(args[0])) {
-	        //   connection.connectionType("server");
-	        }else if ("alone".equalsIgnoreCase(args[0])) {
-		     //  connection.connectionType("alone");
-		    }
-	}
-	 
-	 
-	 public void setConnectionType(String type)
+	private static DialogBoxViews dialogs = new DialogBoxViews();
+	 private static Logger logger = Logger.getLogger("startUp");
+	 private static ApplicationMode connectionType = null;
+	// static MainWindowView startUp = new MainWindowView();
+	
+	 public static void setApplicationMode(ApplicationMode appMode)
 	 {
-	     connectionType = type;
+	     connectionType = appMode;
 	 }
 	 
-	 public static String getConnectionType()
+	 public static ApplicationMode getApplicationMode()
 	 {
 	     return connectionType;
 	 }
 
 
 	public static void main(String[] args){
-			Startup start = new Startup(args);
+		System.out.println("humble beginings");
+		System.out.println("humble beginings -->" + args.length);
+		 launch(args);
 	}
+
+	private static void launch(String[] args) {
+		if (args.length == 0) {
+		//	setApplicationMode(ApplicationMode.NETWORK);
+		//	dialogs.rmiClient();
+
+			setApplicationMode(ApplicationMode.ALONE);
+        	dialogs.databaseLocationWindow();
+			
+		}
+        else if (ApplicationMode.SERVER.name().equalsIgnoreCase(args[0])) {
+        	setApplicationMode(ApplicationMode.SERVER);
+        	dialogs.rmiConnectionWindow();
+        	//startUp.DialogSelecter(ApplicationMode.SERVER);
+        }
+        else if (ApplicationMode.ALONE.name().equalsIgnoreCase(args[0])) {
+        	setApplicationMode(ApplicationMode.ALONE);
+        	dialogs.databaseLocationWindow();
+        	//startUp.DialogSelecter(ApplicationMode.ALONE);
+        }
+        else {
+            logger.log(Level.INFO, "Invalid param supplied to application: " +
+                    args[0]);
+        }
+		
+	}
+
+
 }

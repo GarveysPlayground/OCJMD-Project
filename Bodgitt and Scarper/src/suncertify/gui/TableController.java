@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import suncertify.db.Data;
 import suncertify.db.RecordNotFoundException;
+import suncertify.onStart.ApplicationMode;
 import suncertify.onStart.Startup;
 import suncertify.rmi.ClientRemoteConnect;
 import suncertify.rmi.ContractorDBRemote;
@@ -12,15 +13,15 @@ import suncertify.rmi.ContractorDBRemote;
 public class TableController {
 		
 	TableModel TableRecs = new TableModel();	
-	String appType = Startup.getConnectionType();
+	ApplicationMode appType = Startup.getApplicationMode();
 	private ContractorDBRemote remoteConnection = null;
 	private Data localConnection = null;
 	
 	public TableController(String host, int port){
-		if(appType == "alone"){			
+		if(appType == ApplicationMode.ALONE){			
 			localConnection = new Data();
 		
-		}else if(appType == "remote"){
+		}else if(appType == ApplicationMode.NETWORK){
 			try {
 				remoteConnection = 	ClientRemoteConnect.getConnection(host, port);
 			} catch (RemoteException e) {
@@ -37,21 +38,20 @@ public class TableController {
 		String[] record;
 		int[] recordNumbers;
 		try {
-	    	if(appType == "alone"){	
+	    	if(appType == ApplicationMode.ALONE){	
 				 recordNumbers = localConnection.find(criteria);
 				for(int i = 0; i < recordNumbers.length;i++){
 					record = localConnection.read(recordNumbers[i]);
-					System.out.println("Record object values" + record);
 					TableRecs.addSubcontractorRecord(record);
 				}
-	    	}else if(appType == "remote"){
+	    	}else if(appType == ApplicationMode.NETWORK){
 	    		 recordNumbers = remoteConnection.find(criteria);
 				for(int i = 0; i < recordNumbers.length;i++){
 					record = remoteConnection.read(recordNumbers[i]);
 					TableRecs.addSubcontractorRecord(record);}
 	    	}
 		} catch (RecordNotFoundException | RemoteException e) {
-			System.out.println("Issue populating JTable");
+			System.err.println("Issue populating JTable");
 		}
 		return TableRecs;
 	}
@@ -77,9 +77,9 @@ public class TableController {
 	public int getRecordNoFromRow(int row) throws RecordNotFoundException{
 		int recNo[] = null;
 		String[] recordDetails = getSelectedContractor(row);
-		if(appType == "alone"){			
+		if(appType == ApplicationMode.ALONE){			
 			recNo = localConnection.find(recordDetails);
-		}else if(appType == "remote"){
+		}else if(appType == ApplicationMode.NETWORK){
 			try {
 				recNo = remoteConnection.find(recordDetails);
 			} catch (RemoteException e) {
@@ -93,34 +93,16 @@ public class TableController {
 		TableRecs.setValueAt(Customer, row, 5);
 		String[] data = getSelectedContractor(row); 		
 		int recNo = getRecordNoFromRow(row);
-		System.out.println("Updating record number : " + row );
 		
-		if(appType == "alone"){
+		if(appType == ApplicationMode.ALONE){
 			localConnection.update(recNo, data);
-		}else if(appType == "remote"){
+		}else if(appType == ApplicationMode.NETWORK){
 			try {
 				remoteConnection.update(recNo, data);
 			} catch (RemoteException e) {
 				System.err.println("Connection Error : " + e);
 			}
-		}	
-	}
-	
-	
-	public int getRecNo(int row) throws RecordNotFoundException{
-		String[] data = getSelectedContractor(row); 		
-		int[] recNo = null;
-		if(appType == "alone"){			
-			recNo = localConnection.find(data);
-		}else if(appType == "remote"){
-			try {
-				recNo = remoteConnection.find(data);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
 		}
-		System.out.println("About to return rec No " + recNo[0]);
-		return recNo[0];
 	}
 }
 

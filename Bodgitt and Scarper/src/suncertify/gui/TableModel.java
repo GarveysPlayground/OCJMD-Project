@@ -6,10 +6,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 
 	private String [] headerTitles = {"Name", "Location",
 									 "Specialties", "size, ", "rate",
@@ -35,8 +36,6 @@ public class TableModel extends AbstractTableModel {
     public void setValueAt(Object obj, int row, int column) {
         Object[] rowValues = this.records.get(row);
         rowValues[column] = obj;
-        fireTableDataChanged();
-        
     }
     
     public void addSubcontractorRecord(String[] record) {  
@@ -45,7 +44,6 @@ public class TableModel extends AbstractTableModel {
     
     public  String getSubcontractorRecord(int row, int column) {  
     	String[] rowValues = this.records.get(row);
-    	System.out.println(rowValues[0]);
         return rowValues[column];
     }
     
@@ -59,4 +57,5 @@ public class TableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         return headerTitles[column];
     }
+    
 }

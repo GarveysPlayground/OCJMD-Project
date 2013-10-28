@@ -22,7 +22,6 @@ private static final String FILE_NAME = "suncertify.properties";
 		if(!propertiesFile.exists()){
 			properties = new Properties();
 			
-			System.out.println("Not exists");
 			properties.setProperty("database", "");
 			properties.setProperty("host", "");
 			properties.setProperty("port", "");
@@ -37,7 +36,6 @@ private static final String FILE_NAME = "suncertify.properties";
 				e.printStackTrace();
 			}
 		}else{
-			System.out.println("exists");
 			properties = new Properties();
 			try {
 				properties.load(new FileInputStream(propertiesFile));

@@ -6,12 +6,12 @@ public class RecordNotFoundException extends Exception {
 	  //constructor that takes a String that serves as the 
 	  //exception's description
 			
-			public RecordNotFoundException() {
-			     super();
-			}
+	public RecordNotFoundException() {
+		super();
+	}
 
-			public RecordNotFoundException(String message) {
-			    super(message);
-			}
-		}
+	public RecordNotFoundException(String message) {
+		super(message);
+	}
+}
 

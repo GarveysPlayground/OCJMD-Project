@@ -86,7 +86,7 @@ public class DataAccess {
 	 
 	private static String[] read() throws IOException {
 		String[] columnValues = new String[Subcontractor.number_Of_Fields];
-		if(database.getFilePointer() > database.length()){
+		if (database.getFilePointer() > database.length()) {
 			logger.warning("Not that many records exist");
 			throw new IOException("No records to read in at " +
 								"this point in the database"); 
@@ -285,7 +285,6 @@ public class DataAccess {
 			String[] record = null;
 			ArrayList<Integer> matchingRecords = new ArrayList<Integer>();
 			for(int i = 0; i < getValidRecords().length; i++){
-				System.out.println("Records i : " + records[i]);
 				 record = read(records[i]);
 				 if(record[0].contains(allColumns[0]) && 
 					record[1].contains(allColumns[1]) &&
@@ -298,7 +297,6 @@ public class DataAccess {
 		 	searchResults = new int[matchingRecords.size()];
 		  	for(int i = 0; i < matchingRecords.size(); i++){
 		  	      if (matchingRecords.get(i) != null) {
-		  	    	  System.out.println("Matching record" + matchingRecords.get(i));
 		  	    	searchResults[i] = matchingRecords.get(i);
 		  	      }
 		  	}
