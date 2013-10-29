@@ -7,7 +7,8 @@ import java.rmi.RemoteException;
 public interface DBMainRmiConnector extends Remote{
   // Reads a record from the file. Returns an array where each
   // element is a record value.
-  public String [] read(int recNo) throws RecordNotFoundException, RemoteException;
+  public String [] read(int recNo) 
+		  throws RecordNotFoundException, RemoteException;
 
   // Modifies the fields of a record. The new value for field n 
   // appears in data[n].

@@ -7,7 +7,8 @@ public final class LockManager {
 	
 	private static LockManager instance;
 	
-	private static Map<Integer, Long> reservations = new HashMap<Integer, Long>();
+	private static Map<Integer, Long> reservations = 
+			new HashMap<Integer, Long>();
 	  
 	private LockManager() {
 	}
@@ -38,22 +39,24 @@ public final class LockManager {
 	public synchronized  void unlock(final int recNo) {
 		final long lockCookie = Thread.currentThread().getId();	  
 		System.out.println(lockCookie + "  wants to unlock  " + recNo);
-		try{	
-			if(isLocked(recNo)){
+		try {
+			if (isLocked(recNo)) {
 				if (isOwnerOfLock(recNo, lockCookie)) {
 					System.out.println(lockCookie + "  unlocking " + recNo);
 					reservations.remove(recNo);
-				}else{
+				} else {
 					System.out.println(lockCookie + " not owner of " + recNo);
 				}
-			}else{System.out.println(recNo + "  Not locked  (" + lockCookie+")");}
-		}finally{
+			} else {
+				System.out.println(recNo + "  Not locked");
+			}
+		} finally {
 			notifyAll();
 		}		
 	}
 
 	  public boolean isOwnerOfLock(final int recNo, final long lockCookie) {
-		  if(isLocked(recNo)){
+		  if (isLocked(recNo)) {
 			  return reservations.get(recNo).equals(lockCookie);
 		  }
 		return false;

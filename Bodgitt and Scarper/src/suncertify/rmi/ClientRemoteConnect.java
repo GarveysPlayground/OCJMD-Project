@@ -24,12 +24,12 @@ public class ClientRemoteConnect {
 			DBFactory factory =  (DBFactory) Naming.lookup(url);
 			return (ContractorDBRemote) factory.getClient();
 			
-		 }catch (MalformedURLException e) {
+		 } catch (MalformedURLException e) {
 			System.err.println("Invalid URL:" + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage(), e);
             throw new RemoteException("Problem with Room connection: ", e);
             
-		 }catch (NotBoundException e) {
+		 } catch (NotBoundException e) {
 			System.err.println("Not bound Exception: " + e.getMessage());
             throw new RemoteException("Not bound Exception: ", e);
 		}

@@ -55,7 +55,7 @@ public class MainWindowView implements ActionListener {
 	
 
 	
-	public void setupMainWindow(String host, int port){
+	public void setupMainWindow(String host, int port) {
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindowFrame.setSize(800,550);
@@ -119,37 +119,38 @@ public class MainWindowView implements ActionListener {
 	
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == bookButton || e.getSource() == unbookButton){	
+		if (e.getSource() == bookButton || e.getSource() == unbookButton) {
 			int rowNo = table.getSelectedRow();
 			String customerID = "";
-			if(e.getSource() == bookButton){
+			if (e.getSource() == bookButton) {
 				customerID = (String) JOptionPane.showInputDialog(tablePanel,
 							 "Please enter the Customer ID", 
 							 "Booking SubContractor", 3);
 			}
-			if((customerID != null && customerID.length() == 8 && isInteger(customerID)) || e.getSource() == unbookButton){						
+			if ((customerID != null && customerID.length() == 8 
+				  && isInteger(customerID)) || e.getSource() == unbookButton) {
 				try {
 					controller.updateContractor(rowNo, customerID);
 				} catch (RecordNotFoundException recEx) {
 					System.err.println("Issue finding Record on row "
-							  +rowNo + " : " + recEx);
+							  + rowNo + " : " + recEx);
 				}		
 				refreshTable();	
-			}else if(customerID == null){
+			} else if (customerID == null) {
 				//logger message about canceling
-			}else{
+			} else {
 				JOptionPane.showMessageDialog(tablePanel,
 				    "Invalid Customer ID :\n8 digit int expected",
 				    "Record not booked",
 				    JOptionPane.ERROR_MESSAGE);
 			}	
-		}else if(e.getSource() == searchButton){
+		} else if (e.getSource() == searchButton) {
 			String[] criteria = new String[2];
 			criteria[0] = nameSearch.getText();
 			criteria[1] = locationSearch.getText();			
 			tableModel = controller.getContractors(criteria);
 			refreshTable();
-		}else if(e.getSource() == searchAllButton){
+		} else if (e.getSource() == searchAllButton) {
 			String[] criteria = new String[2];
 			criteria[0] = "";
 			criteria[1] = "";			
@@ -160,12 +161,11 @@ public class MainWindowView implements ActionListener {
 	}
 	
 	
-	public boolean isInteger( String input ) {
+	public boolean isInteger(String input) {
 	    try {
-	        Integer.parseInt( input );
+	        Integer.parseInt(input);
 	        return true;
-	    }
-	    catch( Exception e ) {
+	    } catch (Exception e) {
 	        return false;
 	    }
 	}

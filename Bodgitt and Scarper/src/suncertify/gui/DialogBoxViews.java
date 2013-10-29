@@ -36,11 +36,11 @@ public class DialogBoxViews implements ActionListener{
 	JButton selectFile;
 	JFrame frame;
 	
-	public void databaseLocationWindow(){
+	public void databaseLocationWindow() {
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Standalone Mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(550,125);
+		frame.setSize(550, 125);
 		
 		JPanel filePanel = new JPanel();
 		JLabel nameLabel = new JLabel("DATABASE: ");
@@ -66,27 +66,27 @@ public class DialogBoxViews implements ActionListener{
 		frame.setVisible(true);		
 	}
 		
-	public void rmiClient(){
+	public void rmiClient() {
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Network mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(400,150);
 				
-		JPanel hostPanel= new JPanel();
+		JPanel hostPanel = new JPanel();
 		JLabel hostLabel = new JLabel("Host:");
 		host = new JTextField(20);
 		host.setText(properties.getProperty("host"));
 		hostPanel.add(hostLabel);
 		hostPanel.add(host);
 		
-		JPanel rmiPanel= new JPanel();
+		JPanel rmiPanel = new JPanel();
 		JLabel portLabel = new JLabel("Port:");
 		rmiPort = new JTextField(20);
 		rmiPort.setText(properties.getProperty("port"));
 		rmiPanel.add(portLabel);
 		rmiPanel.add(rmiPort);
 		
-		JPanel confirmationPanel= new JPanel();
+		JPanel confirmationPanel = new JPanel();
 		networkButton = new JButton("Connect");
 		networkButton.addActionListener(this);
 		exitButton = new JButton("  Exit  ");
@@ -94,14 +94,14 @@ public class DialogBoxViews implements ActionListener{
 		exitButton.addActionListener(this);
 		confirmationPanel.add(exitButton);	
 		
-		frame.getContentPane().add(hostPanel,BorderLayout.NORTH);	
-		frame.getContentPane().add(rmiPanel,BorderLayout.CENTER);	
-		frame.getContentPane().add(confirmationPanel,BorderLayout.SOUTH);
+		frame.getContentPane().add(hostPanel, BorderLayout.NORTH);
+		frame.getContentPane().add(rmiPanel, BorderLayout.CENTER);
+		frame.getContentPane().add(confirmationPanel, BorderLayout.SOUTH);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
-	public void rmiConnectionWindow(){
+	public void rmiConnectionWindow() {
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Server mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,14 +117,14 @@ public class DialogBoxViews implements ActionListener{
 		selectFile.addActionListener(this);
 		filePanel.add(selectFile);
 		
-		JPanel rmiPanel= new JPanel();
+		JPanel rmiPanel = new JPanel();
 		JLabel portLabel = new JLabel("Run on Port: ");
 		rmiPort = new JTextField(20);
 		rmiPort.setText("4566");
 		rmiPanel.add(portLabel);
 		rmiPanel.add(rmiPort);
 		
-		JPanel confirmationPanel= new JPanel();
+		JPanel confirmationPanel = new JPanel();
 		serverStartButton = new JButton("Start Server");
 		serverStartButton.addActionListener(this);
 		exitButton = new JButton(" Disconnect  ");
@@ -133,27 +133,27 @@ public class DialogBoxViews implements ActionListener{
 		confirmationPanel.add(exitButton);	
 
 		frame.add(filePanel, BorderLayout.NORTH);
-		frame.getContentPane().add(rmiPanel,BorderLayout.WEST);
-		frame.getContentPane().add(confirmationPanel,BorderLayout.SOUTH);
+		frame.getContentPane().add(rmiPanel, BorderLayout.WEST);
+		frame.getContentPane().add(confirmationPanel, BorderLayout.SOUTH);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
-	public boolean confirmation(){
+	public boolean confirmation() {
 		MainWindowView gui = new MainWindowView();
 
-		if (dbFile.isShowing()){
-			if(dbFile.getText().length() == 0){	
+		if (dbFile.isShowing()) {
+			if (dbFile.getText().length() == 0) {
 				JOptionPane.showMessageDialog(
 						frame, "No Location entered!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
 				return false;
-			}else if(!new File(dbFile.getText()).exists()){	
+			} else if (!new File(dbFile.getText()).exists()) {
 				JOptionPane.showMessageDialog(
 						frame, "Chosen File does not exist!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
 				return false;
-			}else if(!dbFile.getText().endsWith("db")){	
+			} else if (!dbFile.getText().endsWith("db")) {
 				JOptionPane.showMessageDialog(
 						frame, "Not a valid db file!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
@@ -163,30 +163,30 @@ public class DialogBoxViews implements ActionListener{
 		}
 			
 		
-		if (rmiPort.isShowing()){
-			if(rmiPort.getText().length() == 0){	
+		if (rmiPort.isShowing()) {
+			if (rmiPort.getText().length() == 0) {
 				JOptionPane.showMessageDialog(
 						frame, "No Port entered!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
 				return false;
-			}else if(!gui.isInteger(rmiPort.getText())){
+			} else if (!gui.isInteger(rmiPort.getText())) {
 				JOptionPane.showMessageDialog(
 						frame, "Port Value not an int!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			int range = Integer.parseInt(rmiPort.getText());
-			if(range <  1 || range > 65535){
+			if (range <  1 || range > 65535) {
 				JOptionPane.showMessageDialog(
 						frame, "Value not in valid port range of 1 - 65535"
-						, "Inane error",JOptionPane.ERROR_MESSAGE);
+						, "Inane error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			properties.setProperty("port", rmiPort.getText());
 		}
 		
-		if (host.isShowing()){
-			if(host.getText().length() == 0){	
+		if (host.isShowing()) {
+			if (host.getText().length() == 0) {	
 				JOptionPane.showMessageDialog(
 						frame, "No Host entered!", "Inane error", 
 						JOptionPane.ERROR_MESSAGE);
@@ -198,9 +198,9 @@ public class DialogBoxViews implements ActionListener{
 				boolean connectable = addresses.isReachable(5);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(
-						frame, "Host is unreachable \n Check hostname : \"" + host.getText()
-								+ "\"\n and try again", "Inane error", 
-						JOptionPane.ERROR_MESSAGE);
+						frame, "Host is unreachable \n Check hostname : \"" 
+								+ host.getText() + "\"\n and try again",
+								"Inane error", JOptionPane.ERROR_MESSAGE);
 				return false;
 				//e.printStackTrace();
 			}
@@ -211,7 +211,7 @@ public class DialogBoxViews implements ActionListener{
 	
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == selectFile){
+		if (e.getSource() == selectFile) {
 			JFileChooser fileChooser = new JFileChooser();
 	        FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	        									"Database file", "db");
@@ -220,13 +220,12 @@ public class DialogBoxViews implements ActionListener{
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            dbFile.setText(fileChooser.getSelectedFile().toString());
 	        }
-		}
-		
-		else if(e.getSource() == localConect){
-			if(confirmation()){			
+	        
+		} else if (e.getSource() == localConect) {
+			if (confirmation()) {
 				try {
 					new Data(dbFile.getText());
-				}catch (IOException e1) {
+				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				frame.setVisible(false);
@@ -234,8 +233,8 @@ public class DialogBoxViews implements ActionListener{
 				gui.setupMainWindow(dbFile.getText(), 0);
 			}
 			
-		}else if(e.getSource() == networkButton){
-			if(confirmation()){	
+		} else if (e.getSource() == networkButton) {
+			if (confirmation()) {	
 				int port = Integer.parseInt(rmiPort.getText());
 				try {
 					ClientRemoteConnect.getConnection(host.getText(), port);
@@ -244,15 +243,15 @@ public class DialogBoxViews implements ActionListener{
 					gui.setupMainWindow(host.getText(), port);
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(
-							frame,"Connection Refused!\nIs the server started?"
+							frame, "Connection Refused!\nIs the server started?"
 							, "Inane error", JOptionPane.ERROR_MESSAGE);
 					//e1.printStackTrace();
 				}
 			}
 			
-		}else if(e.getSource() == serverStartButton){
+		} else if (e.getSource() == serverStartButton) {
 			RMIManager rmiManage = new RMIManager();
-			if(confirmation()){	
+			if (confirmation()) {
 				int port = Integer.parseInt(rmiPort.getText());
 				
 				try {
@@ -266,7 +265,7 @@ public class DialogBoxViews implements ActionListener{
 				
 			}
 		
-		}else if(e.getSource() == exitButton){
+		} else if (e.getSource() == exitButton) {
 			System.exit(0);
 		}
 	}	

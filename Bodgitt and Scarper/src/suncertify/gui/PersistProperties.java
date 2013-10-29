@@ -19,7 +19,7 @@ private static final String FILE_NAME = "suncertify.properties";
 	static Properties properties = null;
 	
 	public PersistProperties(){
-		if(!propertiesFile.exists()){
+		if (!propertiesFile.exists()) {
 			properties = new Properties();
 			
 			properties.setProperty("database", "");
@@ -35,7 +35,7 @@ private static final String FILE_NAME = "suncertify.properties";
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			properties = new Properties();
 			try {
 				properties.load(new FileInputStream(propertiesFile));
