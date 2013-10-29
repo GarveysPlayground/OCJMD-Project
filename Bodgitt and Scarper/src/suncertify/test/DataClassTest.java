@@ -116,10 +116,11 @@ public class DataClassTest {
                  * "Y", "$150.00", "2005/07/27", null}); 
                  */  
 
-    			System.out.println("Thread "+Thread.currentThread().getId() +" Updateing Rec No " + recNo);
+    			System.out.println("Thread " + Thread.currentThread().getId() 
+    					+ " Updateing Rec No " + recNo);
     			
-    			data.update(recNo,new String[] {"Sir Update", "Athlone", "Programming", 
-    	                  "5", "$150.00", "55555555"}); 
+    			data.update(recNo, new String[] {"Sir Update", "Athlone", 
+    					"Programming", "5", "$150.00", "55555555"}); 
     			
                // System.out.println(Thread.currentThread().getId()  
                //         + " trying to unlock record #" + recNo  

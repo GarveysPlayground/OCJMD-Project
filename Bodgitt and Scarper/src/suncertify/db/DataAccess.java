@@ -81,7 +81,7 @@ public class DataAccess {
              database.read(fieldLength);  
              fieldLengths[i] = getValue(fieldLength);  
          } 
-		 /**Setting the initial_offset to point at the begining of the first record*/
+ /**Setting the initial_offset to point at the begining of the first record*/
 		 initialOffset = (int) database.getFilePointer();
 	     return initialOffset;
 	 }
@@ -152,7 +152,7 @@ public class DataAccess {
 	 }
 	 
 	
-	public static String[] read(final int recNo) 
+	public static String[] read(int recNo) 
 			throws RecordNotFoundException {
 		try {
 			database.seek(initialOffset + (FULL_RECORD_SIZE * recNo)); 
@@ -166,7 +166,7 @@ public class DataAccess {
 	}
 	 
 	 
-	public static synchronized void update(final int recNo, final String[] data) 
+	static synchronized void update(final int recNo, final String[] data)
 			throws RecordNotFoundException {
 		try {
 			if (recNo < 0 || recNo > getNoOfRecords()) {
@@ -225,7 +225,8 @@ public class DataAccess {
 	  	    			break;
 	  	    		}	  	    
 			}			
-			int recordLocation = initialOffset + (currentRec * FULL_RECORD_SIZE);
+			int recordLocation = initialOffset 
+					+ (currentRec * FULL_RECORD_SIZE);
 			database.seek(recordLocation);
 			byte b = VALID; //valid file byte
 			database.write(b);

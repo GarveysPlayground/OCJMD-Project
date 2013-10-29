@@ -14,11 +14,11 @@ private static final String FILE_NAME = "suncertify.properties";
 	
 	private static final String FILE_DIR = System.getProperty("user.dir");
 	
-	private static File propertiesFile = new File(FILE_DIR,FILE_NAME);
+	private static File propertiesFile = new File(FILE_DIR, FILE_NAME);
 	
 	static Properties properties = null;
 	
-	public PersistProperties(){
+	public PersistProperties() {
 		if (!propertiesFile.exists()) {
 			properties = new Properties();
 			

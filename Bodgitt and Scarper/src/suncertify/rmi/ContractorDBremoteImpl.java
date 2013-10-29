@@ -10,7 +10,8 @@ import suncertify.db.DataRemote;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 
-public class ContractorDBremoteImpl extends UnicastRemoteObject implements ContractorDBRemote {
+public class ContractorDBremoteImpl extends UnicastRemoteObject 
+	implements ContractorDBRemote {
 
 	  
 	/**

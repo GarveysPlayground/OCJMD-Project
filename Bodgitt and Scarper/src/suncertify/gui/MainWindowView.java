@@ -58,7 +58,7 @@ public class MainWindowView implements ActionListener {
 	public void setupMainWindow(String host, int port) {
 		mainWindowFrame.setTitle("Bodgitt and Scarper, LLC: Booking System");
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindowFrame.setSize(800,550);
+		mainWindowFrame.setSize(800, 550);
 		mainWindowFrame.setResizable(false);
 		
 		tablePanel =  makeTablePanel(host, port);

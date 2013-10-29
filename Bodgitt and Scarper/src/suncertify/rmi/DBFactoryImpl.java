@@ -3,7 +3,7 @@ package suncertify.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory{
+public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory {
 	
 	
 	
@@ -19,11 +19,11 @@ public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory{
     private String dbLocation = null;
     
 	
-   public DBFactoryImpl(String dbLocation) throws RemoteException{
+   public DBFactoryImpl(String dbLocation) throws RemoteException {
 	   this.dbLocation = dbLocation;	   
    }
     
-   public ContractorDBRemote getClient() throws RemoteException{
+   public ContractorDBRemote getClient() throws RemoteException {
 	   return new ContractorDBremoteImpl(dbLocation);
    }
   	

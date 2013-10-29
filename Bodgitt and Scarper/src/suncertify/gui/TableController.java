@@ -77,7 +77,7 @@ public class TableController {
 	
 	public int getRecordNoFromRow(int row) throws RecordNotFoundException {
 		String[] recordDetails = getSelectedContractor(row);
-		int recNo[] = null;
+		int [] recNo = null;
 		if (appType == ApplicationMode.ALONE) {			
 			recNo = localConnection.find(recordDetails);
 		} else if (appType == ApplicationMode.NETWORK) {

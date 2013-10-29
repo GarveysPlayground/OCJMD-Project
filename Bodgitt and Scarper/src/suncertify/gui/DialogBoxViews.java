@@ -22,7 +22,7 @@ import suncertify.rmi.RMIManager;
 
 
 
-public class DialogBoxViews implements ActionListener{
+public class DialogBoxViews implements ActionListener {
 	
 	PersistProperties properties = new PersistProperties();
 	JTextField dbFile = new JTextField();
@@ -70,7 +70,7 @@ public class DialogBoxViews implements ActionListener{
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Network mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400,150);
+		frame.setSize(400, 150);
 				
 		JPanel hostPanel = new JPanel();
 		JLabel hostLabel = new JLabel("Host:");
@@ -105,7 +105,7 @@ public class DialogBoxViews implements ActionListener{
 		frame = new JFrame();
 		frame.setTitle("Bodgitt and Scarper, LLC: Server mode");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(550,175);
+		frame.setSize(550, 175);
 		
 		JPanel filePanel = new JPanel();
 		JLabel nameLabel = new JLabel("Database: ");

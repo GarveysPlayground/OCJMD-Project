@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 
-public interface DBMainRmiConnector extends Remote{
+public interface DBMainRmiConnector extends Remote {
   // Reads a record from the file. Returns an array where each
   // element is a record value.
   public String [] read(int recNo) 
@@ -34,7 +34,8 @@ public interface DBMainRmiConnector extends Remote{
   // Creates a new record in the database (possibly reusing a
   // deleted entry). Inserts the given data, and returns the record
   // number of the new record.
-  public int create(String [] data) throws DuplicateKeyException, RemoteException;
+  public int create(String [] data) 
+		  throws DuplicateKeyException, RemoteException;
 
 
   // Locks a record so that it can only be updated or deleted by this client.
