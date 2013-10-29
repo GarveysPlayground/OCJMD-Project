@@ -1,7 +1,7 @@
 /* Project: Bodgitt and Scarper Version 2.3.3
- * Author: Patrick Garvey
- * Last Modified: 28th Oct 2013
- * Data.java
+ * @author: Patrick Garvey
+ * Last Modified: 28 Oct 2013
+ * .java
  */
 package suncertify.db;
 
@@ -19,12 +19,12 @@ import java.io.IOException;
  * APIs that future coders can implement. 
  * 
  * It also allows us to break the code into multiple classes with a single
- * purpose i.e <code>DataAccess</code> for record manipulation and 
- * <code>LockManager</code> for record locking.
+ * purpose i.e {@link #DataAccess()} for record manipulation and 
+ * {@link #LockManager()} for record locking.
  */
 public class Data implements DBMain {
 
-	/** Gets the running instance of the singleton LockManager */
+	/** Gets the running instance of the singleton LockManager. */
 	private static LockManager lockManager = LockManager.getInstance();
 	
 	/**
@@ -48,6 +48,8 @@ public class Data implements DBMain {
 	
 	
 	/* (non-Javadoc)
+	 * This method calls on the read implementation located at
+	 * @see suncertify.db.DataAccess#read(int)
 	 * @see suncertify.db.DBMain#read(int)
 	 */
 	@Override
@@ -57,6 +59,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.DataAccess#update(int, java.lang.String[])
 	 * @see suncertify.db.DBMain#update(int, java.lang.String[])
 	 */
 	@Override
@@ -67,7 +71,9 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
-	 * @see suncertify.db.DBMain#delete(int)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.DataAccess#delete(int)
+	 * @see suncertify.db.DBMain#delete(java.lang.String[])
 	 */
 	@Override
 	public void delete(final int recNo) throws RecordNotFoundException {
@@ -76,6 +82,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.DataAccess#(java.lang.String[])
 	 * @see suncertify.db.DBMain#find(java.lang.String[])
 	 */
 	@Override
@@ -85,6 +93,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.DataAccess#create(java.lang.String[])
 	 * @see suncertify.db.DBMain#create(java.lang.String[])
 	 */
 	@Override
@@ -104,6 +114,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.LockManager#lock(int)
 	 * @see suncertify.db.DBMain#lock(int)
 	 */
 	@Override
@@ -113,6 +125,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.LockManager#unlock(int)
 	 * @see suncertify.db.DBMain#unlock(int)
 	 */
 	@Override
@@ -122,6 +136,8 @@ public class Data implements DBMain {
 
 	
 	/* (non-Javadoc)
+	 * This method calls on the update implementation located at
+	 * @see suncertify.db.LockManager#isLocked(int)
 	 * @see suncertify.db.DBMain#isLocked(int)
 	 */
 	@Override

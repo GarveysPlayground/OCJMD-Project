@@ -29,3 +29,8 @@ Then read(int [x]) reads through them again to get the data
 Should FileAccess.getSingleRecord() be replaced with read?
 
 No duplicate key, checks for duplicate record
+
+
+read() I can divide record lenght by (current place - offset) to make sure im at the start of a file
+
+put some error checking on read(int recNo)

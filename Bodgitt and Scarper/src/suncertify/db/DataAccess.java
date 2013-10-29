@@ -1,3 +1,8 @@
+/* Project: Bodgitt and Scarper Version 2.3.3
+ * @author: Patrick Garvey
+ * Last Modified: 29th Oct 2013 
+ * DataAccess.java
+ */
 package suncertify.db;
 
 import java.io.File;
@@ -7,28 +12,55 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import suncertify.test.DataClassTest.UpdatingRecord1Thread;
 
 
+
+/**
+ * The Class DataAccess is a worker class that is used 
+ * for reading and manipulating the database file. This
+ * makes it easier to modify how the system manipulates
+ * the data at a later date if needed. It is possible to
+ * change how these methods function without any effect 
+ * from the end user perspective. It can be said that we 
+ * are using the delegation pattern as this class mostly 
+ * consists of helper methods helping the Data.java class.
+ */
 public class DataAccess {
 	
-	 private static RandomAccessFile database = null;
-	 private static int initialOffset = 0;
+	 /** The database. */
+ 	private static RandomAccessFile database = null;
 	 
-	 //Start of data file
-	 private static final int MAGIC_COOKIE_BYTES = 4;
-	 private static final int NUMBER_OF_FIELDS_BYTES = 2;
+ 	/** The initial offset that offsets the initial information of the database file */
+ 	private static int initialOffset = 0;
+	 
+	 /** The Constant MAGIC_COOKIE_BYTES as declared by instructions.html. */
+ 	private static final int MAGIC_COOKIE_BYTES = 4;
+	 
+ 	/** The Constant NUMBER_OF_FIELDS_BYTES as declared by instructions.html. */
+ 	private static final int NUMBER_OF_FIELDS_BYTES = 2;
 	 
 	 //for each field
-	 private static final int FIELD_LENGTH_BYTES = 1;
-	 private static final int FIELD_NAME_BYTES = 1;  
+	 /** The Constant FIELD_LENGTH_BYTES as declared by instructions.html. */
+ 	private static final int FIELD_LENGTH_BYTES = 1;
+	 
+ 	/** The Constant FIELD_NAME_BYTES as declared by instructions.html. */
+ 	private static final int FIELD_NAME_BYTES = 1;  
 	 
 	 //data section
-	 private static final int RECORD_FLAG_BYTES = 1; 
-	 private static final byte VALID = 00;
-	 private static final byte INVALID = (byte) 0xFF;
-	 private static final String ENCODING = "US-ASCII";
+	 /** The Constant RECORD_FLAG_BYTES as declared by instructions.html. */
+ 	private static final int RECORD_FLAG_BYTES = 1; 
 	 
-	 /**Set the individual lengths of the field record*/
+ 	/** The Constant VALID as declared by instructions.html. */
+ 	private static final byte VALID = 00;
+	 
+ 	/** The Constant INVALID as declared by instructions.html. */
+ 	private static final byte INVALID = (byte) 0xFF;
+	 
+ 	/** The Constant ENCODING as declared by instructions.html. */
+ 	private static final String ENCODING = "US-ASCII";
+	 
+	 /** Set the individual lengths of the field record as declared by instructions.html. */
 	 private static final int[] FIELD_LENGTHS = {Subcontractor.name_Length,
     		 Subcontractor.location_Length,
     		 Subcontractor.specialties_Length,
@@ -38,14 +70,27 @@ public class DataAccess {
 	 
 	 
 
-	 private static final int FULL_RECORD_SIZE = Subcontractor.entry_Length 
+	 /** The Constant FULL_RECORD_SIZE. */
+ 	private static final int FULL_RECORD_SIZE = Subcontractor.entry_Length 
 			 + RECORD_FLAG_BYTES;
 	 
-	 private static LockManager lockManager = LockManager.getInstance();
+	 /** The lock manager instance. */
+ 	private static LockManager lockManager = LockManager.getInstance();
 	 
-	 private static Logger logger = Logger.getLogger("suncertify.db");
+	 /** The logger. */
+ 	private static Logger logger = Logger.getLogger("suncertify.db");
 	 
-	 public DataAccess(final String dbLocation) 
+	 /**
+ 	 * Instantiates a new data access taking in the location of the
+ 	 * local database file. This method establishes the connection
+ 	 * to the database file through the use of 
+ 	 * <code>RandomAccessFile</code>. Once connected to the database
+ 	 * the total initial offset value is determined.
+ 	 *
+ 	 * @param dbLocation : The database location
+ 	 * @throws IOException Signals that an I/O exception has occurred.
+ 	 */
+ 	public DataAccess(final String dbLocation) 
 			 throws IOException {
 		 logger.entering("FileAccess", "connectToDB", dbLocation);
 		 logger.info("Connecting to Database dbLocation");
@@ -53,9 +98,16 @@ public class DataAccess {
 		 initialOffset = getInitialOffset();
 		 }
 	 
-	 private static int getInitialOffset() throws IOException {
+	 /**
+ 	 * Gets the initial offset. The initial offset is the one time
+ 	 * constants declared at the start of the file such as the
+ 	 * table headers, magic Cookie, etc. 
+ 	 *
+ 	 * @return the initial offset
+ 	 * @throws IOException Signals that an I/O exception has occurred.
+ 	 */
+ 	private static int getInitialOffset() throws IOException {
 		 database.seek(0);
-		 //Read the start of the file as per the Data File Format
 		 final byte [] magicCookieByteArray = new byte[MAGIC_COOKIE_BYTES];    
          final byte [] numberOfFieldsByteArray = 
         		 new byte[NUMBER_OF_FIELDS_BYTES];  
@@ -67,7 +119,9 @@ public class DataAccess {
         		 new String[Subcontractor.number_Of_Fields];
          final int [] fieldLengths = new int[Subcontractor.number_Of_Fields];  
 		    
-         /** Get the value of the field name titles   */   
+         /** for each database field get the length of the header 
+          * and read in that field . At the end of this loop the file
+          * pointer will be at the beginning of Record number 1 */   
 		 for (int i = 0; i < Subcontractor.number_Of_Fields; i++) {  
              final byte[] nameLengthByteArray = new byte[FIELD_NAME_BYTES];
              database.read(nameLengthByteArray);
@@ -81,12 +135,25 @@ public class DataAccess {
              database.read(fieldLength);  
              fieldLengths[i] = getValue(fieldLength);  
          } 
- /**Setting the initial_offset to point at the begining of the first record*/
+		 
+		 /**Set the initial_offset to point at the beginning of the first record*/
 		 initialOffset = (int) database.getFilePointer();
 	     return initialOffset;
 	 }
 	 
 	 
+	/**
+	 * Read in a single record from the wherever the database file
+	 * pointer currently is. This method is called by <code>read(int recNo)
+	 * </code> and <code>getNoOfRecords()</code> and returns the record
+	 * it just read.
+	 *
+	 * @return the string[] : Returns a String containing all 
+	 * 						  Columns it just read.
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @see #getNoOfRecords()
+	 * @see #read(int)
+	 */
 	private static String[] read() throws IOException {
 		String[] columnValues = new String[Subcontractor.number_Of_Fields];
 		if (database.getFilePointer() > database.length()) {
@@ -104,11 +171,24 @@ public class DataAccess {
 			}
 		}
 		return columnValues;
-	}
-	 
+	}	 
 	
-	 //Get no of both valid and invalid records
-	public static int getNoOfRecords() { 
+
+	/**
+ 	 * The method <code>getNoOfRecords()</code> gets the 
+ 	 * total number of records in the database file. This
+ 	 * includes both valid and invalid/deleted records
+ 	 * and returns the value as an int. This helps
+ 	 * with the update and delete methods in case
+ 	 * somebody specifies a record to edit that is greater
+ 	 * than the total number of records.
+ 	 *
+ 	 * @return numberOfRecords : The total number of records
+ 	 * in the database.
+ 	 * @see #delete(int)
+ 	 * @see #update(int, String[])
+ 	 */
+ 	public static int getNoOfRecords() { 
 		int numberOfRecords = 0;
 		try {
 			database.seek(initialOffset);
@@ -123,10 +203,22 @@ public class DataAccess {
     } 
 	 
 	
-	 //Go through all record spaces adding valid records to ArrayList.
-	// Then return the valid records in an int []
-	public static int[] getValidRecords() 
-			throws IOException, RecordNotFoundException { 
+	/**
+ 	 * The <code>getValidRecords</code> method gets all the valid
+ 	 * records in the database file and returns their record numbers
+ 	 * in an int []. It does this by going threw the database and
+ 	 * adding each valid record to an arrayList. The contents of that 
+ 	 * arrayList is then fed into the in [] to be returned. The <code>
+ 	 * find(String[])</code> only searches these records to return.
+ 	 *
+ 	 * @return validRecords : int [] of valid records
+ 	 * @throws IOException : Signals that an I/O exception has occurred.
+ 	 * @throws RecordNotFoundException : the record was not found exception
+ 	 * @see #find(String[])
+ 	 */
+ 	public static int[] getValidRecords() 
+			throws IOException, RecordNotFoundException {
+ 		logger.entering("DataAccess", "getValidRecords");
 		ArrayList<Integer> recNumArray = new ArrayList<Integer>();
         int recNo = 0;
         final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
@@ -152,9 +244,25 @@ public class DataAccess {
 	 }
 	 
 	
-	public static String[] read(int recNo) 
+	/**
+	 * The <code>read(int)</code> method is passed in a record number to read.
+	 * The method sets the database file pointer to the beginning of the 
+	 * record and then calls the <code>read()</code> method to read the record.
+	 *
+	 * @param recNo : The record number to be returned
+	 * @return the string[] record containing the record numbers contents
+	 * @throws RecordNotFoundException : the record not found exception if the 
+	 * record number is out of bounds.
+	 */
+	public static String[] read(final int recNo) 
 			throws RecordNotFoundException {
+		logger.entering("DataAccess", "read(int)");
 		try {
+			if (recNo < 0 || recNo > getNoOfRecords()) {
+				throw new RecordNotFoundException("The record: " + recNo 
+						+ " was not found");
+			}
+			
 			database.seek(initialOffset + (FULL_RECORD_SIZE * recNo)); 
 		 	String[] record = read();
 		 	return record;
@@ -166,8 +274,16 @@ public class DataAccess {
 	}
 	 
 	 
+	/**
+	 * Update.
+	 *
+	 * @param recNo the rec no
+	 * @param data the data
+	 * @throws RecordNotFoundException the record not found exception
+	 */
 	static synchronized void update(final int recNo, final String[] data)
 			throws RecordNotFoundException {
+		logger.entering("DataAccess", "update(int, String[])");
 		try {
 			if (recNo < 0 || recNo > getNoOfRecords()) {
 				throw new RecordNotFoundException("The record: " + recNo 
@@ -205,6 +321,14 @@ public class DataAccess {
 	}
 	 
  
+	/**
+	 * Creates the.
+	 *
+	 * @param data the data
+	 * @return the int
+	 * @throws DuplicateKeyException the duplicate key exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static synchronized int create(final String [] data) 
 			throws DuplicateKeyException, IOException {
 		int currentRec = 0;
@@ -249,7 +373,13 @@ public class DataAccess {
 	 }
 	 	 
 	
-	 static synchronized void delete(final int recNo) 
+	 /**
+ 	 * Delete.
+ 	 *
+ 	 * @param recNo the rec no
+ 	 * @throws RecordNotFoundException the record not found exception
+ 	 */
+ 	static synchronized void delete(final int recNo) 
 			 throws RecordNotFoundException {
 		 try {
 		 if (recNo < 0 || recNo >=  getNoOfRecords()) {
@@ -271,7 +401,14 @@ public class DataAccess {
 	 }
 	 
 	 
-	 public static int [] find(String [] criteria) 
+	 /**
+ 	 * Find.
+ 	 *
+ 	 * @param criteria the criteria
+ 	 * @return the int[]
+ 	 * @throws RecordNotFoundException the record not found exception
+ 	 */
+ 	public static int [] find(String [] criteria) 
 			 throws RecordNotFoundException {
 		 String[] allColumns = 
 				 new String[Subcontractor.number_Of_Fields];		 
@@ -313,7 +450,13 @@ public class DataAccess {
 		 return searchResults;
 	 }
 	 
-	 public static boolean isDuplicate(final String [] criteria) {
+	 /**
+ 	 * Checks if is duplicate.
+ 	 *
+ 	 * @param criteria the criteria
+ 	 * @return true, if is duplicate
+ 	 */
+ 	public static boolean isDuplicate(final String [] criteria) {
 		 try {
 			int [] duplicateRecs = find(criteria);
 			if (duplicateRecs.length > 0) {
@@ -327,7 +470,13 @@ public class DataAccess {
 	 }
 	 
 	 
-	 private static int getValue(final byte [] byteArray) {  
+	 /**
+ 	 * Gets the value.
+ 	 *
+ 	 * @param byteArray the byte array
+ 	 * @return the value
+ 	 */
+ 	private static int getValue(final byte [] byteArray) {  
          int value = 0;  
          final int byteArrayLength = byteArray.length;  
    
