@@ -6,13 +6,10 @@
 package suncertify.db;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import suncertify.test.DataClassTest.UpdatingRecord1Thread;
 
 
 
@@ -31,7 +28,8 @@ public class DataAccess {
 	 /** The database. */
  	private static RandomAccessFile database = null;
 	 
- 	/** The initial offset that offsets the initial information of the database file */
+ 	/** The initial offset that offsets the 
+ 	 *initial information of the database file. */
  	private static int initialOffset = 0;
 	 
 	 /** The Constant MAGIC_COOKIE_BYTES as declared by instructions.html. */
@@ -60,7 +58,8 @@ public class DataAccess {
  	/** The Constant ENCODING as declared by instructions.html. */
  	private static final String ENCODING = "US-ASCII";
 	 
-	 /** Set the individual lengths of the field record as declared by instructions.html. */
+	 /** Set the individual lengths of the field 
+	  * record as declared by instructions.html. */
 	 private static final int[] FIELD_LENGTHS = {Subcontractor.name_Length,
     		 Subcontractor.location_Length,
     		 Subcontractor.specialties_Length,
@@ -136,7 +135,8 @@ public class DataAccess {
              fieldLengths[i] = getValue(fieldLength);  
          } 
 		 
-		 /**Set the initial_offset to point at the beginning of the first record*/
+		 /**Set the initial_offset to point at the beginning of 
+		  * the first record.*/
 		 initialOffset = (int) database.getFilePointer();
 	     return initialOffset;
 	 }
@@ -275,17 +275,28 @@ public class DataAccess {
 	 
 	 
 	/**
-	 * Update.
+	 * The <code>update(int, String[])</code> method updates a record.
+	 * Before making any changes it first calls on the <code>lock(int) 
+	 * </code>method to lock the record. The method is synchronized to
+	 *  prevent thread interference as multiple threads will try to move
+	 *  the database file pointers. Once the record is locked a record 
+	 *  validity check is done. If it passes the record is overwritten 
+	 *  with the inputed params. The finally block <code>unlocks</code> 
+	 *  the record.
 	 *
-	 * @param recNo the rec no
-	 * @param data the data
+	 * @param recNo : the record number to be updated
+	 * @param data : the data to be written to the database
 	 * @throws RecordNotFoundException the record not found exception
+	 * @see suncertify.db.LockManager#lock(int)
+	 * @see suncertify.db.LockManager#unlock(int)
+	 * 
 	 */
 	static synchronized void update(final int recNo, final String[] data)
 			throws RecordNotFoundException {
 		logger.entering("DataAccess", "update(int, String[])");
 		try {
 			if (recNo < 0 || recNo > getNoOfRecords()) {
+				logger.warning("Record not found : " + recNo);
 				throw new RecordNotFoundException("The record: " + recNo 
 						+ " was not found");
 			}		
@@ -322,15 +333,27 @@ public class DataAccess {
 	 
  
 	/**
-	 * Creates the.
+	 * The <code>create(String[])</code> method creates a new record.
+	 * First it compares the record to other valid records in
+	 * the database. If it finds an identical record then a 
+	 * duplicateKeyEx is thrown(see choices.txt for more on this).
+	 * It then goes threw all records in the database. If it finds
+	 * a deleted record then the new record is created in that place.
+	 * Otherwise the new record is added to the end of the file.
+	 * The record to be created is locked and written to the file.
+	 * A finally block unlocks the record.
 	 *
-	 * @param data the data
-	 * @return the int
+	 * @param data : the record to be created
+	 * @return currentRec : the record number of the newly created record
 	 * @throws DuplicateKeyException the duplicate key exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @see suncertify.db.LockManager#lock(int)
+	 * @see suncertify.db.LockManager#unlock(int)
+	 * @see #isDuplicate(String[])
 	 */
 	public static synchronized int create(final String [] data) 
 			throws DuplicateKeyException, IOException {
+		logger.entering("DataAccess", "create(String [])");
 		int currentRec = 0;
 		final byte [] flagByteArray = new byte[RECORD_FLAG_BYTES];
 		try {
@@ -345,10 +368,11 @@ public class DataAccess {
 	  	    			read(currentRec);
 	  	    			currentRec++;
 	  	    		} else {  
-	  	    			lockManager.lock(currentRec);
 	  	    			break;
 	  	    		}	  	    
 			}			
+			logger.info("Creating record in record location : " + currentRec);
+			lockManager.lock(currentRec);
 			int recordLocation = initialOffset 
 					+ (currentRec * FULL_RECORD_SIZE);
 			database.seek(recordLocation);
@@ -374,13 +398,22 @@ public class DataAccess {
 	 	 
 	
 	 /**
- 	 * Delete.
+ 	 * The <code>delete(int)</code> method changes the Valid byte flag
+ 	 * to an invalid byte flag. Once the desired record is found it is
+ 	 * locked. The byte flag is then changed and a <code>finally</code> block
+ 	 * unlocks threads hold on that record location in case a future
+ 	 * <code>create(String [])</code> happens. 
+ 	 * If the specified record number is does
+ 	 * not exist the the RecordNotFoundException is thrown.
  	 *
- 	 * @param recNo the rec no
+ 	 * @param recNo : the record number to be deleted
  	 * @throws RecordNotFoundException the record not found exception
+ 	 * @see suncertify.db.LockManager#lock(int)
+	 * @see suncertify.db.LockManager#unlock(int)
  	 */
  	static synchronized void delete(final int recNo) 
 			 throws RecordNotFoundException {
+ 		logger.entering("DataAccess", "delete");
 		 try {
 		 if (recNo < 0 || recNo >=  getNoOfRecords()) {
 			 throw new RecordNotFoundException("The record you wish to delete:"
@@ -402,14 +435,22 @@ public class DataAccess {
 	 
 	 
 	 /**
- 	 * Find.
+ 	 * The <code>find(String [])</code> locates matching records in the
+ 	 * database with the criteria param. Criteria can be of length 0 to
+ 	 * 6 (6 headers). the String [] is copied to another String [] of 
+ 	 * length 6. Any null values are replaced with an empty string. 
+ 	 * This new String [] searches all valid records returned by 
+ 	 * <code>getValidRecords</code> for matching Parameters. The record
+ 	 * numbers of each matching records are stored in an int [] and returned.
  	 *
- 	 * @param criteria the criteria
- 	 * @return the int[]
+ 	 * @param criteria : the contents to search the database for
+ 	 * @return the int[] : the matching record numbers
  	 * @throws RecordNotFoundException the record not found exception
+ 	 * @see #getValidRecords()
  	 */
  	public static int [] find(String [] criteria) 
 			 throws RecordNotFoundException {
+ 		logger.entering("DataAccess", "find(String [])");
 		 String[] allColumns = 
 				 new String[Subcontractor.number_Of_Fields];		 
 		 System.arraycopy(criteria, 0, allColumns, 0, criteria.length);
@@ -442,7 +483,7 @@ public class DataAccess {
 		  	    	searchResults[i] = matchingRecords.get(i);
 		  	      }
 		  	}
-		  	
+		  	logger.info("Found" + searchResults.length + "matching records");
 		 } catch (IOException e) {
 			System.err.println("Error searching for records : ");
 			e.printStackTrace();
@@ -451,7 +492,9 @@ public class DataAccess {
 	 }
 	 
 	 /**
- 	 * Checks if is duplicate.
+ 	 * The <code>isDuplicate(String [])</code> method checks for duplicate 
+ 	 * values. if duplicates are found then a <code>true</code> is returned.
+ 	 * 
  	 *
  	 * @param criteria the criteria
  	 * @return true, if is duplicate
@@ -471,19 +514,20 @@ public class DataAccess {
 	 
 	 
 	 /**
- 	 * Gets the value.
+ 	 * Converts the given <code>bytes</code> to an int to help with
+ 	 * reading values such as the byteFlag from the database.
  	 *
  	 * @param byteArray the byte array
  	 * @return the value
  	 */
  	private static int getValue(final byte [] byteArray) {  
-         int value = 0;  
+         int bytesValue = 0;  
          final int byteArrayLength = byteArray.length;  
    
          for (int i = 0; i < byteArrayLength; i++) {  
              final int shift = (byteArrayLength - 1 - i) * 8;  
-             value += (byteArray[i] & 0x000000FF) << shift;  
+             bytesValue += (byteArray[i] & 0x000000FF) << shift;  
          }  
-         return value;  
+         return bytesValue;  
      } 	 
 }
