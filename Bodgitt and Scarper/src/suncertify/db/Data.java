@@ -1,7 +1,7 @@
 /* Project: Bodgitt and Scarper Version 2.3.3
  * @author: Patrick Garvey
  * Last Modified: 28 Oct 2013
- * .java
+ * Data.java
  */
 package suncertify.db;
 

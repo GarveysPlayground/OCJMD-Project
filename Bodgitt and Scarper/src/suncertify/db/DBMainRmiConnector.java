@@ -3,7 +3,13 @@ package suncertify.db;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-
+/**
+ * Modifiable duplicate of DBMain that allows me to handle Remote Exception
+ * exceptions. Had instructions.html dictated permission to modify DBMain.java
+ * this class would be unnecessary. (Further information in choices.txt)
+ * @author Garvey
+ *
+ */
 public interface DBMainRmiConnector extends Remote {
   // Reads a record from the file. Returns an array where each
   // element is a record value.

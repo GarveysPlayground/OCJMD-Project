@@ -1,33 +1,66 @@
+/* Project: Bodgitt and Scarper Version 2.3.3
+ * @author: Patrick Garvey
+ * Last Modified: 28 Oct 2013
+ * Subcontractor.java
+ */
 package suncertify.db;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Subcontractor.
+ */
 public class Subcontractor {
 	
-	 static final int name_Length = 32;
+	 /** The Constant name_Length. */
+ 	static final int NAME_LENGTH = 32;
 	 
-	 static final int location_Length = 64;
+	 /** The Constant location_Length. */
+ 	static final int LOCATION_LENGTH = 64;
 	 
-	 static final int specialties_Length = 64;
+	 /** The Constant specialties_Length. */
+ 	static final int SPECIALTIES_LENGTH = 64;
 	 
-	 static final int size_Length = 6;
+	 /** The Constant size_Length. */
+ 	static final int SIZE_LENGTH = 6;
 	 
-	 static final int rate_Length = 8;
+	 /** The Constant rate_Length. */
+ 	static final int RATE_LENGTH = 8;
 	 
-	 static final int owner_Length = 8;
+	 /** The Constant owner_Length. */
+ 	static final int OWNER_LENGTH = 8;
 	 
-	 static final int number_Of_Fields = 6;
+	 /** The Constant number_Of_Fields. */
+ 	static final int NUMBER_OF_FIELDS = 6;
 	 
-	 static final int entry_Length = name_Length + location_Length
-			 						 + specialties_Length + size_Length
-			 						 + rate_Length + owner_Length;
+	 /** The Constant entry_Length. */
+ 	static final int ENTRY_LENGTH = NAME_LENGTH + LOCATION_LENGTH
+			 						 + SPECIALTIES_LENGTH + SIZE_LENGTH
+			 						 + RATE_LENGTH + OWNER_LENGTH;
 	 
-	 private String name = "";
-	 private String location = "";
-	 private String specialties = "";
-	 private String size = "";
-	 private String rate = "";
-	 private String owner = "";
+	 /** The name. */
+ 	private String name = "";
 	 
-	 public Subcontractor(String[] data) {
+ 	/** The location. */
+ 	private String location = "";
+	 
+ 	/** The specialties. */
+ 	private String specialties = "";
+	 
+ 	/** The size. */
+ 	private String size = "";
+	 
+ 	/** The rate. */
+ 	private String rate = "";
+	 
+ 	/** The owner. */
+ 	private String owner = "";
+	 
+	 /**
+ 	 * Instantiates a new subcontractor.
+ 	 *
+ 	 * @param data the data
+ 	 */
+ 	public Subcontractor(final String[] data) {
 		 this.name = data[0];
 		 this.location = data[1];
 		 this.specialties = data[2];
@@ -36,66 +69,140 @@ public class Subcontractor {
 		 this.owner = data[5];
 	 }
 	 
-	 public Subcontractor() {
+	 /**
+ 	 * Instantiates a new subcontractor.
+ 	 */
+ 	public Subcontractor() {
 		
 	 }
 	 
 
-	 public Subcontractor(String name, String location, String specialities,
+	 /**
+ 	 * Instantiates a new subcontractor.
+ 	 *
+ 	 * @param name the name
+ 	 * @param location the location
+ 	 * @param specialties the specialties
+ 	 * @param size the size
+ 	 * @param rate the rate
+ 	 * @param owner the owner
+ 	 */
+ 	public Subcontractor(String name, String location, String specialties,
 			 			String size, String rate, String owner) {
 		 this.name = name;
 		 this.location = location;
-		 this.specialties = specialities;
+		 this.specialties = specialties;
 		 this.size = size;
 		 this.rate = rate;
 		 this.owner = owner;
 
 	 }
 	 
-	 public String getName() {
+	 /**
+ 	 * Gets the name.
+ 	 *
+ 	 * @return the name
+ 	 */
+ 	public final String getName() {
 		 return this.name;
 	 }
 	 
-	 public void setName(String name) {
+	 /**
+ 	 * Sets the name.
+ 	 *
+ 	 * @param name the new name
+ 	 */
+ 	public final void setName(final String name) {
 		 this.name = name;
 	 }
 	 
-	 public String getLocation() {
+	 /**
+ 	 * Gets the location.
+ 	 *
+ 	 * @return the location
+ 	 */
+ 	public final String getLocation() {
 		 return this.location;
 	 }
 	 
-	 public void setLocation(String location) {
+	 /**
+ 	 * Sets the location.
+ 	 *
+ 	 * @param location the new location
+ 	 */
+ 	public final void setLocation(final String location) {
 		 this.location = location;
 	 }
 	 
-	 public String getSpecialties() {
+	 /**
+ 	 * Gets the specialties.
+ 	 *
+ 	 * @return the specialties
+ 	 */
+ 	public final String getSpecialties() {
 		 return this.specialties;
 	 }
 	 
-	 public void setSpecialties(String specialties) {
+	 /**
+ 	 * Sets the specialties.
+ 	 *
+ 	 * @param specialties the new specialties
+ 	 */
+ 	public final void setSpecialties(final String specialties) {
 		 this.specialties = specialties;
 	 }
 	 
-	 public String getSize() {
+	 /**
+ 	 * Gets the size.
+ 	 *
+ 	 * @return the size
+ 	 */
+ 	public final String getSize() {
 		 return this.size;
 	 }
-	 public void setSize(String size) {
+	 
+ 	/**
+ 	 * Sets the size.
+ 	 *
+ 	 * @param size the new size
+ 	 */
+ 	public final void setSize(final String size) {
 		 this.size = size;
 	 }
 	 
-	 public String getRate() {
+	 /**
+ 	 * Gets the rate.
+ 	 *
+ 	 * @return the rate
+ 	 */
+ 	public final String getRate() {
 		 return this.rate;
 	 }
 	 
-	 public void setRate(String rate) {
+	 /**
+ 	 * Sets the rate.
+ 	 *
+ 	 * @param rate the new rate
+ 	 */
+ 	public final void setRate(final String rate) {
 		 this.rate = rate;
 	 }
 	 
-	 public String getOwner() {
+	 /**
+ 	 * Gets the owner.
+ 	 *
+ 	 * @return the owner
+ 	 */
+ 	public final String getOwner() {
 		 return this.owner;
 	 }
 	 
-	 public void setOwner(String owner) {
+	 /**
+ 	 * Sets the owner.
+ 	 *
+ 	 * @param owner the new owner
+ 	 */
+ 	public final void setOwner(final String owner) {
 		 this.owner = owner;
 	 }
 }

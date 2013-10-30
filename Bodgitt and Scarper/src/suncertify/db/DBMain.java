@@ -1,6 +1,15 @@
+/* Project: Bodgitt and Scarper Version 2.3.3
+ * @author: Patrick Garvey
+ * Last Modified: 28 Oct 2013
+ * DBMain.java
+ */
 package suncertify.db;
 
-
+/**
+ * Main interface of the data Facade as dictated byinstructions.html
+ * @author Garvey
+ *
+ */
 public interface DBMain {
   // Reads a record from the file. Returns an array where each
   // element is a record value.
