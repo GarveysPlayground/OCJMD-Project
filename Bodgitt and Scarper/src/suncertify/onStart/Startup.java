@@ -58,9 +58,12 @@ public class Startup {
 	public static void main(final String[] args) {
 
 		if (args.length == 0) {
-			logger.info("Starting Client Connection");
-			setApplicationMode(ApplicationMode.NETWORK);
-			dialogs.rmiClient();			
+			//logger.info("Starting Client Connection");
+			//setApplicationMode(ApplicationMode.NETWORK);
+			//dialogs.rmiClient();			
+        	logger.info("Starting standalone mode");
+        	setApplicationMode(ApplicationMode.ALONE);
+        	dialogs.databaseLocationWindow();
 		} else if (ApplicationMode.SERVER.name().equalsIgnoreCase(args[0])) {
 			logger.info("Starting Bodgitt & Scarper server mode.");
 			setApplicationMode(ApplicationMode.SERVER);
