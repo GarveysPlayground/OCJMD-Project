@@ -70,7 +70,7 @@ public final class LockManager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		logger.info("Thread " + lockCookie + "  locking  " + recNo);
+		logger.info("Thread " + lockCookie + "  locking  record " + recNo);
 		reservations.put(recNo, lockCookie);
 	}
 	
@@ -88,12 +88,12 @@ public final class LockManager {
 		try {
 			if (isLocked(recNo)) {
 				if (isOwnerOfLock(recNo, lockCookie)) {
-					logger.info("Thread " + lockCookie + " unlocking  " 
+					logger.info("Thread " + lockCookie + " unlocking record " 
 						+ recNo);
 					reservations.remove(recNo);
 				} else {
 					logger.warning("Thread " + lockCookie + " not owner of " 
-							+ recNo);
+							+ "record " + recNo);
 				}
 			} else {
 				logger.warning("Record " + recNo + " not locked");

@@ -448,7 +448,7 @@ public class DataAccess {
 			records = getValidRecords();
 			String[] record = null;
 			ArrayList<Integer> matchingRecords = new ArrayList<Integer>();
-			for (int i = 0; i < getValidRecords().length; i++) {
+			for (int i = 0; i < records.length; i++) {
 				 record = read(records[i]);
 				 if (record[0].contains(allColumns[0]) 
 						 &&	record[1].contains(allColumns[1]) 
@@ -464,7 +464,7 @@ public class DataAccess {
 		  	    	searchResults[i] = matchingRecords.get(i);
 		  	      }
 		  	}
-		  	logger.info("Found" + searchResults.length + "matching records");
+		  	logger.info("Found " + searchResults.length + " matching records");
 		 } catch (IOException e) {
 			System.err.println("Error searching for records : ");
 			e.printStackTrace();
