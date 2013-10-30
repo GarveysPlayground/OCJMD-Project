@@ -69,6 +69,7 @@ public class TableController {
 	 * @return the contractors
 	 */
 	public final TableModel getContractors(final String [] criteria) {
+		tableRecs = new TableModel();
 		logger.info("Fetching contractors");
 		String[] record;
 		int[] recordNumbers;

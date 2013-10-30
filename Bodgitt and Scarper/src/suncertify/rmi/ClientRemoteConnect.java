@@ -1,3 +1,8 @@
+/* Project: Bodgitt and Scarper Version 2.3.3
+ * @author: Patrick Garvey
+ * Last Modified: 28th Oct 2013 
+ * ClientRemoteConnect.java
+ */
 package suncertify.rmi;
 
 import java.net.MalformedURLException;
@@ -8,11 +13,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+/**
+ * The Class ClientRemoteConnect is called when the application is started
+ * is Network client mode and the end user wishes to connect to the database
+ * through RMI. This class is considered a utility class as only use is to
+ * have its static class is called 
+ */
 public class ClientRemoteConnect {
 	
-	 private static Logger logger = Logger.getLogger("suncertify.rmi");
+	 /** The logger instance. */
+ 	private static Logger logger = Logger.getLogger("suncertify.rmi");
 	 
-	 public static ContractorDBRemote getConnection(String host, int port)
+	 /**
+ 	 * The <code>getConnection</code> method is used to create an RMI 
+ 	 * connection. <code>ContractorDBRemote</code> is the remote client.
+ 	 *
+ 	 * @param host The hostname / IP-address of the host
+ 	 * @param port Port the registry listens on.
+ 	 * @return a connection instance
+ 	 * @throws RemoteException the remote exception indicating that a
+ 	 * 			connection issue has occurred
+ 	 */
+ 	public static ContractorDBRemote 
+ 					getConnection(final String host, final int port)
 	            throws RemoteException {
 		 
 		

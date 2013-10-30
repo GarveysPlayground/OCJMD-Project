@@ -68,7 +68,7 @@ public class MainWindowView implements ActionListener {
 	/** The table where the records are displayed. */
 	private JTable table;
 	
-	/**The Logger*/
+	/**The Logger instance.*/
 	private static Logger logger = Logger.getLogger("suncertify.gui");
 	
 
@@ -229,7 +229,7 @@ public class MainWindowView implements ActionListener {
 	 * @param input the input
 	 * @return true, if is integer
 	 */
-	public boolean isInteger(final String input) {
+	public final boolean isInteger(final String input) {
 	    try {
 	        Integer.parseInt(input);
 	        return true;

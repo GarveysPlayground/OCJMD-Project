@@ -36,8 +36,8 @@ public class TableModel extends AbstractTableModel {
 	}
 
 	/**
-	 *Gets the number of rows in the table
-	 *@returns the number of rows 
+	 *Gets the number of rows in the table.
+	 *@return the number of rows 
 	 */
 	public int getRowCount() {
 		return this.records.size();
@@ -45,8 +45,8 @@ public class TableModel extends AbstractTableModel {
 	
 
 	/**
-	 * Gets the value in a specified cell
-	 * @returns a cell objects value
+	 * Gets the value in a specified cell.
+	 * @return rowValues[] a cell objects value
 	 */		
 	public Object getValueAt(int row, int column) {
 		String[] rowValues = this.records.get(row);
@@ -54,16 +54,18 @@ public class TableModel extends AbstractTableModel {
 	}
 	
 	/**
-	 * Sets the value in a specified cell
-	 * @returns a cell objects value
+	 * Sets the value in a specified cell.
+	 * 
+	 * @param obj the object value to be placed in the cell
 	 */	
     public void setValueAt(Object obj, int row, int column) {
         Object[] rowValues = this.records.get(row);
         rowValues[column] = obj;
+        fireTableDataChanged();
     }
     
     /**
-     * Adds the subcontractor record.
+     * Adds a subcontractor record to the current records.
      *
      * @param record the record
      */
@@ -71,33 +73,21 @@ public class TableModel extends AbstractTableModel {
     	this.records.add(record);
     }
     
+        
     /**
-     * Gets the subcontractor record.
-     *
-     * @param row the row
-     * @param column the column
-     * @return the subcontractor record
-     */
-    public  String getSubcontractorRecord(int row, int column) {  
-    	String[] rowValues = this.records.get(row);
-        return rowValues[column];
-    }
-    
-    /**
-     * Adds the subcontractor record.
-     */
-    public void addSubcontractorRecord() {
-    }
-    
-    /* (non-Javadoc)
-     * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+     * Checks to see if a specified cell is editable.
+     * 
+     * @return false as all cells are non editable
      */
     public boolean isCellEditable(int row, int column) {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+    /**
+     * gets the column headers to be displayed in the table.
+     * 
+     * @param column The specified column index.
+     * @return A String containing the column name.
      */
     public String getColumnName(int column) {
         return headerTitles[column];
