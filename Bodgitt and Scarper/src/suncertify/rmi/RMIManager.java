@@ -26,13 +26,13 @@ public class RMIManager {
 	
 	/**
 	 * Starts the register opening a connection to the database file and
-	 * listening on a port for incoming connections. 
+	 * listens on a specified port for incoming connections. 
 	 *
 	 * @param dbLocation the database location location
 	 * @param rmiPort the port to listen on
 	 * @throws RemoteException the remote exception in case of connection errors
 	 */
-	public void startRegister(String dbLocation, int rmiPort) 
+	public final void startRegister(final String dbLocation, final int rmiPort)
 			throws RemoteException {
 		
 		dbFactory = new  DBFactoryImpl(dbLocation);

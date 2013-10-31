@@ -17,6 +17,6 @@ public enum ApplicationMode {
     /** The standalone mode. */
     ALONE,
     
-    /** The network client. */
+    /** The network client mode. */
     NETWORK
 }

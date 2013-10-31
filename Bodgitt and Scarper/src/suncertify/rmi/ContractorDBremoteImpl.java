@@ -18,23 +18,26 @@ import suncertify.db.RecordNotFoundException;
 
 /**
  * The Class <code>ContractorDBremoteImpl</code> implements the remote 
- * interface used by network clients.
+ * interface used by network clients during an RMI connection.
  */
 public class ContractorDBremoteImpl extends UnicastRemoteObject 
 	implements ContractorDBRemote {
 
 	  
-	/** The Constant serialVersionUID. */
+	/** The Constant serialVersionUID used for serialization and 
+	 * deserialization */
 	private static final long serialVersionUID = 1L;
 	
-	/** The database. */
+	/** The database interface for RMI connections. */
 	private DBMainRmiConnector database = null;
 
 	/**
-	 * Instantiates a new contractor.
+	 * The <code>ContractorDBremoteImpl</code> constructor that passes the
+	 * database location to a new instance of <code>DataRemote</code>.
 	 *
 	 * @param dbLocation the database location
 	 * @throws RemoteException the remote exception in case of connection issues
+	 * @see suncertify.db.DataRemote
 	 */
 	public ContractorDBremoteImpl(final String dbLocation) 
 			throws RemoteException {
@@ -114,7 +117,6 @@ public class ContractorDBremoteImpl extends UnicastRemoteObject
 	@Override
 	public final int[] find(final String[] criteria) 
 			throws RecordNotFoundException,	RemoteException {
-		System.out.println("Trying");
 		return database.find(criteria);
 	}
 

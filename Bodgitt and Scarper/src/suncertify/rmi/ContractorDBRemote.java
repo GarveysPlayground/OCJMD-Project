@@ -12,7 +12,7 @@ import suncertify.db.DBMainRmiConnector;
 /**
  * The Interface ContractorDBRemote for the network client. This extents the 
  * DBMainRmiConnector interface which is a duplicate of the DBmain interface
- * provided by instructions.html but allows the use of extending remote. 
+ * provided by instructions.html but allows the use of extends remote. 
  * See choices.txt for more on this.
  */
 public interface ContractorDBRemote extends Remote, DBMainRmiConnector {

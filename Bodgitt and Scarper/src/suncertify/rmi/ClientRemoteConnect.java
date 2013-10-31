@@ -14,10 +14,10 @@ import java.util.logging.Logger;
 
 
 /**
- * The Class ClientRemoteConnect is called when the application is started
- * is Network client mode and the end user wishes to connect to the database
- * through RMI. This class is considered a utility class as only use is to
- * have its static class is called 
+ * The Class <code>ClientRemoteConnect</code> is called when the application is
+ * started in Network client mode and the end user wishes to connect to the
+ * database through RMI. This class is considered a utility class as we only 
+ * use it to have its static <code>getConnection</code>class called. 
  */
 public class ClientRemoteConnect {
 	
@@ -25,8 +25,8 @@ public class ClientRemoteConnect {
  	private static Logger logger = Logger.getLogger("suncertify.rmi");
 	 
 	 /**
- 	 * The <code>getConnection</code> method is used to create an RMI 
- 	 * connection. <code>ContractorDBRemote</code> is the remote client.
+ 	 * The <code>getConnection</code> method is used to establish an RMI 
+ 	 * connection.
  	 *
  	 * @param host The hostname / IP-address of the host
  	 * @param port Port the registry listens on.

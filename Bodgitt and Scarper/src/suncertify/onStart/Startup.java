@@ -17,7 +17,7 @@ import suncertify.gui.DialogBoxViews;
  */
 public class Startup {
 	
-	/** The dialogs. */
+	/** The dialog GUI instance. */
 	private static DialogBoxViews dialogs = new DialogBoxViews();
 	 
  	/** Logger used for displaying information to the end user.*/
@@ -61,26 +61,18 @@ public class Startup {
 			logger.info("Starting Client Connection");
 			setApplicationMode(ApplicationMode.NETWORK);
 			dialogs.rmiClient();			
-   
-			
-			//logger.info("Starting Bodgitt & Scarper server mode.");
-			//setApplicationMode(ApplicationMode.SERVER);
-        	//dialogs.rmiConnectionWindow();
-			
-			//logger.info("Starting standalone mode");
-        	//setApplicationMode(ApplicationMode.ALONE);
-        	//dialogs.databaseLocationWindow();
-			
-			
+
 		} else if (ApplicationMode.SERVER.name().equalsIgnoreCase(args[0])) {
 			logger.info("Starting Bodgitt & Scarper server mode.");
 			setApplicationMode(ApplicationMode.SERVER);
         	dialogs.rmiConnectionWindow();
-        } else if (ApplicationMode.ALONE.name().equalsIgnoreCase(args[0])) {
+
+		} else if (ApplicationMode.ALONE.name().equalsIgnoreCase(args[0])) {
         	logger.info("Starting standalone mode");
         	setApplicationMode(ApplicationMode.ALONE);
         	dialogs.databaseLocationWindow();
-        } else {
+        
+		} else {
             logger.log(Level.INFO, "Invalid param supplied to application: " 
                     + args[0]);
         }

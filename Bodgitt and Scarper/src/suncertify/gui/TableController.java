@@ -17,7 +17,7 @@ import suncertify.rmi.ContractorDBRemote;
 
 
 /**
- * The Class TableController is used has a helper class for handling table
+ * The Class TableController is used as a helper class for handling table
  * requests from the end user. This class interacts with the table model and
  * the Data class to help further distance the view from any data handling.
  */
@@ -66,7 +66,7 @@ public class TableController {
 	 * String [] Criteria.
 	 *
 	 * @param criteria The record values to search for
-	 * @return the contractors
+	 * @return the matching contractors
 	 */
 	public final TableModel getContractors(final String [] criteria) {
 		tableRecs = new TableModel();

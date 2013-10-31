@@ -29,8 +29,8 @@ public class DBFactoryImpl extends UnicastRemoteObject implements DBFactory {
     
 	
    /**
-    * Instantiates a new database factory implementation indicating where
-    * the database location is.
+    * The constructor <code>DBFactoryImpl</code> instantiates a new database 
+    * factory implementation indicating where the database location is.
     *
     * @param dbLocation the path to the database file
     * @throws RemoteException the remote exception in case of connectivity 

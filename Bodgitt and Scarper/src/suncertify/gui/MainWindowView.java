@@ -180,10 +180,16 @@ public class MainWindowView implements ActionListener {
 			logger.info("Booking record");
 			int rowNo = table.getSelectedRow();
 			String customerID = "";
-			if (e.getSource() == bookButton) {
+			if (e.getSource() == bookButton && rowNo >= 0) {
 				customerID = (String) JOptionPane.showInputDialog(tablePanel,
 							 "Please enter the Customer ID", 
 							 "Booking SubContractor", 3);
+			} else if (e.getSource() == bookButton && rowNo <= 0) {
+				JOptionPane.showMessageDialog(tablePanel,
+					    "No record selected",
+					    "Record not booked",
+					    JOptionPane.ERROR_MESSAGE);
+						customerID = null;
 			}
 			if ((customerID != null && customerID.length() == 8 
 				  && isInteger(customerID)) || e.getSource() == unbookButton) {
